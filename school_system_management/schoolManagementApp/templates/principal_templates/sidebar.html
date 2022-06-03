@@ -1,0 +1,154 @@
+<!---SIDEBAR-UL PAGINII DE ADMIN-->
+{% load static %}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+      <img src="{% static "dist/img/edupedia-logo.png" %}" alt="Edupedia Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span style="margin-left: 10px;" class="brand-text font-weight-bold">Edupedia</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static "dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">Alexander Pierce</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a href="/add_staff" class="nav-link">
+              <i class="nav-icon fas fa-plus"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Add Staff
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/manage_staff" class="nav-link">
+              <i class="nav-icon fas fa-user"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Manage Staff
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/add_student" class="nav-link">
+              <i class="nav-icon fas fa-plus"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Add Students
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/manage_student" class="nav-link">
+              <i class="nav-icon fas fa-graduation-cap"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Manage Students
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/add_course" class="nav-link">
+              <i class="nav-icon fas fa-plus"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Add Courses
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/manage_course" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p style="font-size: 19px; font-weight: bold;
+              margin-left: 20px;">
+                Manage Courses
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/add_subject" class="nav-link">
+              <i class="nav-icon fas fa-plus"></i>
+              <p style="font-size: 19px; font-weight: bold;
+              margin-left: 20px;">
+                Add Subjects
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/manage_subjects" class="nav-link">
+              <i class="nav-icon fas fa-book-open"></i>
+              <p style="font-size: 19px; font-weight: bold;
+              margin-left: 20px;">
+                Manage Subjects
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/attendance_report" class="nav-link">
+              <i class="nav-icon fas fa-eye"></i>
+              <p style="font-size: 18px; font-weight: bold;
+              margin-left: 20px;">
+                Attendance Report
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/student_feedback" class="nav-link">
+              <i class="nav-icon fas fa-comment-dots"></i>
+              <p style="font-size: 18px; font-weight: bold;
+              margin-left: 20px;">
+                Student Feedback
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/staff_feedback" class="nav-link">
+              <i class="nav-icon fas fa-comment-dots"></i>
+              <p style="font-size: 18px; font-weight: bold;
+              margin-left: 20px;">
+                Staff Feedback
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/student_leave_request" class="nav-link">
+              <i class="nav-icon fas fa-door-open"></i>
+              <p style="font-size: 19px; font-weight: bold;
+              margin-left: 20px;">
+                Students Leave Requests
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/staff_leave_request" class="nav-link">
+              <i class="nav-icon fas fa-door-open"></i>
+              <p style="font-size: 19px; font-weight: bold;
+              margin-left: 20px;">
+                Staff Leave Requests
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

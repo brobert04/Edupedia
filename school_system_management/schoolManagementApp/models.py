@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 # Create your models here.
 
-class User(AbstractUser):
+class UserCustom(AbstractUser):
     user_type_data = ((1, "Admin"), (2, "Staff"), (3, "Student"))
     user_type = models.CharField(default=1, max_length=30, choices=user_type_data)
 
@@ -14,7 +14,7 @@ class User(AbstractUser):
 # MODELUL PENTRU ADMIN(IN CAZUL ACESTA, DIRECTORUL SCOLII)
 class Admin(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(User, on_delete=models.CASCADE)
+    admin = models.OneToOneField(UserCustom, on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
@@ -24,13 +24,13 @@ class Admin(models.Model):
 class Staff(models.Model):
     objects = models.Manager()
     id = models.AutoField(primary_key=True)
-    staff = models.OneToOneField(User, on_delete=models.CASCADE)
+    admin = models.OneToOneField(UserCustom, on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
-    adress = models.TextField(max_length=300)
+    address = models.TextField(max_length=500)
 
 
-# MODEL PENTRU CURS/URI
+# MODEL PENTRU CURS/URI 
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=300)
@@ -51,7 +51,7 @@ class Subject(models.Model):
 # MODELUL PENTRU STUDENT
 class Student(models.Model):
     id = models.AutoField(primary_key=True)
-    student = models.OneToOneField(User, on_delete=models.CASCADE)
+    admin = models.OneToOneField(UserCustom, on_delete=models.CASCADE)
     address = models.TextField(max_length=300)
     profile_picture = models.FileField()
     gender = models.CharField(max_length=300)
@@ -141,7 +141,7 @@ class StaffNotification(models.Model):
 
 
 # ATUNCI CAND UN NOU USER ESTE CREAT, SE VA ADAUGA AUTOMAT IN NOU RAND FIE IN MODELUL DIRECTORULUI, INVATATORULUI SAU STUDENTULUI
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=UserCustom)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         if instance.user_type == 1:
@@ -153,7 +153,7 @@ def create_profile(sender, instance, created, **kwargs):
 
 
 # ACEASTA METODA VA FI EXECUTATA PENTRU A SALVA INFORMATIILE DUPA CE EXECUTIA FUNCTIEI DE MAI SUS SE VA FI TERMINAT
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=UserCustom)
 def save_profile(sender, instance, **kwargs):
     if instance.user_type == 1:
         instance.admin.save()

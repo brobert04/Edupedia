@@ -2,13 +2,14 @@ from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from schoolManagementApp.Email import Email
+from django.contrib import messages
 
 
 def showDemoPage(request):
     return render(request, "demo.html")
 
 
-def loginPage(request):
+def loginPage(request): 
     return render(request, "login-page.html")
 
 
@@ -23,9 +24,10 @@ def Login(request):
         # IN CAZUL IN CARE USERUL EXISTA, REALIZAM LOGAREA
         if user is not None:
             login(request, user)
-            return HttpResponse(f"Email: {request.POST.get('email')}, Password: {request.POST.get('password')}")
+            return HttpResponseRedirect('principal_dashboard')
         else:
-            return HttpResponse("Invalid Login")
+            messages.error(request, "Datele introduse nu sunt corecte. Inecearca din nou!")
+            return HttpResponseRedirect('/', )
 
 def getUserData(request):
     if request.user is not None:

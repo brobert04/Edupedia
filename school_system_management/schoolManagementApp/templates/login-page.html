@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Liceul de Arte 'Ionel Perlea' | Conectare</title>
+  <title>Edupedia | Log In</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,16 +14,33 @@
   <link rel="stylesheet" href="{% static "plugins/icheck-bootstrap/icheck-bootstrap.min.css" %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static "dist/css/adminlte.css" %}">
+  
+  <style>
+    #logo-text{
+      font-size: 50px;
+    }
+
+    #autentificare{
+      font-size: 25px;
+    }
+
+    #fail{
+      width: 75%;
+      text-align: center;
+      margin: 20px auto;
+    }
+  </style>
+
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>Liceul de Arte</b><br>"Ionel Perlea"<br></a>
+    <a id="logo-text" href="../../index2.html"><b>Edupedia</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Autentificare</p>
+      <p id="autentificare" class="login-box-msg">Log in to the platform</p>
 
     <form action="/login" method="post">
         {% csrf_token %}
@@ -36,7 +53,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Parola" name="password">
+          <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -46,9 +63,18 @@
         <div class="row mt-5">
           <!-- /.col -->
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Autentificare</button>
+            <button type="submit" class="btn btn-primary btn-block">Log In</button>
           </div>
-          <!-- /.col -->
+          <div class="row">
+            {%if messages%}
+            <div class="col-12">
+            {% for m in messages %}
+            {% if m.tags == "error" %}
+              <div id="fail" class="alert alert-danger">{{m}}</div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
       </form>
     </div>
