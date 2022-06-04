@@ -24,7 +24,12 @@ def Login(request):
         # IN CAZUL IN CARE USERUL EXISTA, REALIZAM LOGAREA
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect('principal_dashboard')
+            if user.user_type == "1":
+                return HttpResponseRedirect('principal_dashboard')
+            elif user.user_type == "2":
+                return HttpResponse(f'Staff login {user.user_type}')
+            else:
+                return HttpResponse(f'Student login {user.user_type}')
         else:
             messages.error(request, "Datele introduse nu sunt corecte. Inecearca din nou!")
             return HttpResponseRedirect('/', )

@@ -44,7 +44,7 @@ class Subject(models.Model):
     name = models.CharField(max_length=300)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
-    courseId = models.ForeignKey(Course, on_delete=models.CASCADE)
+    courseId = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
     staffId = models.ForeignKey(Staff, on_delete=models.CASCADE)
 
 
@@ -149,7 +149,7 @@ def create_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staff.objects.create(admin=instance)
         if instance.user_type == 3:
-            Student.objects.create(admin=instance)
+            Student.objects.create(admin=instance, courseId=Course.objects.get(id=1),startYear="2022-01-01", finishYear="2023-01-01", address="",profile_picture="",gender="")
 
 
 # ACEASTA METODA VA FI EXECUTATA PENTRU A SALVA INFORMATIILE DUPA CE EXECUTIA FUNCTIEI DE MAI SUS SE VA FI TERMINAT

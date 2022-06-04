@@ -17,5 +17,9 @@ urlpatterns = [
     path('logout', views.Logout),
     path('principal_dashboard', principal_views.principal_home),
     path('add_staff', principal_views.add_staff ),
-    path('save_staff_information', principal_views.save_staff_info)
+    path('save_staff_information', principal_views.save_staff_info),
+    path('add_course', principal_views.add_course),
+    path('save_course_information', principal_views.save_course_info),
+    path('add_student', principal_views.add_student),
+    path('save_student_information', principal_views.save_student_information)
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
