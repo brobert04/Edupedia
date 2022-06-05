@@ -45,7 +45,7 @@ class Subject(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
     courseId = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
-    staffId = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    staffId = models.ForeignKey(UserCustom, on_delete=models.CASCADE)
 
 
 # MODELUL PENTRU STUDENT

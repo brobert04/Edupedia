@@ -1,0 +1,58 @@
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
+
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} Manage Students {% endblock page_title %}
+{% block breadcrumb %}Students List{% endblock breadcrumb %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+              <h3 style="font-size: 25px; font-weight:bold;"class="card-title">Students List</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Course</th>
+                    <th>Start Year</th>
+                    <th>End Year</th>
+                    <th>Date Joined</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                  <tr>
+                    <td>{{s.admin.id}}</td>
+                    <td>{{s.admin.first_name}}</td>
+                    <td>{{s.admin.last_name}}</td>
+                    <td>{{s.admin.username}}</td>
+                    <td>{{s.gender}}</td>
+                    <td>{{s.admin.email}}</td>
+                    <td>{{s.address}}</td>
+                    <td>{{s.courseId.name}}</td>
+                    <td>{{s.startYear}}</td>
+                    <td>{{s.finishYear}}</td>
+                    <td>{{s.admin.date_joined}}</td>
+                    <td>{{s.admin.last_login}}</td>
+                    <th><a href="/edit_student/{{s.admin.id}}">Edit</a></th>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+    </div>
+</section>
+{% endblock main-content %}

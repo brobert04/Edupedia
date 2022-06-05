@@ -24,10 +24,13 @@ def Login(request):
         # IN CAZUL IN CARE USERUL EXISTA, REALIZAM LOGAREA
         if user is not None:
             login(request, user)
+            # DACA USERUL ESTE ADMIN, RANDAM PAGINA DE DASHBOARD A ADMINULUI
             if user.user_type == "1":
                 return HttpResponseRedirect('principal_dashboard')
+            # DACA USERUL ESTE PARTE A STAFF ULUI, RANDAM PAGINA DE DASHBOARD A STAFF ULUI
             elif user.user_type == "2":
                 return HttpResponse(f'Staff login {user.user_type}')
+            # DACA USERUL ESTE STUDENT, RANDAM PAGINA DE DASHBOARD A STUDENTULUI
             else:
                 return HttpResponse(f'Student login {user.user_type}')
         else:

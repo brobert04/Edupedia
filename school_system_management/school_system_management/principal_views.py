@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 
-from schoolManagementApp.models import Course, UserCustom
+from schoolManagementApp.models import Course, Staff, Student, Subject, UserCustom
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
@@ -94,3 +94,50 @@ def save_student_information(request):
         except:
             messages.error(request, 'The platform could not process the request. Try again!')
             return HttpResponseRedirect('/add_student')
+        
+        
+ # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE MATERIE    
+def add_subject(request):
+    courses = Course.objects.all()
+    staff = UserCustom.objects.filter(user_type=2)
+    return render(request, 'principal_templates/add_subject.html', {"courses" : courses, "staff": staff})
+
+ # FUNCTIA PENTRU A SALVA DATELE DESPRE NOUA MATERIE   
+def save_subject_info(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        subject_name = request.POST.get('subjectName')
+        course_id = request.POST.get('course')
+        course_object = Course.objects.get(id=course_id)
+        teacher = request.POST.get('teacher')
+        teacher_object = UserCustom.objects.get(id=teacher)
+        try:
+            subject = Subject(name=subject_name, courseId = course_object, staffId = teacher_object)
+            subject.save()
+            messages.success(request, 'A new subject has been added!')
+            return HttpResponseRedirect('/add_subject')
+        except:
+             messages.error(request, 'The platform could not process the request. Try again!')
+             return HttpResponseRedirect('/add_subject')
+         
+         
+ # FUNCTIA PENTRU A RANDA PAGINA CU TOTI MEMBRII STAFF ULUI           
+def manage_staff(request):
+    staff = Staff.objects.all()
+    return render(request, 'principal_templates/manage_staff.html', {"staff" : staff})
+
+ # FUNCTIA PENTRU A RANDA PAGINA CU TOTI STUDENTII  
+def manage_student(request):
+    student = Student.objects.all()
+    return render(request, 'principal_templates/manage_student.html', {"students": student})
+
+ # FUNCTIA PENTRU A RANDA PAGINA CU TOATE CURSURILE
+def manage_course(request):
+    course = Course.objects.all()
+    return render(request, 'principal_templates/manage_course.html', {"courses": course})
+
+ # FUNCTIA PENTRU A RANDA PAGINA CU TOATE MATERIILE
+def manage_subjects(request):
+    subject = Subject.objects.all()
+    return render(request,'principal_templates/manage_subject.html', {"subjects": subject})

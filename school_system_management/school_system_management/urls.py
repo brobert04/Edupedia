@@ -21,5 +21,11 @@ urlpatterns = [
     path('add_course', principal_views.add_course),
     path('save_course_information', principal_views.save_course_info),
     path('add_student', principal_views.add_student),
-    path('save_student_information', principal_views.save_student_information)
+    path('save_student_information', principal_views.save_student_information),
+    path('add_subject',principal_views.add_subject),
+    path('save_subject_information', principal_views.save_subject_info),
+    path('manage_staff', principal_views.manage_staff),
+    path('manage_student', principal_views.manage_student),
+    path('manage_course', principal_views.manage_course),
+    path('manage_subjects' , principal_views.manage_subjects)
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
