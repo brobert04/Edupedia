@@ -1,6 +1,4 @@
 # ACEASTA PAGINA CONTINE FUNCTIILE NECESARE FUNCTIONARII PAGINI DE ADMIN/DIRECTOR
-
-import datetime
 from unicodedata import name
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -141,3 +139,84 @@ def manage_course(request):
 def manage_subjects(request):
     subject = Subject.objects.all()
     return render(request,'principal_templates/manage_subject.html', {"subjects": subject})
+
+# FUNCTIA PENTRU A RANDA PAGINA DE A UPDATA INFORMATIILE STAFF-ULUI
+def edit_staff(request, staff_id):
+    staff = Staff.objects.get(admin=staff_id)
+    return render(request, "principal_templates/edit_staff.html", {"staff": staff})
+
+#FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STAFF ULUI
+def edit_staff_information(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        staff_id = request.POST.get('staff_id')
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        username = request.POST.get('username')
+        address = request.POST.get('address')
+        email = request.POST.get('email')
+        
+        try:
+            user  = UserCustom.objects.get(id=staff_id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+                
+            staff = Staff.objects.get(admin=staff_id)
+            staff.address = address
+            staff.save()
+            messages.success(request, 'Teacher information have been updated!')
+            return HttpResponseRedirect(f"/edit_staff/{staff_id}")
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(f"/edit_staff/{staff_id}")
+
+
+# FUNCTIA PENTRU A RANDA PAGINA DE A UPDATA INFORMATIILE STUDENTULUI
+def edit_student(request, student_id):
+    courses = Course.objects.all()
+    student = Student.objects.get(admin=student_id)
+    return render(request, 'principal_templates/edit_student.html', {"student": student, "courses": courses})
+
+#FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STUDENTULUI
+def edit_student_information(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        student_id = request.POST.get('student_id')
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        username = request.POST.get('username')
+        address = request.POST.get('address')
+        email = request.POST.get('email')
+        course  = request.POST.get('course')
+        # course_obj = course_object = Course.objects.get(id=course)
+        gender = request.POST.get('gender')
+        start_year = request.POST.get('startDate')
+        end_year = request.POST.get('endDate')
+        
+        try:
+            user = UserCustom.objects.get(id=student_id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+            
+            student  = Student.objects.get(admin=student_id)
+            student.address = address
+            student.gender = gender
+            student.startYear = start_year
+            student.finishYear = end_year
+            course = Course.objects.get(id=course)
+            student.courseId = course
+            student.save()
+            
+            messages.success(request, 'Student information have been updated!')
+            return HttpResponseRedirect(f"/edit_student/{student_id}")
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(f"/edit_student/{student_id}")

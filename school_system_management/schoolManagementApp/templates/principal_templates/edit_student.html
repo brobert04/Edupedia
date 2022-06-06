@@ -1,75 +1,65 @@
 {% extends 'principal_templates/base.html' %}
-{% block page_title %} Add Student {% endblock page_title %}
+{% block page_title %} Edit Student : <span style="color: red;">{{student.admin.username}}</span>#{{student.admin.id}}{% endblock page_title %}
 {% block main-content %}
 <section class="content">
     <div class="container-fluid">
         <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Add Student Information</h3>
-            </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="/save_student_information" method="post">
+            <form role="form" action="/edit_student_information" method="post">
             {% csrf_token %}
               <div class="card-body">
                 <div class="form-group">
                     <label>First name</label>
                     <input type="text"
-                    name="firstName" class="form-control form-control-border border-width-2" placeholder="Enter first name">
-                </div>
+                    name="firstName" class="form-control form-control-border border-width-2" placeholder="Enter first name" value="{{student.admin.first_name}}">
+                </div> 
                 <div class="form-group">
                     <label>Last name</label>
                     <input type="text"
-                    name="lastName" class="form-control form-control-border border-width-2" placeholder="Enter last name">
+                    name="lastName" class="form-control form-control-border border-width-2" placeholder="Enter last name" value="{{student.admin.last_name}}">
+                    <input type="hidden"
+                    name="student_id" value="{{student.admin.id}}">
                 </div>
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text"
-                    name="username" class="form-control form-control-border border-width-2" placeholder="Enter username">
+                    name="username" class="form-control form-control-border border-width-2" placeholder="Enter username" value="{{student.admin.username}}">
                 </div>
-                {% comment %} <div class="form-group">
-                    <label>Profile Picture</label>
-                    <input type="file"
-                    name="profilePic" class="form-control form-control-border"  placeholder="Enter Start Year">
-                </div> {% endcomment %}
                 <div class="form-group">
                     <label>Address</label>
                     <input type="text"
-                    name="address" class="form-control form-control-border border-width-2" placeholder="Enter address">
+                    name="address" class="form-control form-control-border border-width-2" placeholder="Enter address" value="{{student.address}}">
                 </div>
                 <div class="form-group">
                     <label>Course</label>
                    <select name="course" class="form-control">
                        {% for c in courses %}
-                       <option value="{{c.id}}">{{c.name}}</option>
+                       <option value="{{c.id}}" {% if c.id == student.courseId.id %} selected {% endif %}>{{c.name}}</option>
                        {% endfor %}
                    </select>
                 </div>
                 <div class="form-group">
                     <label>Gender</label>
                     <select name="gender" class="form-control">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Rather not say</option>
+                        <option {% if student.gender == 'Male' %} selected {% endif %}>Male</option>
+                        <option {% if student.gender == 'Female' %} selected {% endif %}>Female</option>
+                        <option {% if student.gender == 'Rather not say' %} selected {% endif %}>Rather not say</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Start Year</label>
                     <input type="date"
-                    name="startDate" class="form-control" placeholder="Enter Start Year">
+                    name="startDate" class="form-control" placeholder="Enter Start Year" value={{student.startYear|date:"Y-m-d"}}>
                 </div>
                 <div class="form-group">
                     <label>End Year</label>
                     <input type="date"
-                    name="endDate" class="form-control" placeholder="Enter End Year">
+                    name="endDate" class="form-control" placeholder="Enter End Year" value={{student.finishYear|date:"Y-m-d"}}>
                 </div>
                 <div class="form-group">
                   <label>Email address</label>
-                  <input type="email" class="form-control form-control-border border-width-2" name="email" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="password" class="form-control form-control-border border-width-2" name="password" placeholder="Password">
+                  <input type="email" class="form-control form-control-border border-width-2" name="email" placeholder="Enter email" value="{{student.admin.email}}">
                 </div>
                 <div class="form-group">
                   {%if messages%}
@@ -86,7 +76,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Add New Student</button>
+                <button type="submit" class="btn btn-primary">Make Changes</button>
               </div>
             </form>
           </div>

@@ -27,5 +27,10 @@ urlpatterns = [
     path('manage_staff', principal_views.manage_staff),
     path('manage_student', principal_views.manage_student),
     path('manage_course', principal_views.manage_course),
-    path('manage_subjects' , principal_views.manage_subjects)
+    path('manage_subjects' , principal_views.manage_subjects),
+    path('edit_staff/<str:staff_id>', principal_views.edit_staff),
+    path('edit_staff_information', principal_views.edit_staff_information),
+    path('edit_student/<str:student_id>', principal_views.edit_student),
+    path('edit_student_information', principal_views.edit_student_information)
+    
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
