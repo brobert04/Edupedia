@@ -11,7 +11,7 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
+        <div class="image"> 
           <img src="{% static "dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
@@ -35,7 +35,8 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="/add_staff" class="nav-link">
+            {% url 'add_staff' as add_staff %}
+            <a href="{% url 'add_staff' %}" class="nav-link {% if request.path == add_staff%} active {% endif %}">
               <i class="nav-icon fas fa-plus"></i>
               <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
                 Add Staff
@@ -43,7 +44,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/manage_staff" class="nav-link">
+            {% url 'manage_staff' as manage_staff %}
+            {% url 'edit_staff' staff_id=id as edit_staff %}
+            <a href="{% url 'manage_staff' %}" class="nav-link {% if request.path == manage_staff%} active {% endif %} {% if request.path == edit_staff%} active {% endif %}">
               <i class="nav-icon fas fa-user"></i>
               <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
                 Manage Staff
@@ -51,7 +54,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/add_student" class="nav-link">
+            {% url 'add_student' as add_student %}
+            <a href="{% url 'add_student' %}" class="nav-link {% if request.path == add_student%} active {% endif %}">
               <i class="nav-icon fas fa-plus"></i>
               <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
                 Add Student
@@ -59,7 +63,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/manage_student" class="nav-link">
+            {% url 'manage_student' as manage_student%}
+            {% url 'edit_student' student_id=id as edit_student %}
+            <a href="{% url 'manage_student' %}" class="nav-link {% if request.path == manage_student%} active {% endif %} {% if request.path == edit_student%} active {% endif %}">
               <i class="nav-icon fas fa-graduation-cap"></i>
               <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
                 Manage Students
@@ -67,7 +73,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/add_course" class="nav-link">
+            {% url 'add_course' as add_course%}
+            <a href="{% url 'add_course' %}" class="nav-link {% if request.path == add_course%} active {% endif %}">
               <i class="nav-icon fas fa-plus"></i>
               <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
                 Add Course
@@ -75,7 +82,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/manage_course" class="nav-link">
+            {% url 'manage_course' as manage_course%}
+            {% url 'edit_course' course_id=id as edit_course %}
+            <a href="{% url 'manage_course' %}" class="nav-link {% if request.path == manage_course%} active {% endif %} {% if request.path == edit_course%} active {% endif %}">
               <i class="nav-icon fas fa-book"></i>
               <p style="font-size: 19px; font-weight: bold;
               margin-left: 20px;">
@@ -84,7 +93,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/add_subject" class="nav-link">
+            {% url 'add_subject' as add_subject %}
+            <a href="{% url 'add_subject' %}" class="nav-link {% if request.path == add_subject%} active {% endif %}">
               <i class="nav-icon fas fa-plus"></i>
               <p style="font-size: 19px; font-weight: bold;
               margin-left: 20px;">
@@ -93,7 +103,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/manage_subjects" class="nav-link">
+            {% url 'manage_subject' as manage_subject %}
+            {% url 'edit_subject' subject_id=id as edit_subject %}
+            <a href="{% url 'manage_subject' %}" class="nav-link {% if request.path == manage_subject%} active {% endif %} {% if request.path == edit_subject%} active {% endif %}">
               <i class="nav-icon fas fa-book-open"></i>
               <p style="font-size: 19px; font-weight: bold;
               margin-left: 20px;">

@@ -24,7 +24,7 @@
                   <tr>
                     <td>{{c.id}}</td>
                     <td>{{c.name}}</td>
-                    <th><a href="/edit_course/{{c.id}}">Edit</a></th>
+                    <th><a href="{% url 'edit_course' course_id=c.id %}">Edit</a></th>
                   </tr>
                   {% endfor %}
                 </tbody>

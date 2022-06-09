@@ -29,6 +29,13 @@
   {% block base_css %}
 
   {% endblock base_css %}
+
+
+  <style>
+    #logout:hover{
+      color: red;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -46,6 +53,12 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="/principal_dashboard" role="button"><i class="fas fa-bars"></i></a>
       </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'principal_dashboard' %}" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'logout' %}" id="logout" class="nav-link">Logout</a>
+      </li>
     </ul>
 
   <!-- Right navbar links -->
@@ -54,7 +67,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-    {% include 'principal_templates/sidebar.html' with user=user %}
+    {% include 'principal_templates/sidebar.html' with user=user id=id %}
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

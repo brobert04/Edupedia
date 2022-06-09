@@ -9,87 +9,9 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form role="form" action="/save_student_information" method="post">
-            {% csrf_token %}
-              <div class="card-body">
-                <div class="form-group">
-                    <label>First name</label>
-                    <input type="text"
-                    name="firstName" class="form-control form-control-border border-width-2" placeholder="Enter first name">
-                </div>
-                <div class="form-group">
-                    <label>Last name</label>
-                    <input type="text"
-                    name="lastName" class="form-control form-control-border border-width-2" placeholder="Enter last name">
-                </div>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text"
-                    name="username" class="form-control form-control-border border-width-2" placeholder="Enter username">
-                </div>
-                {% comment %} <div class="form-group">
-                    <label>Profile Picture</label>
-                    <input type="file"
-                    name="profilePic" class="form-control form-control-border"  placeholder="Enter Start Year">
-                </div> {% endcomment %}
-                <div class="form-group">
-                    <label>Address</label>
-                    <input type="text"
-                    name="address" class="form-control form-control-border border-width-2" placeholder="Enter address">
-                </div>
-                <div class="form-group">
-                    <label>Course</label>
-                   <select name="course" class="form-control">
-                       {% for c in courses %}
-                       <option value="{{c.id}}">{{c.name}}</option>
-                       {% endfor %}
-                   </select>
-                </div>
-                <div class="form-group">
-                    <label>Gender</label>
-                    <select name="gender" class="form-control">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Rather not say</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Start Year</label>
-                    <input type="date"
-                    name="startDate" class="form-control" placeholder="Enter Start Year">
-                </div>
-                <div class="form-group">
-                    <label>End Year</label>
-                    <input type="date"
-                    name="endDate" class="form-control" placeholder="Enter End Year">
-                </div>
-                <div class="form-group">
-                  <label>Email address</label>
-                  <input type="email" class="form-control form-control-border border-width-2" name="email" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="password" class="form-control form-control-border border-width-2" name="password" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  {%if messages%}
-                  {% for message in messages %}
-                  {% if message.tags == "error" %}
-                    <div id="fail" class="alert alert-danger">{{message}}</div>
-                  {% endif %}
-                  {% if message.tags == "success" %}
-                    <div id="fail" class="alert alert-success">{{message}}</div>
-                  {% endif %}
-                  {% endfor %}
-                {% endif %}
-              </div>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Add New Student</button>
-              </div>
-            </form>
+            {% url 'save_student' as action_path %}
+            {% include 'principal_templates/form_template.html' with messages=messages form=form action_path=action_path text_button="Add New Student"%}
           </div>
-    </div>
+    </div> 
 </section>
 {% endblock main-content %}

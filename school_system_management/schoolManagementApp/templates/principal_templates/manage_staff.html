@@ -37,7 +37,7 @@
                     <td>{{s.address}}</td>
                     <td>{{s.admin.date_joined}}</td>
                     <td>{{s.admin.last_login}}</td>
-                    <th><a href="/edit_staff/{{s.admin.id}}">Edit</a></th>
+                    <th><a href="{% url 'edit_staff' staff_id=s.admin.id %}">Edit</a></th>
                   </tr>
                   {% endfor %}
                 </tbody>

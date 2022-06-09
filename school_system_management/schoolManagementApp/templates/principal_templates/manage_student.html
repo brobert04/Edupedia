@@ -20,6 +20,7 @@
                     <th>Username</th>
                     <th>Gender</th>
                     <th>Email</th>
+                    <th>Profile Picture</th>
                     <th>Address</th>
                     <th>Course</th>
                     <th>Start Year</th>
@@ -38,13 +39,14 @@
                     <td>{{s.admin.username}}</td>
                     <td>{{s.gender}}</td>
                     <td>{{s.admin.email}}</td>
+                    <td><img height="35px" width="35px" src="{{s.profile_picture}}" alt="{{s.admin.username}}'s profile picture"></td>
                     <td>{{s.address}}</td>
                     <td>{{s.courseId.name}}</td>
                     <td>{{s.startYear}}</td>
                     <td>{{s.finishYear}}</td>
                     <td>{{s.admin.date_joined}}</td>
                     <td>{{s.admin.last_login}}</td>
-                    <th><a href="/edit_student/{{s.admin.id}}">Edit</a></th>
+                    <th><a href="{% url 'edit_student' student_id=s.admin.id %}">Edit</a></th>
                   </tr>
                   {% endfor %}
                 </tbody>

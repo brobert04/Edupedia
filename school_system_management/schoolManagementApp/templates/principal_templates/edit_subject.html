@@ -1,0 +1,55 @@
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} Edit Subject : <span style="color: red;">{{subject.name}}</span>#{{subject.id}}{% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form" action="/edit_subject_information" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Subject Name</label>
+                    <input type="text"
+                    name="subjectName" class="form-control form-control-border border-width-2" placeholder="Enter first name" value="{{subject.name}}">
+                    <input type="hidden" class="form-control" name="subject_id" value="{{subject.id}}">
+                </div> 
+                <div class="form-group">
+                  <label>Course</label>
+                 <select name="course" class="form-control">
+                     {% for c in courses %}
+                     <option value="{{c.id}}" {% if c.id == subject.courseId.id %} selected {% endif %}>{{c.name}}</option>
+                     {% endfor %}
+                 </select>
+              </div>
+                <div class="form-group">
+                    <label>Teacher</label>
+                   <select name="teacher" class="form-control">
+                       {% for t in teachers %}
+                       <option value="{{t.id}}" {% if t.id == subject.staffId.id %} selected {% endif %}>{{t.first_name}} {{t.last_name}}</option>
+                       {% endfor %}
+                   </select>
+                </div>
+                <div class="form-group">
+                  {%if messages%}
+                  {% for message in messages %}
+                  {% if message.tags == "error" %}
+                    <div id="fail" class="alert alert-danger">{{message}}</div>
+                  {% endif %}
+                  {% if message.tags == "success" %}
+                    <div id="fail" class="alert alert-success">{{message}}</div>
+                  {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Make Changes</button>
+              </div>
+            </form>
+          </div>
+    </div>
+</section>
+{% endblock main-content %}

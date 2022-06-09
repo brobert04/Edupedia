@@ -30,7 +30,7 @@
                     <td>{{s.courseId.name}}</td>
                     <td>{{s.courseId.id}}</td>
                     <td>{{s.staffId.first_name}} {{s.staffId.last_name}}</td>
-                    <th><a href="/edit_subject/{{s.id}}">Edit</a></th>
+                    <th><a href="{% url 'edit_subject' subject_id=s.id %}">Edit</a></th>
                   </tr>
                   {% endfor %}
                 </tbody>
