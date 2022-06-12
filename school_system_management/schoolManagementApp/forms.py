@@ -1,10 +1,12 @@
 from django import forms
 
-from schoolManagementApp.models import Course
+from schoolManagementApp.models import Course, Staff
 
 class CustomDateInput(forms.DateInput):
     input_type = "date"
-    
+
+
+# FORMULARUL PENTRU ADAUGARE STUDENT
 class AddStudent(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
     lastName = forms.CharField(label="Last Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
@@ -32,6 +34,7 @@ class AddStudent(forms.Form):
     endDate = forms.DateField(label="End Year", widget=CustomDateInput( attrs={"class": "form-control"}))
 
 
+# FORMULARUL PENTRU EDITARE STUDENT
 class EditStudent(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
     lastName = forms.CharField(label="Last Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
@@ -56,4 +59,32 @@ class EditStudent(forms.Form):
     course = forms.ChoiceField(label="Course", choices=courses_list, widget=forms.Select(attrs={"class": "form-control"}))  
     startDate = forms.DateField(label="Start Year", widget=CustomDateInput(attrs={"class": "form-control"}))
     endDate = forms.DateField(label="End Year", widget=CustomDateInput( attrs={"class": "form-control"}))
-   
+
+
+# FORMULARUL PENTRU ADAUGARE STAFF
+class AddStaff(forms.Form):
+    firstName = forms.CharField(label="First Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    lastName = forms.CharField(label="Last Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    username = forms.CharField(label="Username", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    address = forms.CharField(label="Address", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class": "form-control"}))
+    password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput(attrs={"class": "form-control"}))
+    
+
+# FORMULARUL PENTRU EDITARE STAFF
+class EditStaff(forms.Form):
+    firstName = forms.CharField(label="First Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    lastName = forms.CharField(label="Last Name", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    username = forms.CharField(label="Username", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    address = forms.CharField(label="Address", max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+    email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class": "form-control"}))
+
+
+# FORMULARUL PENTRU ADAUGARE CURS
+class AddCourse(forms.Form):
+    courseName = forms.CharField(label="Course Name",max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))
+
+
+# FORMULARUL PENTRU EDITARE CURS
+class EditCourse(forms.Form):
+    courseName = forms.CharField(label="Course Name",max_length=50,widget=forms.TextInput(attrs={"class": "form-control"}))

@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from schoolManagementApp.Email import Email
 from django.contrib import messages
 
@@ -29,10 +30,10 @@ def Login(request):
                 return HttpResponseRedirect('principal_dashboard')
             # DACA USERUL ESTE PARTE A STAFF ULUI, RANDAM PAGINA DE DASHBOARD A STAFF ULUI
             elif user.user_type == "2":
-                return HttpResponse(f'Staff login {user.user_type}')
+                return HttpResponseRedirect(reverse('staff_dashboard'))
             # DACA USERUL ESTE STUDENT, RANDAM PAGINA DE DASHBOARD A STUDENTULUI
             else:
-                return HttpResponse(f'Student login {user.user_type}')
+                 return HttpResponseRedirect(reverse('student_dashboard'))
         else:
             messages.error(request, "Datele introduse nu sunt corecte. Inecearca din nou!")
             return HttpResponseRedirect('/', )

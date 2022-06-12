@@ -4,7 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-from schoolManagementApp.forms import AddStudent, EditStudent
+from itsdangerous import NoneAlgorithm
+
+from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
 
 from schoolManagementApp.models import Course, Staff, Student, Subject, UserCustom
 
@@ -14,50 +16,63 @@ def principal_home(request):
 
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE STAFF
 def add_staff(request):
-    return render(request, 'principal_templates/add_staff.html')
+    form = AddStaff()
+    return render(request, 'principal_templates/add_staff.html', {"form":form})
 
 # FUNCTIA PENTRU A SALVA INFORMATIILE NOULUI MEMBRU STAFF ADAUGAT SI PENTRU A-L ADAUGA IN BAZA DE DATE
 def save_staff_info(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        first_name = request.POST.get('firstName')
-        last_name = request.POST.get('lastName')
-        username = request.POST.get('username')
-        address = request.POST.get('address')
-        email = request.POST.get('email')
-        password = request.POST.get('password')  
-        try:   
-            # CREEM UN NOU USER CUSTOM CU MODELUL USERCUSTOM DIN BAZA DE DATE LA CARE ADAUGAM SI ADRESA   
-            user = UserCustom.objects.create_user(username=username, password=password, email=email, last_name=last_name,first_name=first_name, user_type=2)
-            user.staff.address = address 
-            user.save()
-            messages.success(request, 'A new staff member has been added to the database!')
-            return HttpResponseRedirect('/add_staff')
-        except:
-             messages.error(request, 'The platform could not process the request. Try again!')
-             return HttpResponseRedirect('/add_staff')
+        form = AddStaff(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data['firstName']
+            last_name = form.cleaned_data['lastName']
+            username = form.cleaned_data['username']
+            address = form.cleaned_data['address']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            try:   
+                # CREEM UN NOU USER CUSTOM CU MODELUL USERCUSTOM DIN BAZA DE DATE LA CARE ADAUGAM SI ADRESA   
+                user = UserCustom.objects.create_user(username=username, password=password, email=email, last_name=last_name,first_name=first_name, user_type=2)
+                user.staff.address = address 
+                user.save()
+                messages.success(request, 'A new staff member has been added to the database!')
+                return HttpResponseRedirect('/add_staff')
+            except:
+                messages.error(request, 'The platform could not process the request. Try again!')
+                return HttpResponseRedirect('/add_staff')
+        else:
+            form = AddStaff()
+            return render(request, 'principal_templates/add_staff.html', {"form":form})
+
 
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE CURS       
 def add_course(request):
-    return render(request, 'principal_templates/add_course.html')
+    form = AddCourse()
+    return render(request, 'principal_templates/add_course.html', {"form":form})
 
 
 # FUNCTIA PENTRU A SALVA INFORMATIILE DESPRE CURS IN BAZA DE DATE
 def save_course_info(request):
     if request.method != "POST":
-        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>') 
     else:
-        course_name = request.POST.get('courseName')
-        try:
-            course = Course(name=course_name)
-            course.save()
-            messages.success(request, 'A new course has been added!')
-            return HttpResponseRedirect('/add_course')
-        except:
-             messages.error(request, 'The platform could not process the request. Try again!')
-             return HttpResponseRedirect('/add_course')
-
+        form = AddCourse(request.POST)
+        if form.is_valid():
+            course_name = form.cleaned_data['courseName']
+            try:
+                course = Course(name=course_name)
+                course.save()
+                messages.success(request, 'A new course has been added!')
+                return HttpResponseRedirect('/add_course')
+            except:
+                messages.error(request, 'The platform could not process the request. Try again!')
+                return HttpResponseRedirect('/add_course')
+        else:
+            form = AddCourse()
+            return render(request, 'principal_templates/add_course.html', {"form":form})
+        
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE STUDENT
 def add_student(request):
     form  = AddStudent()
@@ -156,38 +171,52 @@ def manage_subjects(request):
 
 # FUNCTIA PENTRU A RANDA PAGINA DE A UPDATA INFORMATIILE STAFF-ULUI
 def edit_staff(request, staff_id):
+    request.session['staff_id'] = staff_id
     staff = Staff.objects.get(admin=staff_id)
-    return render(request, "principal_templates/edit_staff.html", {"staff": staff, "id": staff_id})
+    form = EditStaff()
+    form.fields['firstName'].initial = staff.admin.first_name
+    form.fields['lastName'].initial = staff.admin.last_name
+    form.fields['username'].initial = staff.admin.username
+    form.fields['address'].initial = staff.address
+    form.fields['email'].initial = staff.admin.email
+    return render(request, "principal_templates/edit_staff.html", {"form":form,"id": staff_id, "username": staff.admin.username})
 
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STAFF ULUI
 def edit_staff_information(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        staff_id = request.POST.get('staff_id')
-        first_name = request.POST.get('firstName')
-        last_name = request.POST.get('lastName')
-        username = request.POST.get('username')
-        address = request.POST.get('address')
-        email = request.POST.get('email')
-        
-        try:
-            user  = UserCustom.objects.get(id=staff_id)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.username = username
-            user.email = email
-            user.save()
-                
+        staff_id = request.session.get('staff_id')
+        if staff_id == None:
+            return HttpResponseRedirect('/manage_staff')
+        form = EditStaff(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data['firstName']
+            last_name = form.cleaned_data['lastName']
+            username = form.cleaned_data['username']
+            address = form.cleaned_data['address']
+            email = email = form.cleaned_data['email']  
+            try:
+                user  = UserCustom.objects.get(id=staff_id)
+                user.first_name = first_name
+                user.last_name = last_name
+                user.username = username
+                user.email = email
+                user.save()
+                    
+                staff = Staff.objects.get(admin=staff_id)
+                staff.address = address
+                staff.save()
+                del request.session['staff_id']
+                messages.success(request, 'Teacher information have been updated!')
+                return HttpResponseRedirect(f"/edit_staff/{staff_id}")
+            except:
+                messages.error(request,'The platform could not process the request. Try again!')
+                return HttpResponseRedirect(f"/edit_staff/{staff_id}")
+        else:
+            form = EditStaff()
             staff = Staff.objects.get(admin=staff_id)
-            staff.address = address
-            staff.save()
-            messages.success(request, 'Teacher information have been updated!')
-            return HttpResponseRedirect(f"/edit_staff/{staff_id}")
-        except:
-            messages.error(request,'The platform could not process the request. Try again!')
-            return HttpResponseRedirect(f"/edit_staff/{staff_id}")
-
+            return render(request, "principal_templates/edit_staff.html", {"form":form,"id": staff_id, "username": staff.admin.username})
 
 # FUNCTIA PENTRU A RANDA PAGINA DE A UPDATA INFORMATIILE STUDENTULUI
 def edit_student(request, student_id):
@@ -270,26 +299,37 @@ def edit_student_information(request):
 
 # FUNCTIA PENTRU A RANDA PAGINA DE A UPDATA INFORMATIILE DESPRE CURS
 def edit_course(request, course_id):
+    request.session['course_id'] = course_id
     course  = Course.objects.get(id=course_id)
-    return render(request, "principal_templates/edit_course.html", {"course": course, "id": course_id})
+    form = EditCourse()
+    form.fields['courseName'].initial = course.name
+    return render(request, "principal_templates/edit_course.html", {"name": course.name, "id": course_id, "form":form})
 
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII REFERITOARE LA CURS
 def edit_course_information(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        course_id = request.POST.get('course_id')
-        course_name = request.POST.get('courseName')
+        course_id = request.session['course_id']
+        if course_id ==None:
+            HttpResponseRedirect('/manage_subject')
         
-        try:
-            course = Course.objects.get(id=course_id)        
-            course.name = course_name
-            course.save()
-            messages.success(request, 'Course information have been updated!')
-            return HttpResponseRedirect(f"/edit_course/{course_id}")
-        except:
-            messages.error(request,'The platform could not process the request. Try again!')
-            return HttpResponseRedirect(f"/edit_course/{course_id}")
+        
+        form = EditCourse(request.POST)
+        if form.is_valid():
+            course_name = form.cleaned_data['courseName']
+            
+            try:
+                course = Course.objects.get(id=course_id)        
+                course.name = course_name
+                course.save()
+                messages.success(request, 'Course information have been updated!')
+                return HttpResponseRedirect(f"/edit_course/{course_id}")
+            except:
+                messages.error(request,'The platform could not process the request. Try again!')
+                return HttpResponseRedirect(f"/edit_course/{course_id}")
+        else:
+            pass
 
 
 

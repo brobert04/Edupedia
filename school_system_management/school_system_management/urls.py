@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 from school_system_management import settings
-from schoolManagementApp import views
+from schoolManagementApp import staff_views, student_views, views
 from schoolManagementApp import principal_views
 from schoolManagementApp.principal_views import principal_home
 from schoolManagementApp.views import showDemoPage, loginPage, getUserData, Logout
@@ -11,6 +11,8 @@ from schoolManagementApp.views import showDemoPage, loginPage, getUserData, Logo
 urlpatterns = [
     path('demo/', views.showDemoPage, name='DemoPage'),
     path('', views.loginPage, name='LoginPage'),
+    
+    # ADMIN PAGE URLS
     path('admin/', admin.site.urls, name="admin"),
     path('login', views.Login, name="login"),
     path('get_user_data', views.getUserData),
@@ -28,17 +30,21 @@ urlpatterns = [
     path('manage_student', principal_views.manage_student, name="manage_student"),
     path('manage_course', principal_views.manage_course, name="manage_course"),
     path('manage_subjects' , principal_views.manage_subjects, name="manage_subject"),
-    
     path('edit_staff/<str:staff_id>', principal_views.edit_staff, name="edit_staff"),
     path('edit_staff_information', principal_views.edit_staff_information, name="edit_staff_information"),
-    
     path('edit_student/<str:student_id>', principal_views.edit_student, name="edit_student"),
     path('edit_student_information', principal_views.edit_student_information, name="edit_student_information"),
-    
     path('edit_course/<str:course_id>', principal_views.edit_course, name="edit_course"),
     path('edit_course_information', principal_views.edit_course_information, name="edit_course_information"),
-    
     path('edit_subject/<str:subject_id>', principal_views.edit_subject, name="edit_subject"),    
-    path('edit_subject_information', principal_views.edit_subject_information, name="edit_subject_information")
+    path('edit_subject_information', principal_views.edit_subject_information, name="edit_subject_information"),
     
+    # STAFF PAGE URLS
+    path('staff_dashboard', staff_views.staff_home, name="staff_dashboard"),
+    
+    
+    
+    
+    # STUDENT PAGE URLS
+    path('student_dashboard', student_views.student_home, name="student_dashboard")
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
