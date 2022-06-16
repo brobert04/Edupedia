@@ -1,0 +1,48 @@
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
+
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} Add Session {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Add Session Years</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form role="form" action="/save_session_information" method="post">
+            {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Session Start Year</label>
+                    <input type="date"
+                    name="sessionStart" class="form-control form-control-border border-width-2" placeholder="Enter session start year">
+                </div>
+                <div class="form-group">
+                  <label>Session End Year</label>
+                  <input type="date"
+                  name="sessionEnd" class="form-control form-control-border border-width-2" placeholder="Enter session end year">
+              </div>
+                <div class="form-group">
+                  {%if messages%}
+                  {% for message in messages %}
+                  {% if message.tags == "error" %}
+                    <div id="fail" class="alert alert-danger">{{message}}</div>
+                  {% endif %}
+                  {% if message.tags == "success" %}
+                    <div id="fail" class="alert alert-success">{{message}}</div>
+                  {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Add New Session</button>
+              </div>
+            </form>
+          </div>
+    </div>
+</section>
+{% endblock main-content %}

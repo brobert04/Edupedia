@@ -4,11 +4,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+from django.urls import reverse
 from itsdangerous import NoneAlgorithm
 
 from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
 
-from schoolManagementApp.models import Course, Staff, Student, Subject, UserCustom
+from schoolManagementApp.models import Course, SessionYears, Staff, Student, Subject, UserCustom
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
@@ -92,8 +93,7 @@ def save_student_information(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             gender  = form.cleaned_data['gender']
-            startYear = form.cleaned_data['startDate']
-            endYear = form.cleaned_data['endDate']
+            session_id = form.cleaned_data['session_id']
             course_id = form.cleaned_data['course']
         
         
@@ -107,9 +107,9 @@ def save_student_information(request):
                 user = UserCustom.objects.create_user(username=username, password=password, email=email, last_name=last_name,first_name=first_name, user_type=3)
                 user.student.address = address
                 course_object = Course.objects.get(id=course_id)
-                user.student.courseId = course_object 
-                user.student.startYear = startYear
-                user.student.finishYear = endYear
+                user.student.courseId = course_object
+                session_year = SessionYears.object.get(id=session_id)
+                user.student.session_id = session_year 
                 user.student.gender = gender
                 user.student.profile_picture = profile_pic_url
                 user.save()
@@ -232,8 +232,7 @@ def edit_student(request, student_id):
     form.fields['address'].initial = student.address
     form.fields['course'].initial = student.courseId.id
     form.fields['course'].initial = student.courseId.id
-    form.fields['startDate'].initial = student.startYear
-    form.fields['endDate'].initial = student.finishYear
+    form.fields['session_id'].initial = student.session_id.id
     
     return render(request, 'principal_templates/edit_student.html', {"form":form, "id":student_id,"username": student.admin.username})
 
@@ -255,8 +254,7 @@ def edit_student_information(request):
             email = form.cleaned_data['email']
             course  = form.cleaned_data['course']
             gender = form.cleaned_data['gender']
-            start_year = form.cleaned_data['startDate']
-            end_year = form.cleaned_data['endDate']
+            session_id = form.cleaned_data['session_id']
             
             if request.FILES.get('profilePic', False):
                 profile_pic = request.FILES['profilePic']
@@ -277,8 +275,8 @@ def edit_student_information(request):
                 student  = Student.objects.get(admin=student_id)
                 student.address = address
                 student.gender = gender
-                student.startYear = start_year
-                student.finishYear = end_year
+                session_year = SessionYears.object.get(id=session_id)
+                student.session_id = session_year
                 if profile_pic_url != None:
                     student.profile_picture = profile_pic_url
                 course = Course.objects.get(id=course)
@@ -363,3 +361,24 @@ def edit_subject_information(request):
         except:
             messages.error(request,'The platform could not process the request. Try again!')
             return HttpResponseRedirect(f"/edit_subject/{subject_id}")
+
+
+def manage_session(request):
+    return render(request, "principal_templates/manage_session.html")
+
+
+def save_session_information(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        session_start = request.POST.get('sessionStart')
+        session_end = request.POST.get('sessionEnd') 
+        
+        try:
+            session  = SessionYears(startYear=session_start, endYear=session_end)
+            session.save()
+            messages.success(request, 'Session information have been saved!')
+            return HttpResponseRedirect(reverse(manage_session))
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse('manage_sesion'))

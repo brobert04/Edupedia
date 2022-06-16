@@ -38,9 +38,12 @@ urlpatterns = [
     path('edit_course_information', principal_views.edit_course_information, name="edit_course_information"),
     path('edit_subject/<str:subject_id>', principal_views.edit_subject, name="edit_subject"),    
     path('edit_subject_information', principal_views.edit_subject_information, name="edit_subject_information"),
-    
+    path("manage_session", principal_views.manage_session, name="manage_session"),
+    path('save_session_information', principal_views.save_session_information, name="save_session_information"),
     # STAFF PAGE URLS
     path('staff_dashboard', staff_views.staff_home, name="staff_dashboard"),
+    path("student_attendance", staff_views.student_attendance, name="student_attendance"),
+    path("get_students", staff_views.get_students, name="get_students"),
     
     
     

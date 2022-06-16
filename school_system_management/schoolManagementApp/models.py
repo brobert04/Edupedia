@@ -5,7 +5,12 @@ from django.dispatch import receiver
 
 
 # Create your models here.
-
+class SessionYears(models.Model):
+    id = models.AutoField(primary_key=True)
+    startYear = models.DateField()
+    endYear = models.DateField()
+    object = models.Manager()
+    
 class UserCustom(AbstractUser):
     user_type_data = ((1, "Admin"), (2, "Staff"), (3, "Student"))
     user_type = models.CharField(default=1, max_length=30, choices=user_type_data)
@@ -58,8 +63,7 @@ class Student(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
     courseId = models.ForeignKey(Course, on_delete=models.CASCADE)
-    startYear = models.DateField()
-    finishYear = models.DateField()
+    session_id = models.ForeignKey(SessionYears, on_delete=models.CASCADE)
 
 
 
@@ -70,6 +74,7 @@ class Attendance(models.Model):
     modifiedAt = models.DateTimeField(auto_now_add=True)
     date = models.DateTimeField(auto_now_add=True)
     subjectID = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    session_id = models.ForeignKey(SessionYears, on_delete=models.CASCADE)
 
 
 # MODELUL PENTRU RAPORTUL PREZENTEI LA CURSURI
@@ -149,7 +154,7 @@ def create_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staff.objects.create(admin=instance)
         if instance.user_type == 3:
-            Student.objects.create(admin=instance, courseId=Course.objects.get(id=1),startYear="2022-01-01", finishYear="2023-01-01", address="",profile_picture="",gender="")
+            Student.objects.create(admin=instance, courseId=Course.objects.get(id=1),session_id=SessionYears.object.get(id=1), address="",profile_picture="",gender="")
 
 
 # ACEASTA METODA VA FI EXECUTATA PENTRU A SALVA INFORMATIILE DUPA CE EXECUTIA FUNCTIEI DE MAI SUS SE VA FI TERMINAT

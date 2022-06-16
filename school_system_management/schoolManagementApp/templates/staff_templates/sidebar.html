@@ -35,11 +35,11 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            {% url 'add_staff' as add_staff %}
-            <a href="{% url 'add_staff' %}" class="nav-link {% if request.path == add_staff%} active {% endif %}">
-              <i class="nav-icon fas fa-plus"></i>
-              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
-                Add Staff
+            {% url 'student_attendance' as student_attendance %}
+            <a href="{% url 'student_attendance' %}" class="nav-link {% if request.path == student_attendance%} active {% endif %}">
+              <i class="nav-icon fas fa-calendar-check"></i>
+              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                Student Attendance
               </p>
             </a>
           </li>

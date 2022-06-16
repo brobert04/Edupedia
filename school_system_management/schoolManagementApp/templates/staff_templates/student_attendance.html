@@ -1,0 +1,93 @@
+
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Student Attendance {% endblock page_title %}
+{% block breadcrumb %}Dashboard{% endblock breadcrumb %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Student Attendance</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Subject</label>
+                   <select name="subject" class="form-control" id="subject">
+                    {% for subject in subjects %}
+                    <option value="{{subject.id}}">{{subject.name}}</option>
+                    {% endfor %}
+                   </select>
+                </div>
+                <div class="form-group">
+                    <label>Session</label>
+                   <select name="session" class="form-control" id="session">
+                       {% for s in session %}
+                       <option value="{{s.id}}">From {{s.startYear}} to {{s.endYear}}</option>
+                       {% endfor %}
+                   </select>
+                </div>
+                <div class="form-group">
+                  {%if messages%}
+                  {% for message in messages %}
+                  {% if message.tags == "error" %}
+                    <div id="fail" class="alert alert-danger">{{message}}</div>
+                  {% endif %}
+                  {% if message.tags == "success" %}
+                    <div id="fail" class="alert alert-success">{{message}}</div>
+                  {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="button" class="btn btn-primary" id="fetch_attendance">Fetch Student Attendance</button>
+              </div>
+              <div style="margin-top: 40px;" id="studentData">
+                <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
+
+              </div>
+          </div>
+    </div>
+</section>
+
+<!--IN CONTINUARE VOM FOLOSI AJAX PENTRU A FACE UN SCHIMB DE DATE CU SERVERUL SI A ARATA LISTA ELEVILOR PREZENTI LA CURSUL RESPECTIV-->
+{% block base_js %}
+<script>
+    $(document).ready(function(){
+        $("#fetch_attendance").click(function(){
+            var subject = $("#subject").val()
+            var session = $("#session").val()
+            $.ajax({
+                url: '{% url 'get_students' %}',
+                type: "POST",
+                data: {subject:subject, session:session}
+            })
+            .done(function(response){
+                var json_data = JSON.parse(response)
+                console.log(json_data)
+                var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Attendance List</h1><div class='row'>";
+                for(j in json_data){
+                    div_data += "<div class='col-lg-4'><div style='margin-bottom:10px; font-size:18px;' class='form-check'><input style='margin: 0 5px 0 30px;' type ='checkbox' checked='checked' name='studentData[]'' value='" +json_data[j]['id']+"'>"+json_data[j]['name']+"</div></div>";
+                }
+                div_data+="</div></div>"
+                $('#studentData').html(div_data);
+            })
+            .fail(function(){
+                alert("We could not fetch the students. Try again!")
+            })
+        })
+    })
+</script>
+{% endblock base_js %}
+
+{% endblock main-content %}
+
+font-size: 40px;
+font-weight: bold;
+margin: 0 0 20px
+px
+50px;
+color: red;
