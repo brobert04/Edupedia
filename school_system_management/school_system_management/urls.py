@@ -43,7 +43,9 @@ urlpatterns = [
     # STAFF PAGE URLS
     path('staff_dashboard', staff_views.staff_home, name="staff_dashboard"),
     path("student_attendance", staff_views.student_attendance, name="student_attendance"),
+    path("update_student_attendance", staff_views.update_student_attendance, name="update_student_attendance"),
     path("get_students", staff_views.get_students, name="get_students"),
+    path("attendance_data", staff_views.attendance_data, name="attendance_data"),
     
     
     

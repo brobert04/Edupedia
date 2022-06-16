@@ -72,7 +72,7 @@ class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
     subjectID = models.ForeignKey(Subject, on_delete=models.CASCADE)
     session_id = models.ForeignKey(SessionYears, on_delete=models.CASCADE)
 
