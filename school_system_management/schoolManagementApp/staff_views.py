@@ -2,10 +2,8 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from requests import session
-
 from schoolManagementApp.models import Attendance, AttendanceReport, SessionYears, Student, Subject
 from  django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
 def staff_home(request):
@@ -56,7 +54,60 @@ def attendance_data(request):
     except:
         return HttpResponse("Error")
 
-    
+
+# FUNCTIA PENTRU A RANDA PAGINA DE VERIFICARE SI VIZUALIZARE A PREZENTEI LA CURS   
 def update_student_attendance(request):
     subjects = Subject.objects.filter(staffId = request.user.id)
-    return render(request, "staff_templates/update_student_attendance.html", {"subjects": subjects})
+    session = SessionYears.object.all()
+    return render(request, "staff_templates/update_student_attendance.html", {"subjects": subjects, "session":session})
+
+
+# CU ACEASTA FUNCTIE SE REALIZEAZA PRELUAREA DATEI SI A MATERIEI PENTRU VERIFICAREA PREZENTEI LA CURS
+@csrf_exempt
+def get_att_data(request):
+    subject = request.POST.get("subject")
+    subject_object = Subject.objects.get(id=subject)
+    
+    session = request.POST.get("session")
+    session_object = SessionYears.object.get(id=session)
+    
+    attendance = Attendance.objects.filter(subjectID=subject_object,session_id=session_object)
+    attendance_data_list = []
+    
+    for a in attendance:
+        data={"id": a.id, "date": str(a.date), "session_id": a.session_id.id}
+        attendance_data_list.append(data)
+    return JsonResponse(json.dumps(attendance_data_list), safe=False)
+
+
+# CU ACESTA FUNCTIE SE REALIZEAZA PREZENTAREA SI DISPLAYING-UL ELEVILOR IN DIV-UL DIN JOSUL CHENARULUI CU VERIFICAREA PREZENTEI
+@csrf_exempt
+def show_student_data(request):   
+    attendance_date = request.POST.get("attendanceDate")
+    attendance = Attendance.objects.get(id=attendance_date)
+    print(attendance)
+    report = AttendanceReport.objects.filter(attendanceID=attendance)
+    data = []
+    for r in report:
+        r = {"id": r.studentID.admin.id, "name": f"{r.studentID.admin.first_name} {r.studentID.admin.last_name}", "status":r.status}
+        data.append(r) 
+        
+    return JsonResponse(json.dumps(data),content_type="application/json", safe=False)
+
+# CU ACESTA FUNCTIA SE REALIZEAZA UPDATAREA PREZENTEI IN CAZUL IN CARE FUSESE FACUTA GRESIT IN PRIMA INSTANTA
+@csrf_exempt
+def update_attendance_data(request):
+    students_id = request.POST.get("students_id")
+    attendance_date = request.POST.get("attendanceDate")
+    attendance = Attendance.objects.get(id=attendance_date)
+
+    new_student_data = json.loads(students_id)
+    try:
+        for s in new_student_data:
+            student = Student.objects.get(admin=s["id"])
+            report = AttendanceReport.objects.get(studentID=student,attendanceID=attendance)
+            report.status=s['status'];
+            report.save()
+        return HttpResponse("Saved")
+    except:
+        return HttpResponse("Error")

@@ -1,12 +1,12 @@
 
 {% extends 'staff_templates/base.html' %}
-{% block page_title %} View Student Attendance {% endblock page_title %}
+{% block page_title %} View & Edit Students Attendance {% endblock page_title %}
 {% block main-content %}
 <section class="content">
     <div class="container-fluid">
         <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">View Student Attendance</h3>
+              <h3 class="card-title">View & Edit Students Attendance</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -20,29 +20,33 @@
                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Session</label>
-                   <select name="session" class="form-control" id="session">
-                    
-                   </select>
-                </div>
-                <div class="form-group">
-                  {%if messages%}
-                  {% for message in messages %}
-                  {% if message.tags == "error" %}
-                    <div id="fail" class="alert alert-danger">{{message}}</div>
-                  {% endif %}
-                  {% if message.tags == "success" %}
-                    <div id="fail" class="alert alert-success">{{message}}</div>
-                  {% endif %}
+                  <label>Session</label>
+                 <select name="session" class="form-control" id="session">
+                  {% for s in session %}
+                  <option value="{{s.id}}">From {{s.startYear}} To {{s.endYear}}</option>
                   {% endfor %}
-                {% endif %}
+                 </select>
+              </div>
+              <div class="form-group" style="margin: 0 auto; display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-primary" id="view_attendance">Check attendance</button>
+              </div>
+              <div class="form-group" id="div_date">
+                <label>Attendance Date</label>
+               <select name="attendance-date" class="form-control" id="attendance-date">
+
+               </select>
+              </div>
+              <div class="form-group">
+                <div class="alert alert-danger" id="attendance-error" style="display: none; margin-top:40px;">
+
+              </div>
+              <div class="form-group" id="view_student" style="margin: 0 auto; display: flex; flex-direction: row; justify-content: center; margin-top: 30px;display:none;">
+                <button type="button" class="btn btn-primary" id="view_students">View Students</button>
+              </div>
               </div>
               </div>
               <!-- /.card-body -->
-              <div class="card-footer">
-                <button type="button" class="btn btn-primary" id="fetch_attendance">Fetch Student Attendance</button>
-              </div>
-              <div style="margin-top: 40px;" id="studentData" >
+              <div style="margin-top: 40px;" id="studentData" > 
                 <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
               </div>
           </div>
@@ -53,66 +57,107 @@
 {% block base_js %}
 <script>
     $(document).ready(function(){
-        $("#fetch_attendance").click(function(){
-            var subject = $("#subject").val()
-            var session = $("#session").val()
-            $.ajax({
-                url: '{% url 'get_students' %}',
-                type: "POST",
-                data: {subject:subject, session:session}
-            })
-            .done(function(response){
-                var json_data = JSON.parse(response)
-                console.log(json_data)
-                var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Attendance List</h1><label style='margin-left: 50px;'>Attendance Date: </label><input style='margin: 0 0 20px 50px;width: 50%;'type='date' name='attendanceDate' id='attendanceDate' class='form-control'</div><div class='form-group'><div class='row'>";
-                for(j in json_data){
-                    div_data += "<div class='col-lg-4'><div style='margin-bottom:10px; font-size:18px;' class='form-check'><input style='margin: 0 5px 0 30px;' type ='checkbox' checked='checked' name='studentData[]'' value='" +json_data[j]['id']+"'>"+json_data[j]['name']+"</div></div>";
-                }
-                div_data+="</div></div>"
-                div_data+="<div class='form-group'>";
-                div_data+="<button style='margin-left:50px;' type='button' class='btn btn-default' id='save_attendance_data'>Save Attendance Data</button>";
-                div_data+="</div>";
-                $('#studentData').html(div_data);
-            })
-            .fail(function(){
-                alert("We could not fetch the students. Try again!")
-            })
 
-            /*ACEASTA ESTE FUNCTIA CARE VA SALVA INFORMATIILE DESPRE PREZENTA FOLOSINDU-SE BUTONUL DE SAVE ATTENDANCE DATA*/
-            $(document).on("click", "#save_attendance_data", function(){
-              var studentData = $("input[name='studentData[]']").map(function(){
-                if($(this).is(":checked")){
-                  return {"id":$(this).val(), "status": 1};
-                }
-                else{
-                  return {"id":$(this).val(), "status": 0};
-                }
-                
-              }).get();
-              studentData = JSON.stringify(studentData)
+        $("#view_attendance").click(function(){
+            var subject_id = $("#subject").val();
+            var session_id = $("#session").val();
+          $.ajax({
+            url: '{% url 'get_att_data' %}',
+            type: "POST",
+            data: {subject:subject_id, session:session_id}
+        })
+        .done(function(response){
+          var jsonData = JSON.parse(response);
+          if (jsonData.length > 0){
+            var data_html = "";
+            for(j in jsonData){
+              data_html+="<option value="+jsonData[j]["id"]+">"+jsonData[j]["date"]+"</option>";
+            }
+            $("#attendance-error").html("");
+            $("#attendance-error").hide();
+            $("#div_date").show();
+            $('#view_student').show();
+            $("#view_student").css({"margin": "0 auto", "display": "flex" ,"flex-direction": "row", "justify-content": "center", "margin-top": "30px"});    
+            $("#attendance-date").html(data_html);
+          }
+          else{
+            $("#attendance-error").html("We did not find anything matching your search criteria. Try again!");
+            $("#attendance-error").show();
+            $("#div_date").hide()
+            $('#view_student').hide();
+            $("#attendance-date").html("");
+          }
+        })
+        .fail(function(){
+            alert("We could not process the attendance data. Try again!");
+        })
+        })
+        $("#view_students").click(function(){
+          var attendanceDate = $("#attendance-date").val();
+          console.log(attendanceDate);
+          $.ajax({
+              url: '{% url 'show_student_data' %}',
+              type: "POST",
+              data: {attendanceDate:attendanceDate}
+          })
+          .done(function(response){
+              var json_data = JSON.parse(response)
+              console.log(json_data)
+              var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Student List <span style='font-size: 15px; color:#73777B'>(checked means present, unchecked means absent)</span></h1></div><div class='form-group'><div class='row'>";
+              for(j in json_data){
+                  div_data += "<div class='col-lg-4'><div style='margin-bottom:10px; font-size:18px;'class='form-check'><input style='margin: 0 5px 0 30px;' type ='checkbox'";
+                  
+                  if(json_data[j]['status'] == 1){
+                    div_data+= "checked ='checked'";
+                  }
+                  else{
+                    div_data+="";
+                  }
 
-              var attendanceDate = $("#attendanceDate").val();
-              var subject_id = $("#subject").val();
-              var session_id = $("#session").val();
+                  div_data+="name='studentData[]'' value='" +json_data[j]['id']+"'>"+json_data[j]['name']+"</div></div>";
+              }
+              div_data+="</div></div>"
+              div_data+="<div class='form-group'>";
+              div_data+="<button style='margin-left:50px;' type='button' class='btn btn-default' id='save_attendance_data'>Update Attendance Data</button>";
+              div_data+="</div>";
+              $('#studentData').html(div_data);
+          })
+          .fail(function(){
+              alert("We could not fetch the students. Try again!")
+          })
 
-              $.ajax({
-                url: '{% url 'attendance_data' %}',
-                type: "POST",
-                data: {students_id:studentData, attendanceDate:attendanceDate, subject_id:subject_id, session_id:session_id}
-            })
-            .done(function(response){
-              if (response="Saved"){
-                alert("The attendance information have been saved!")
+           /*ACEASTA ESTE FUNCTIA CARE VA SALVA INFORMATIILE DESPRE PREZENTA FOLOSINDU-SE BUTONUL DE SAVE ATTENDANCE DATA*/
+           $(document).on("click", "#save_attendance_data", function(){
+            var studentData = $("input[name='studentData[]']").map(function(){
+              if($(this).is(":checked")){
+                return {"id":$(this).val(), "status": 1};
               }
               else{
-                alert("We could not process the saving of attendance information. Try again!")
+                return {"id":$(this).val(), "status": 0};
               }
-              location.reload();
-            })
-            .fail(function(){
-                alert("We could not save the attendance data. Try again!");
-            })
-            })
+              
+            }).get();
+            studentData = JSON.stringify(studentData)
+
+            var attendanceDate = $("#attendance-date").val();
+            $.ajax({
+              url: '{% url 'update_attendance_data' %}',
+              type: "POST",
+              data: {students_id:studentData, attendanceDate:attendanceDate}
+          })
+          .done(function(response){
+            if (response="Saved"){
+              alert("The attendance information have been saved!")
+            }
+            else{
+              alert("We could not process the saving of attendance information. Try again!")
+            }
+            location.reload();
+          })
+          .fail(function(){
+              alert("We could not save the attendance data. Try again!");
+          })
+          })
         })
     })
 </script>

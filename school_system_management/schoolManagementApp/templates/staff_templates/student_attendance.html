@@ -1,12 +1,12 @@
 
 {% extends 'staff_templates/base.html' %}
-{% block page_title %} Student Attendance {% endblock page_title %}
+{% block page_title %} Establish Student Attendance {% endblock page_title %}
 {% block main-content %}
 <section class="content">
     <div class="container-fluid">
         <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Student Attendance</h3>
+              <h3 class="card-title">Establish Student Attendance</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -30,7 +30,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                <button type="button" class="btn btn-primary" id="fetch_attendance">Fetch Student Attendance</button>
+                <button type="button" class="btn btn-primary" id="fetch_attendance">Check Student Attendance</button>
               </div>
               <div style="margin-top: 40px;" id="studentData" >
                 <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
@@ -43,6 +43,7 @@
 {% block base_js %}
 <script>
     $(document).ready(function(){
+      /*ODATA APASAT BUTONUL DE 'CHECK STUDENT ATTENDANCE' SE VOR PRELUA DATELE DIN BAZA DE DATE SI VOR FI ASEZATE INTR-UN DIV DINAMIC DIN JOSUL CHENARULUI*/
         $("#fetch_attendance").click(function(){
             var subject = $("#subject").val()
             var session = $("#session").val()
@@ -54,7 +55,7 @@
             .done(function(response){
                 var json_data = JSON.parse(response)
                 console.log(json_data)
-                var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Attendance List</h1><label style='margin-left: 50px;'>Attendance Date: </label><input style='margin: 0 0 20px 50px;width: 50%;'type='date' name='attendanceDate' id='attendanceDate' class='form-control'</div><div class='form-group'><div class='row'>";
+                var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Attendance List</h1><label style='margin-left: 50px;'>Attendance Date: </label><input style='margin: 0 0 20px 50px;width: 50%;' type='date' name='attendanceDate' id='attendanceDate' class='form-control'</div><div class='form-group'><div class='row'>";
                 for(j in json_data){
                     div_data += "<div class='col-lg-4'><div style='margin-bottom:10px; font-size:18px;' class='form-check'><input style='margin: 0 5px 0 30px;' type ='checkbox' checked='checked' name='studentData[]'' value='" +json_data[j]['id']+"'>"+json_data[j]['name']+"</div></div>";
                 }
@@ -68,6 +69,7 @@
                 alert("We could not fetch the students. Try again!")
             })
 
+            
             /*ACEASTA ESTE FUNCTIA CARE VA SALVA INFORMATIILE DESPRE PREZENTA FOLOSINDU-SE BUTONUL DE SAVE ATTENDANCE DATA*/
             $(document).on("click", "#save_attendance_data", function(){
               var studentData = $("input[name='studentData[]']").map(function(){

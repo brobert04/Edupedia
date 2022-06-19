@@ -46,7 +46,9 @@ urlpatterns = [
     path("update_student_attendance", staff_views.update_student_attendance, name="update_student_attendance"),
     path("get_students", staff_views.get_students, name="get_students"),
     path("attendance_data", staff_views.attendance_data, name="attendance_data"),
-    
+    path("get_att_data", staff_views.get_att_data, name="get_att_data"),
+    path("show_student_data", staff_views.show_student_data, name="show_student_data"),
+    path("update_attendance_data", staff_views.update_attendance_data, name="update_attendance_data"),
     
     
     

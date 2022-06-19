@@ -47,8 +47,8 @@
             {% url 'update_student_attendance' as update_student_attendance %}
             <a href="{% url 'update_student_attendance' %}" class="nav-link {% if request.path == update_student_attendance%} active {% endif %}">
               <i class="nav-icon fas fa-eye"></i>
-              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
-                View Attendance
+              <p style="font-size: 16px; font-weight: bold;margin-left: 5px;">
+                View & Edit Attendance
               </p>
             </a>
           </li>
