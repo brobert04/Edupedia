@@ -2,11 +2,6 @@
 {% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img src="{% static "dist/img/edupedia-logo.png" %}" alt="Edupedia Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span style="margin-left: 10px;" class="brand-text font-weight-bold">Edupedia</span>
-    </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
@@ -18,7 +13,6 @@
           <a href="#" class="d-block">{{user.username}}</a>
         </div>
       </div>
-
       <!-- SidebarSearch Form -->
       <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
@@ -39,7 +33,7 @@
             <a href="{% url 'student_attendance' %}" class="nav-link {% if request.path == student_attendance%} active {% endif %}">
               <i class="nav-icon fas fa-calendar-check"></i>
               <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
-                Student Attendance
+                Attendance
               </p>
             </a>
           </li>
@@ -52,9 +46,28 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            {% url 'staff_send_feedback' as staff_send_feedback %}
+            <a href="{% url 'staff_send_feedback' %}" class="nav-link {% if request.path == staff_send_feedback%} active {% endif %}">
+              <i class="nav-icon fas fa-comment"></i>
+              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                Send Feedback
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            {% url 'staff_applyfor_leave' as staff_applyfor_leave %}
+            <a href="{% url 'staff_applyfor_leave' %}" class="nav-link {% if request.path == staff_applyfor_leave%} active {% endif %}">
+              <i class="nav-icon fas fa-door-open"></i>
+              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                Leave Application
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
     </div>
+    
     <!-- /.sidebar -->
   </aside>

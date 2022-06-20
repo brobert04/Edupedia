@@ -40,7 +40,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
             
         # DACA USERUL NU ESTE AUTENTIFICAT, IL REDIRECTIONAM PENTRU A O REALIZA
         else:
-            if request.path == reverse("LoginPage") or request.path == reverse("login"):
+            if request.path == reverse("LoginPage") or request.path == reverse("login") or modulename == "django.contrib.auth.views":
                 pass
             else:
                 return HttpResponseRedirect(reverse("LoginPage"))

@@ -36,17 +36,16 @@ class AddStudent(forms.Form):
     courses = Course.objects.all()
     courses_list = []
     for c in courses:
-        list = (c.id, c.name)
-        courses_list.append(list)
-    
+            list = (c.id, c.name)
+            courses_list.append(list)
     
     sessions_list = []
     sessions = SessionYears.object.all()
     for s in sessions:
-        sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
-        sessions_list.append(sess)
-        
-        
+            sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
+            sessions_list.append(sess)
+
+    
     course = forms.ChoiceField(label="Course", choices=courses_list, widget=forms.Select(
         attrs={"class": "form-control"}))
     session_id = forms.ChoiceField(
@@ -81,14 +80,17 @@ class EditStudent(forms.Form):
     courses = Course.objects.all()
     courses_list = []
     for c in courses:
-        list = (c.id, c.name)
-        courses_list.append(list)
+            courses = Course.objects.all()
+            list = (c.id, c.name)
+            courses_list.append(list)
+
 
     sessions_list = []
     sessions = SessionYears.object.all()
     for s in sessions:
-        sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
-        sessions_list.append(sess)
+            sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
+            sessions_list.append(sess)
+ 
         
         
     course = forms.ChoiceField(label="Course", choices=courses_list, widget=forms.Select(

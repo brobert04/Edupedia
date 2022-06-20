@@ -29,6 +29,9 @@
       text-align: center;
       margin: 20px auto;
     }
+    #passwordReset:hover{
+      text-decoration: underline;
+    }
   </style>
 
 </head>
@@ -64,6 +67,10 @@
           <!-- /.col -->
           <div class="col-12">
             <button type="submit" class="btn btn-primary btn-block">Log In</button>
+          </div>
+          <div class="col-12 text-center mt-4">
+            <a id="passwordReset" href="{% url 'password_reset' %}" style="
+            color: black;">Forgot your Password?</a>
           </div>
           <div class="row">
             {%if messages%}

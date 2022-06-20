@@ -1,0 +1,26 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: bercaru280804robert@gmail.com
+Date: Mon, 20 Jun 2022 12:01:08 -0000
+Message-ID: <165572646886.51779.18120569459165484557@bercarurobert>
+
+
+
+You're receiving this email because you requested a password reset for your user account at edupedia.com.
+
+Please go to the following page and choose a new password:
+http://127.0.0.1:8000/accounts/reset/MQ/b7bg1w-bf2667c60db2118779053fc36393cf2d/
+(if the link is not working, copy it and paste it in the URL browser box.)
+
+
+Your username, in case you’ve forgotten: admin
+Thanks for using our platform!
+
+
+The Edupedia team <3
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------

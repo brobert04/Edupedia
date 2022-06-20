@@ -1,9 +1,11 @@
 import json
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from requests import session
-from schoolManagementApp.models import Attendance, AttendanceReport, SessionYears, Student, Subject
+from schoolManagementApp.models import Attendance, AttendanceReport, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, Student, Subject
 from  django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
 def staff_home(request):
@@ -111,3 +113,50 @@ def update_attendance_data(request):
         return HttpResponse("Saved")
     except:
         return HttpResponse("Error")
+    
+
+def staff_send_feedback(request):
+    staff = Staff.objects.get(admin=request.user.id)
+    feedback = FeedbackStaff.objects.filter(staffID=staff)
+    return render(request, "staff_templates/staff_send_feedback.html", {"feedback": feedback})
+
+def staff_feedback(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        feedback_msg = request.POST.get("feedbackMessage")
+        staff = Staff.objects.get(admin = request.user.id)
+        
+        try:
+            feedback = FeedbackStaff(staffID=staff, feedback=feedback_msg, feedbackReply="")
+            feedback.save()
+            messages.success(request, 'Your feedback has been sent!' )
+            return HttpResponseRedirect(reverse("staff_send_feedback"))
+        except:
+            messages.error(request, 'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse("staff_send_feedback"))
+
+
+def staff_applyfor_leave(request):
+    staff = Staff.objects.get(admin=request.user.id)
+    data  = LeaveReportStaff.objects.filter(staffID=staff)
+    return render(request, "staff_templates/staff_leave_application.html", {"leaveData": data})
+
+ 
+def staff_send_leave(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        leave_date = request.POST.get("leave_date")
+        leave_reason = request.POST.get("leave_reason")
+        
+        staff = Staff.objects.get(admin=request.user.id)
+        
+        try:
+            report = LeaveReportStaff(leaveDate=leave_date, staffID=staff,leaveMessage=leave_reason, status=0)
+            report.save()
+            messages.success(request, 'Your leave application has been sent and it will be reviewed by the principal!' )
+            return HttpResponseRedirect('/staff_applyfor_leave')
+        except:
+            messages.error(request, 'The platform could not process the request. Try again!')
+            return HttpResponseRedirect('/staff_applyfor_leave')

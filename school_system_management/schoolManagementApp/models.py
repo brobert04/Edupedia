@@ -95,16 +95,18 @@ class LeaveReportStudent(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
     leaveDate = models.CharField(max_length=300)
+    leaveMessage = models.TextField()
 
 
 # MODELUL PENTRU INREGISTRAREA PROFESORILOR CARE PARASESC SCOALA   
 class LeaveReportStaff(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    status = models.IntegerField(default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
     leaveDate = models.CharField(max_length=300)
+    leaveMessage = models.TextField()
 
 
 # MODEL PENTRU INREGISTRAREA FEEDBACK-ULUI ELEVULUI
@@ -121,7 +123,7 @@ class FeedbackStudent(models.Model):
 class FeedbackStaff(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
-    feedback = models.CharField(max_length=255)
+    feedback = models.TextField()
     feedbackReply = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)

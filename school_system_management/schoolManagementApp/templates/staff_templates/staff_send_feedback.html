@@ -1,0 +1,68 @@
+
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Send Feedback To Principal{% endblock page_title %}
+{% block additional_message %} (About classes, students, teachers etc.){% endblock additional_message %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary" style="margin-bottom: 65px">
+            <div class="card-header">
+              <h3 class="card-title">Compose Your Feedback Message</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form action="{% url 'staff_feedback' %}" method="post">
+            {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Feedback Message</label>
+                    <textarea name="feedbackMessage" id="feedbackMessage" rows="6" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    {%if messages%}
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                      <div id="fail" class="alert alert-danger">{{message}}</div>
+                    {% endif %}
+                    {% if message.tags == "success" %}
+                      <div id="fail" class="alert alert-success">{{message}}</div>
+                    {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit Feedback</button>
+              </div>
+          </div>
+        </form>
+    </div>
+
+    <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Feedback History</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+            <tr style="text-align: center;">
+                <th>ID</th>
+                <th>Feedback Message</th>
+                <th>Reply</th>
+            </tr>
+            {% for f in feedback  %}
+            <tr style="text-align: center;">
+                <td>{{f.id}}</td>
+                <td>{{f.feedback}}</td>
+                <td>{{f.feedbackReply}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</section>
+{% block base_js %}
+{% endblock base_js %}
+{% endblock main-content %}
+

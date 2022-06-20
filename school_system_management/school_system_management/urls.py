@@ -1,5 +1,6 @@
+import django
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.conf.urls.static import static
 from school_system_management import settings
 from schoolManagementApp import staff_views, student_views, views
@@ -11,7 +12,7 @@ from schoolManagementApp.views import showDemoPage, loginPage, getUserData, Logo
 urlpatterns = [
     path('demo/', views.showDemoPage, name='DemoPage'),
     path('', views.loginPage, name='LoginPage'),
-    
+    path('accounts/', include('django.contrib.auth.urls')),
     # ADMIN PAGE URLS
     path('admin/', admin.site.urls, name="admin"),
     path('login', views.Login, name="login"),
@@ -49,6 +50,10 @@ urlpatterns = [
     path("get_att_data", staff_views.get_att_data, name="get_att_data"),
     path("show_student_data", staff_views.show_student_data, name="show_student_data"),
     path("update_attendance_data", staff_views.update_attendance_data, name="update_attendance_data"),
+    path("staff_send_feedback", staff_views.staff_send_feedback, name="staff_send_feedback"),
+    path("staff_feedback", staff_views.staff_feedback, name="staff_feedback"),
+    path("staff_applyfor_leave", staff_views.staff_applyfor_leave, name="staff_applyfor_leave"),
+    path("staff_send_leave", staff_views.staff_send_leave, name="staff_send_leave"),
     
     
     
