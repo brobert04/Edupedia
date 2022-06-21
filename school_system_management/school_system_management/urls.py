@@ -58,5 +58,7 @@ urlpatterns = [
     
     
     # STUDENT PAGE URLS
-    path('student_dashboard', student_views.student_home, name="student_dashboard")
+    path('student_dashboard', student_views.student_home, name="student_dashboard"),
+    path('student_view_attendance', student_views.student_view_attendance, name="student_view_attendance"),
+    path("student_view_attendance_data", student_views.student_view_attendance_data, name="student_view_attendance_data")
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

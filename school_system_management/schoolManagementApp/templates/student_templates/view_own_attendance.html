@@ -1,0 +1,50 @@
+
+{% extends 'student_templates/base.html' %}
+{% block page_title %} Check Attendance {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Check {{request.user}}'s Attendance</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form action="{% url 'student_view_attendance_data' %}" method="post">
+              {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Subject</label>
+                   <select name="subject" class="form-control" id="subject">
+                    {% for subject in subjects %}
+                    <option value="{{subject.id}}">{{subject.name}}</option>
+                    {% endfor %}
+                   </select>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" name="startDate" id="startDate" class="form-control" placeholder="Start Date">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" name="endDate" id="endDate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary" id="fetch_attendance">Check Attendance</button>
+              </div>
+            </form>
+          </div>
+    </div>
+</section>
+
+
+{% endblock main-content %}
+
