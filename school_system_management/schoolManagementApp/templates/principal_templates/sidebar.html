@@ -128,7 +128,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/student_feedback" class="nav-link">
+            {% url 'student_feedback_reply' as student_feedback_reply %}
+            <a href="{% url 'student_feedback_reply' %}" class="nav-link {% if request.path == student_feedback_reply%} active {% endif %}">
               <i class="nav-icon fas fa-comment-dots"></i>
               <p style="font-size: 18px; font-weight: bold;
               margin-left: 20px;">
@@ -137,7 +138,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/staff_feedback" class="nav-link">
+            {% url 'staff_feedback_reply' as staff_feedback_reply %}
+            <a href="{% url 'staff_feedback_reply' %}" class="nav-link {% if request.path == staff_feedback_reply%} active {% endif %}">
               <i class="nav-icon fas fa-comment-dots"></i>
               <p style="font-size: 18px; font-weight: bold;
               margin-left: 20px;">

@@ -1,8 +1,10 @@
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib import messages
+from django.urls import reverse
 
-from schoolManagementApp.models import Attendance, AttendanceReport, Course, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom
 
 
 def student_home(request):
@@ -31,3 +33,49 @@ def student_view_attendance_data(request):
     attendance_report = AttendanceReport.objects.filter(attendanceID__in=attendance, studentID=student)
 
     return render(request, "student_templates/own_attendance_data.html", {"report": attendance_report, "subject": subject_object})
+
+def student_send_feedback(request):
+    student = Student.objects.get(admin=request.user.id)
+    feedback = FeedbackStudent.objects.filter(studentID=student)
+    return render(request, "student_templates/student_send_feedback.html", {"feedback": feedback})
+
+def student_feedback(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        feedback_msg = request.POST.get("feedbackMessage")
+        student = Student.objects.get(admin = request.user.id)
+        
+        try:
+            feedback = FeedbackStudent(studentID=student, feedback=feedback_msg, feedbackReply="")
+            feedback.save()
+            messages.success(request, 'Your feedback has been sent!' )
+            return HttpResponseRedirect(reverse("student_send_feedback"))
+        except:
+            messages.error(request, 'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse("student_send_feedback"))
+
+
+def student_applyfor_leave(request):
+    student = Student.objects.get(admin=request.user.id)
+    data  = LeaveReportStudent.objects.filter(studentID=student)
+    return render(request, "student_templates/student_leave_application.html", {"leaveData": data})
+
+
+def student_send_leave(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        leave_date = request.POST.get("leave_date") 
+        leave_reason = request.POST.get("leave_reason")
+        
+        student = Student.objects.get(admin=request.user.id)
+        
+        try:
+            report = LeaveReportStudent(leaveDate=leave_date, studentID=student,leaveMessage=leave_reason, status=0)
+            report.save()
+            messages.success(request, 'Your leave application has been sent and it will be reviewed by the principal!' )
+            return HttpResponseRedirect('/student_applyfor_leave')
+        except:
+             messages.error(request, 'The platform could not process the request. Try again!')
+             return HttpResponseRedirect('/student_applyfor_leave')

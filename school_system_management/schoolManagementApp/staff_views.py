@@ -114,12 +114,13 @@ def update_attendance_data(request):
     except:
         return HttpResponse("Error")
     
-
+# ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A RANDA PAGINA DE FEEDBACK A STAFF-ULUI SI ULTERIOR PERMITE PAGINII SA FOLOESASCA MESAJELE DE FEEDBACK EXISTENTE IN BAZA DE DATE PENTRU A LE INCLUDE INTR UN TABEL
 def staff_send_feedback(request):
     staff = Staff.objects.get(admin=request.user.id)
     feedback = FeedbackStaff.objects.filter(staffID=staff)
     return render(request, "staff_templates/staff_send_feedback.html", {"feedback": feedback})
 
+# ACEASTA FUNCTIE ARE ROLUL DE A SALVA FEEDBACK UL STAFF ULUI IN BAZA DE DATE
 def staff_feedback(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -137,12 +138,13 @@ def staff_feedback(request):
             return HttpResponseRedirect(reverse("staff_send_feedback"))
 
 
+# ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A RANDA PAGINA PENTRU CEREREA DE CONCEDIU SAU CEREREA DE A SI LUA LIBER A STAFF ULUI IN CAZUL UNEI PROBLEME PERSOANALE
 def staff_applyfor_leave(request):
     staff = Staff.objects.get(admin=request.user.id)
     data  = LeaveReportStaff.objects.filter(staffID=staff)
     return render(request, "staff_templates/staff_leave_application.html", {"leaveData": data})
 
- 
+#  ACEASTA FUNCTIE ARE ROLUL DE A SALVA CEREREA DE CONCEDIU SAU DE PROBLEMA IN BAZA DE DATE
 def staff_send_leave(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')

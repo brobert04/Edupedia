@@ -5,11 +5,13 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.urls import reverse
+from httplib2 import Http
 from itsdangerous import NoneAlgorithm
+from  django.views.decorators.csrf import csrf_exempt
 
 from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
 
-from schoolManagementApp.models import Course, SessionYears, Staff, Student, Subject, UserCustom
+from schoolManagementApp.models import Course, FeedbackStaff, FeedbackStudent, SessionYears, Staff, Student, Subject, UserCustom
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
@@ -363,10 +365,12 @@ def edit_subject_information(request):
             return HttpResponseRedirect(f"/edit_subject/{subject_id}")
 
 
+# FUNCTIA PENRU A RANDA PAGINA DE SELECTARE A DURATEI SESIUNII
 def manage_session(request):
     return render(request, "principal_templates/manage_session.html")
 
 
+# FUNCTIA PENTRU A SALVA INFORMATIILE DESPRE NOUA SESIUNE IN BAZA DE DATE
 def save_session_information(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -382,3 +386,61 @@ def save_session_information(request):
         except:
             messages.error(request,'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse('manage_sesion'))
+        
+
+# ACESTA DOUA FUNCTII SUNT UTILIZATE PENTRU A VERIFICA DACA USERNAME UL SI EMAIL UL AU MAI FOST ASOCIATE ALTUI CONT
+@csrf_exempt
+def check_if_email_exist(request):
+    email  = request.POST.get("email")
+    user = UserCustom.objects.filter(email=email).exists()
+    if user:
+        return HttpResponse(True)
+    else:
+         return HttpResponse(False)
+     
+     
+@csrf_exempt
+def check_if_username_exist(request):
+    username  = request.POST.get("username")
+    user = UserCustom.objects.filter(username=username).exists()
+    if user:
+        return HttpResponse(True)
+    else:
+         return HttpResponse(False)
+
+
+def staff_feedback_reply(request):
+    feedback = FeedbackStaff.objects.all()
+    return render(request, "principal_templates/staff_feedback_template.html", {"feedback": feedback})
+
+@csrf_exempt
+def staff_feedback_reply_message(request):
+    feedback_id = request.POST.get("id")
+    feedback_message  = request.POST.get("message")
+    
+    try:
+        feedback  = FeedbackStaff.objects.get(id=feedback_id)
+        feedback.feedbackReply = feedback_message;
+        feedback.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False") 
+    
+
+
+def student_feedback_reply(request):
+    feedback = FeedbackStudent.objects.all()
+    return render(request, "principal_templates/student_feedback_template.html", {"feedback": feedback})
+
+
+@csrf_exempt
+def student_feedback_reply_message(request):
+    feedback_id = request.POST.get("id")
+    feedback_message  = request.POST.get("message")
+    try:
+        feedback  = FeedbackStudent.objects.get(id=feedback_id)
+        feedback.feedbackReply = feedback_message;
+        feedback.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False") 

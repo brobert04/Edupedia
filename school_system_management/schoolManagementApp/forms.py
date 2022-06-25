@@ -10,11 +10,11 @@ class CustomDateInput(forms.DateInput):
 # FORMULARUL PENTRU ADAUGARE STUDENT
 class AddStudent(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control", "autocomplete:": "off"}))
     lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     profilePic = forms.FileField(label="Profile Picture", max_length=50)
     gender_choice = (
         ("Male", "Male"),
@@ -25,11 +25,11 @@ class AddStudent(forms.Form):
     gender = forms.ChoiceField(label="Gender", choices=gender_choice, widget=forms.Select(
         attrs={"class": "form-control"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control", "autocomplete:": "off"}))
     password = forms.CharField(label="Password", max_length=50,
                                widget=forms.PasswordInput(attrs={"class": "form-control"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
 
     # PRELUAM TOATE CURSURILE DIN BAZA DE DATE, CREEM O LISTA CU ELE SI ITERAM PESTE ACESTEA ADAUGANDU-LE IN LISTA SI ULTERIOR LA ADAUGAM IN FORMULAR
     
@@ -55,11 +55,11 @@ class AddStudent(forms.Form):
 # FORMULARUL PENTRU EDITARE STUDENT
 class EditStudent(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     profilePic = forms.FileField(
         label="Profile Picture", max_length=50, required=False)
     gender_choice = (
@@ -71,9 +71,9 @@ class EditStudent(forms.Form):
     gender = forms.ChoiceField(label="Gender", choices=gender_choice, widget=forms.Select(
         attrs={"class": "form-control"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
 
     # PRELUAM TOATE CURSURILE DIN BAZA DE DATE, CREEM O LISTA CU ELE SI ITERAM PESTE ACESTEA ADAUGANDU-LE IN LISTA SI ULTERIOR LA ADAUGAM IN FORMULAR
     
@@ -102,15 +102,15 @@ class EditStudent(forms.Form):
 # FORMULARUL PENTRU ADAUGARE STAFF
 class AddStaff(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     password = forms.CharField(label="Password", max_length=50,
                                widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
@@ -118,15 +118,15 @@ class AddStaff(forms.Form):
 # FORMULARUL PENTRU EDITARE STAFF
 class EditStaff(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
-        attrs={"class": "form-control"}))
+        attrs={"class": "form-control","autocomplete:": "off"}))
 
 
 # FORMULARUL PENTRU ADAUGARE CURS

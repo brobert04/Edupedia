@@ -1,0 +1,109 @@
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} Answer Staff Feedback{% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Reply to staff's feedback</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="table">
+                <table class="table" style="text-align: center;">
+                    <tr>
+                        <th>Feedback ID</th>
+                        <th>Staff Name</th>
+                        <th>Feedback Message</th>
+                        <th>Date</th>
+                        <th>Reply</th>
+                    </tr>
+                    {% for f in feedback %}
+                    <tr>
+                        <td>{{f.id}}</td>
+                        <td>{{f.staffID.admin.first_name}} {{f.staffID.admin.last_name}}</td>
+                        <td>{{f.feedback}}</td>
+                        <td>{{f.createdAt}}</td>
+                        <td style="color:red;">
+                            {% if f.feedbackReply == "" %} 
+                            <button class="btn btn-primary reply_button" data-toggle="modal" data-target="#reply_student">Reply</button>
+                            {% else %}
+                            {{f.feedbackReply}} 
+                            {% endif %}
+                        </td>
+                    </tr>
+                    
+                    
+                    {% endfor %}
+                </table>
+            </div>
+          </div>
+    </div>
+</section>
+
+
+<!-- Modal -->
+<div id="reply_student" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 20px;">
+        <p>Reply to <span id="reply_name" style="color:red; font-weight:bold;">{{f.studentID.admin.first_name}} {{f.studentID.admin.last_name}}</span></p>
+        <input type="hidden" id="reply_id" name="reply_id">
+        <textarea class="form-control" id="reply_message" rows="5"></textarea>
+        <button id="reply-button" style="margin-top: 25px;" class="btn btn-primary">Send Reply</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock main-content %}
+
+{% block base_js %}
+
+<script>
+    $(document).ready(function(){
+        $(".reply_button").click(function(){
+          var id = $(this).parents('tr').children("td:eq(0)").text();;
+          var name = $(this).parents('tr').children("td:eq(1)").text();
+          $("#reply_id").val(id);
+          $("#reply_name").text(name);
+        });
+
+
+        $(document).on("click", "#reply-button", function(){
+
+          var id = $("#reply_id").val();
+          var message = $("#reply_message").val();
+          console.log(id);
+          console.log(message)
+          $.ajax({
+            url: '{% url 'staff_feedback_reply_message' %}',
+            type: "POST",
+            data: {id:id, message:message}
+        })
+        .done(function(response){
+          if (response="True"){
+            alert("The reply has been sent!")
+            location.reload();
+          }
+          else{
+            alert("We could not process the reply. Try again!")
+          }
+        })
+        .fail(function(){
+            alert("We could not send the reply. Try again!");
+        })
+        })
+    })
+</script>
+
+{% endblock base_js %}
+
+
+

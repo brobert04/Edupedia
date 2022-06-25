@@ -41,6 +41,15 @@ urlpatterns = [
     path('edit_subject_information', principal_views.edit_subject_information, name="edit_subject_information"),
     path("manage_session", principal_views.manage_session, name="manage_session"),
     path('save_session_information', principal_views.save_session_information, name="save_session_information"),
+    path("check_if_email_exist", principal_views.check_if_email_exist, name="check_if_email_exist"),
+    path("check_if_username_exist", principal_views.check_if_username_exist, name="check_if_username_exist"),
+    path("student_feedback_reply", principal_views.student_feedback_reply, name="student_feedback_reply"),
+    path("staff_feedback_reply", principal_views.staff_feedback_reply, name="staff_feedback_reply"),
+    path("student_feedback_reply_messasge", principal_views.student_feedback_reply_message, name="student_feedback_reply_message"),
+    path("staff_feedback_reply_message", principal_views.staff_feedback_reply_message, name="staff_feedback_reply_message"),
+    
+    
+    
     # STAFF PAGE URLS
     path('staff_dashboard', staff_views.staff_home, name="staff_dashboard"),
     path("student_attendance", staff_views.student_attendance, name="student_attendance"),
@@ -60,5 +69,11 @@ urlpatterns = [
     # STUDENT PAGE URLS
     path('student_dashboard', student_views.student_home, name="student_dashboard"),
     path('student_view_attendance', student_views.student_view_attendance, name="student_view_attendance"),
-    path("student_view_attendance_data", student_views.student_view_attendance_data, name="student_view_attendance_data")
+    path("student_view_attendance_data", student_views.student_view_attendance_data, name="student_view_attendance_data"),
+    
+    path("student_send_feedback", student_views.student_send_feedback, name="student_send_feedback"),
+    path("student_feedback", student_views.student_feedback, name="student_feedback"),
+    
+    path("student_applyfor_leave", student_views.student_applyfor_leave, name="student_applyfor_leave"),
+    path("student_send_leave", student_views.student_send_leave, name="student_send_leave"),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
