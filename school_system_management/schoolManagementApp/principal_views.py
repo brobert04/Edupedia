@@ -1,6 +1,7 @@
 # ACEASTA PAGINA CONTINE FUNCTIILE NECESARE FUNCTIONARII PAGINI DE ADMIN/DIRECTOR
+import json
 from unicodedata import name
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
@@ -11,7 +12,7 @@ from  django.views.decorators.csrf import csrf_exempt
 
 from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
 
-from schoolManagementApp.models import Course, FeedbackStaff, FeedbackStudent, SessionYears, Staff, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, FeedbackStudent, LeaveReportStaff, LeaveReportStudent, SessionYears, Staff, Student, Subject, UserCustom
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
@@ -409,6 +410,8 @@ def check_if_username_exist(request):
          return HttpResponse(False)
 
 
+
+# ACESTE PATRU FUNCTII SUNT RESPONSABILE PENTRU POSIBILITATEA ADMINULUI DE A RASPUNDE LA FEEDBACK UL ADRESAT DE STAFF SI STUDENT DIRECTORULUI
 def staff_feedback_reply(request):
     feedback = FeedbackStaff.objects.all()
     return render(request, "principal_templates/staff_feedback_template.html", {"feedback": feedback})
@@ -444,3 +447,78 @@ def student_feedback_reply_message(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False") 
+    
+    
+
+
+def student_leave_request(request):
+    requests = LeaveReportStudent.objects.all();
+    return render(request, "principal_templates/student_leave_request.html", {"request": requests})
+
+def approve_student_leave(request, leave_id):
+    leave = LeaveReportStudent.objects.get(id=leave_id)
+    leave.status = 1
+    leave.save()
+    return HttpResponseRedirect(reverse('student_leave_request'))
+
+def reject_student_leave(request, leave_id):
+    leave = LeaveReportStudent.objects.get(id=leave_id)
+    leave.status = 2
+    leave.save()
+    return HttpResponseRedirect(reverse('student_leave_request'))
+
+
+def staff_leave_request(request):
+    requests = LeaveReportStaff.objects.all()
+    return render(request, "principal_templates/staff_leave_request.html", {"request": requests})
+
+
+def approve_staff_leave(request, leave_id):
+    leave = LeaveReportStaff.objects.get(id=leave_id)
+    leave.status = 1
+    leave.save()
+    return HttpResponseRedirect(reverse('staff_leave_request'))
+
+
+def reject_staff_leave(request, leave_id):
+    leave = LeaveReportStaff.objects.get(id=leave_id)
+    leave.status = 2
+    leave.save()
+    return HttpResponseRedirect(reverse('staff_leave_request'))
+
+
+
+def principal_view_attendance_data(request):
+    subjects = Subject.objects.all()
+    session = SessionYears.object.all()
+    return render(request, "principal_templates/view_student_attendance_report.html", {"subjects": subjects, "session":session})
+
+
+@csrf_exempt
+def admin_get_att_data(request):
+    subject = request.POST.get("subject")
+    subject_object = Subject.objects.get(id=subject)
+    
+    session = request.POST.get("session")
+    session_object = SessionYears.object.get(id=session)
+    
+    attendance = Attendance.objects.filter(subjectID=subject_object,session_id=session_object)
+    attendance_data_list = []
+    
+    for a in attendance:
+        data={"id": a.id, "date": str(a.date), "session_id": a.session_id.id}
+        attendance_data_list.append(data)
+    return JsonResponse(json.dumps(attendance_data_list), safe=False)
+
+@csrf_exempt
+def admin_show_student_data(request):
+    attendance_date = request.POST.get("attendanceDate")
+    attendance = Attendance.objects.get(id=attendance_date)
+    print(attendance)
+    report = AttendanceReport.objects.filter(attendanceID=attendance)
+    data = []
+    for r in report:
+        r = {"id": r.studentID.admin.id, "name": f"{r.studentID.admin.first_name} {r.studentID.admin.last_name}", "status":r.status}
+        data.append(r) 
+        
+    return JsonResponse(json.dumps(data),content_type="application/json", safe=False)

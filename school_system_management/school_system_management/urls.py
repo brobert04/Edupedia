@@ -47,6 +47,15 @@ urlpatterns = [
     path("staff_feedback_reply", principal_views.staff_feedback_reply, name="staff_feedback_reply"),
     path("student_feedback_reply_messasge", principal_views.student_feedback_reply_message, name="student_feedback_reply_message"),
     path("staff_feedback_reply_message", principal_views.staff_feedback_reply_message, name="staff_feedback_reply_message"),
+    path("student_leave_request", principal_views.student_leave_request, name="student_leave_request"),
+    path("staff_leave_request", principal_views.staff_leave_request, name="staff_leave_request"),
+    path("approve_student_leave/<str:leave_id>", principal_views.approve_student_leave, name="approve_student_leave"),
+    path("reject_student_leave/<str:leave_id>", principal_views.reject_student_leave, name="reject_student_leave"),
+    path("approve_staff_leave/<str:leave_id>", principal_views.approve_staff_leave, name="approve_staff_leave"),
+    path("reject_staff_leave/<str:leave_id>", principal_views.reject_staff_leave, name="reject_staff_leave"),
+    path("principal_view_attendance_data", principal_views.principal_view_attendance_data, name="principal_view_attendance_data"),
+    path("admin_get_att_data", principal_views.admin_get_att_data, name="admin_get_att_data"),
+    path("admin_show_student_data", principal_views.admin_show_student_data, name="admin_show_student_data"),
     
     
     

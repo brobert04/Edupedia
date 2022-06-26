@@ -1,0 +1,130 @@
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} View Attendance {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">View Attendance</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+              <div class="card-body">
+                <div class="form-group">
+                    <label>Subject</label>
+                   <select name="subject" class="form-control" id="subject">
+                    {% for subject in subjects %}
+                    <option value="{{subject.id}}">{{subject.name}}</option>
+                    {% endfor %}
+                   </select>
+                </div>
+                <div class="form-group">
+                  <label>Session</label>
+                 <select name="session" class="form-control" id="session">
+                  {% for s in session %}
+                  <option value="{{s.id}}">From {{s.startYear}} To {{s.endYear}}</option>
+                  {% endfor %}
+                 </select>
+              </div>
+              <div class="form-group" style="margin: 0 auto; display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-primary" id="view_attendance">Check attendance</button>
+              </div>
+              <div class="form-group" id="div_date">
+                <label>Attendance Date</label>
+               <select name="attendance-date" class="form-control" id="attendance-date">
+
+               </select>
+              </div>
+              <div class="form-group">
+                <div class="alert alert-danger" id="attendance-error" style="display: none; margin-top:40px;">
+
+              </div>
+              <div class="form-group" id="view_student" style="margin: 0 auto; display: flex; flex-direction: row; justify-content: center; margin-top: 30px;display:none;">
+                <button type="button" class="btn btn-primary" id="view_students">View Students</button>
+              </div>
+              </div>
+              </div>
+              <!-- /.card-body -->
+              <div style="margin-top: 40px;" id="studentData" > 
+                <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
+              </div>
+          </div>
+    </div>
+</section>
+
+<!--IN CONTINUARE VOM FOLOSI AJAX PENTRU A FACE UN SCHIMB DE DATE CU SERVERUL SI A ARATA LISTA ELEVILOR PREZENTI/INSCRISI LA CURSUL/MATERIA RESPECTIV/A-->
+{% block base_js %}
+<script>
+    $(document).ready(function(){
+
+        $("#view_attendance").click(function(){
+            var subject_id = $("#subject").val();
+            var session_id = $("#session").val();
+          $.ajax({
+            url: '{% url 'admin_get_att_data' %}',
+            type: "POST",
+            data: {subject:subject_id, session:session_id}
+        })
+        .done(function(response){
+          var jsonData = JSON.parse(response);
+          if (jsonData.length > 0){
+            var data_html = "";
+            for(j in jsonData){
+              data_html+="<option value="+jsonData[j]["id"]+">"+jsonData[j]["date"]+"</option>";
+            }
+            $("#attendance-error").html("");
+            $("#attendance-error").hide();
+            $("#div_date").show();
+            $('#view_student').show();
+            $("#view_student").css({"margin": "0 auto", "display": "flex" ,"flex-direction": "row", "justify-content": "center", "margin-top": "30px"});    
+            $("#attendance-date").html(data_html);
+          }
+          else{
+            $("#attendance-error").html("We did not find anything matching your search criteria. Try again!");
+            $("#attendance-error").show();
+            $("#div_date").hide()
+            $('#view_student').hide();
+            $("#attendance-date").html("");
+          }
+        })
+        .fail(function(){
+            alert("We could not process the attendance data. Try again!");
+        })
+        })
+        $("#view_students").click(function(){
+          var attendanceDate = $("#attendance-date").val();
+          console.log(attendanceDate);
+          $.ajax({
+              url: '{% url 'admin_show_student_data' %}',
+              type: "POST",
+              data: {attendanceDate:attendanceDate}
+          })
+          .done(function(response){
+              var json_data = JSON.parse(response)
+              console.log(json_data)
+              var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Student List</h1></div><div class='form-group'><div style='margin: 0 0 20px 50px' class='row'>";
+              for(j in json_data){
+                  div_data += "<div class='col-lg-3'>";
+                  div_data+= "<label style='font-size: 20px;' class='form-check-label'>"+json_data[j]["name"]+"</label>";
+                  if(json_data[j]['status']){
+                    div_data+= "<b style='color: green; font-size:20px;'>[ Present ]</b>";
+                  }
+                  else{
+                    div_data+="<b style='color:red; font-size:20px;'>[ Absent ]</b>";
+                  }
+
+                  div_data+="</div>";
+              }
+              div_data+="</div></div>"
+              $('#studentData').html(div_data);
+          })
+          .fail(function(){
+              alert("We could not fetch the students. Try again!")
+          })
+        })
+    })
+</script>
+{% endblock base_js %}
+
+{% endblock main-content %}
+

@@ -1,0 +1,56 @@
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
+{% extends 'principal_templates/base.html' %}
+{% block page_title %} Staff Leave Requests{% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Review Staff Leave Requests</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="table">
+                <table class="table" style="text-align: center;">
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Staff Name</th>
+                        <th>Leave Date</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for r in request %}
+                    <tr>
+                        <td>{{r.id}}</td>
+                        <td>{{r.staffID.admin.first_name}} {{r.staffID.admin.last_name}}</td>
+                        <td>{{r.leaveDate}}</td>
+                        <td>{{r.leaveMessage}}</td>
+                        <td>
+                          {% if r.status == 1 %}
+                              <span style="color:#32cd32; font-weight: bold;">Approved</span>
+                          {% elif r.status == 2 %}
+                              <span style="color:#ff2400; font-weight: bold;">Rejected</span>
+                          {% else %}
+                              <span style="color:#e1ad01; font-weight: bold;">Pending</span>
+                          {% endif %}
+                      </td>
+                        <td>
+                            {% if r.status == 0 %} 
+                            <a href="{% url 'approve_staff_leave' leave_id=r.id %}" 
+                            class="btn btn-success" style="margin-right: 10px;">Approve</button>
+                            <a href="{% url 'reject_staff_leave' leave_id=r.id %}" class="btn btn-danger">Reject</button>
+                            {% else %}
+                            <a href="{% url 'approve_staff_leave' leave_id=r.id %}" 
+                            class="btn btn-success" style="margin-right: 10px; pointer-events:none; opacity:0.5;">Approve</button>
+                            <a href="{% url 'reject_staff_leave' leave_id=r.id %}"  style="pointer-events: none;opacity:0.5;"  class="btn btn-danger">Reject</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+          </div>
+    </div>
+</section>
+{% endblock main-content %}

@@ -91,7 +91,7 @@ class AttendanceReport(models.Model):
 class LeaveReportStudent(models.Model):
     id = models.AutoField(primary_key=True)
     studentID = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
-    status = models.BooleanField(default=False)
+    status = models.IntegerField(default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
     leaveDate = models.CharField(max_length=300)
