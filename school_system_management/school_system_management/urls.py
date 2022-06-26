@@ -15,6 +15,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     # ADMIN PAGE URLS
     path('admin/', admin.site.urls, name="admin"),
+    path("admin_profile", principal_views.admin_profile, name="admin_profile"),
+    path("edit_profile_save", principal_views.edit_profile_save, name="edit_profile_save"),
     path('login', views.Login, name="login"),
     path('get_user_data', views.getUserData),
     path('logout', views.Logout, name="logout"),
@@ -56,11 +58,14 @@ urlpatterns = [
     path("principal_view_attendance_data", principal_views.principal_view_attendance_data, name="principal_view_attendance_data"),
     path("admin_get_att_data", principal_views.admin_get_att_data, name="admin_get_att_data"),
     path("admin_show_student_data", principal_views.admin_show_student_data, name="admin_show_student_data"),
+
     
     
     
     # STAFF PAGE URLS
     path('staff_dashboard', staff_views.staff_home, name="staff_dashboard"),
+    path("staff_profile", staff_views.staff_profile, name="staff_profile"),
+    path("staff_profile_save", staff_views.staff_profile_save, name="staff_profile_save"),
     path("student_attendance", staff_views.student_attendance, name="student_attendance"),
     path("update_student_attendance", staff_views.update_student_attendance, name="update_student_attendance"),
     path("get_students", staff_views.get_students, name="get_students"),
@@ -77,6 +82,8 @@ urlpatterns = [
     
     # STUDENT PAGE URLS
     path('student_dashboard', student_views.student_home, name="student_dashboard"),
+    path("student_profile", student_views.student_profile, name="student_profile"),
+    path("student_profile_save", student_views.student_profile_save, name="student_profile_save"),
     path('student_view_attendance', student_views.student_view_attendance, name="student_view_attendance"),
     path("student_view_attendance_data", student_views.student_view_attendance_data, name="student_view_attendance_data"),
     

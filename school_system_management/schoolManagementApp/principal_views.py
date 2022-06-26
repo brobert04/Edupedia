@@ -522,3 +522,26 @@ def admin_show_student_data(request):
         data.append(r) 
         
     return JsonResponse(json.dumps(data),content_type="application/json", safe=False)
+
+
+
+def admin_profile(request):
+    user = UserCustom.objects.get(id=request.user.id)
+    return render(request, "principal_templates/admin_profile.html", {"user": user})
+
+def edit_profile_save(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        first_name = request.POST.get("firstName")
+        last_name = request.POST.get("lastName")
+        try:
+            user = UserCustom.objects.get(id=request.user.id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            messages.success(request, 'Profile information have been updated!')
+            return HttpResponseRedirect(reverse('admin_profile'))
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse('admin_profile'))

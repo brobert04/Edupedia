@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from requests import session
-from schoolManagementApp.models import Attendance, AttendanceReport, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, Student, Subject
+from schoolManagementApp.models import Attendance, AttendanceReport, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, Student, Subject, UserCustom
 from  django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 
@@ -162,3 +162,31 @@ def staff_send_leave(request):
         except:
             messages.error(request, 'The platform could not process the request. Try again!')
             return HttpResponseRedirect('/staff_applyfor_leave')
+        
+        
+
+def staff_profile(request): 
+    user = UserCustom.objects.get(id=request.user.id)
+    staff = Staff.objects.get(admin=user)
+    return render(request, "staff_templates/staff_profile.html", {"user":user, "staff":staff})
+
+def staff_profile_save(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        first_name = request.POST.get("firstName")
+        last_name = request.POST.get("lastName")
+        address = request.POST.get("address")
+        try:
+            user = UserCustom.objects.get(id=request.user.id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            staff = Staff.objects.get(admin=user.id)
+            staff.address = address
+            staff.save()
+            messages.success(request, 'Profile information have been updated!')
+            return HttpResponseRedirect(reverse('staff_profile'))
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse('staff_profile'))

@@ -79,3 +79,32 @@ def student_send_leave(request):
         except:
              messages.error(request, 'The platform could not process the request. Try again!')
              return HttpResponseRedirect('/student_applyfor_leave')
+         
+         
+
+def student_profile(request):
+    user = UserCustom.objects.get(id=request.user.id)
+    student = Student.objects.get(admin=user)
+    return render(request, "student_templates/student_profile.html", {"user":user, "student":student})
+
+
+def student_profile_save(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        first_name = request.POST.get("firstName")
+        last_name = request.POST.get("lastName")
+        address = request.POST.get("address")
+        try:
+            user = UserCustom.objects.get(id=request.user.id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            student = Student.objects.get(admin=user)
+            student.address = address
+            student.save()
+            messages.success(request, 'Profile information have been updated!')
+            return HttpResponseRedirect(reverse('student_profile'))
+        except:
+            messages.error(request,'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse('student_profile'))
