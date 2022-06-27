@@ -8,7 +8,32 @@ from schoolManagementApp.models import Attendance, AttendanceReport, Course, Fee
 
 
 def student_home(request):
-    return render(request, 'student_templates/home.html')
+    student = Student.objects.get(admin=request.user.id)
+    leave_report = LeaveReportStudent.objects.filter(studentID=student).count
+    
+    try:
+        percentage_present = AttendanceReport.objects.filter(studentID=student, status=True).count() / AttendanceReport.objects.filter(studentID=student, status=False).count()
+    except:
+         percentage_present = AttendanceReport.objects.filter(studentID=student, status=True).count() / 1
+    
+    present_total = AttendanceReport.objects.filter(studentID=student, status=True).count()
+    absent = AttendanceReport.objects.filter(studentID=student, status=False).count()
+    course = Course.objects.get(id=student.courseId.id)
+    subjects = Subject.objects.filter(courseId=course).count()
+    
+    subject_name=[]
+    subject_present=[]
+    subject_absent=[]
+    subjectData = Subject.objects.filter(courseId=student.courseId)
+    for subject in subjectData:
+        attendance = Attendance.objects.filter(subjectID=subject.id)
+        att_present = AttendanceReport.objects.filter(attendanceID__in=attendance, status=True, studentID=student.id).count()
+        att_absent = AttendanceReport.objects.filter(attendanceID__in=attendance, status=False, studentID=student.id).count()
+        subject_name.append(subject.name)
+        subject_present.append(att_present)
+        subject_absent.append(att_absent)
+    
+    return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent})
 
 def student_view_attendance(request):
     student = Student.objects.get(admin=request.user.id)
