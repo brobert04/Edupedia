@@ -3,13 +3,25 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from requests import session
-from schoolManagementApp.models import Attendance, AttendanceReport, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, Student, Subject, UserCustom
 from  django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
 def staff_home(request):
-    return render(request, 'staff_templates/home.html')
+    subject = Subject.objects.filter(staffId = request.user.id)
+    course_ids_list = []
+    for s in subject:
+        course = Course.objects.get(id=s.courseId.id)
+        course_ids_list.append(course.id)
+    
+    course_list = []
+    # acest if va sterge id-urile duplicate ale cursurilor
+    for course_id in course_ids_list:
+        if course_id not in course_list:
+            course_list.append(course_id)
+    all_students = Student.objects.filter(courseId__in=course_list).count()
+    return render(request, 'staff_templates/home.html', {"subject": subject, "all_students": all_students})
 
 # FUNCTIA PENTRU A RANDA PAGINA DE STABILIRE A PREZENTEI LA CURS
 def student_attendance(request):
@@ -182,9 +194,6 @@ def staff_profile_save(request):
             user.first_name = first_name
             user.last_name = last_name
             user.save()
-            staff = Staff.objects.get(admin=user.id)
-            staff.address = address
-            staff.save()
             messages.success(request, 'Profile information have been updated!')
             return HttpResponseRedirect(reverse('staff_profile'))
         except:

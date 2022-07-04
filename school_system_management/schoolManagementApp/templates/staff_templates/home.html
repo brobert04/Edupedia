@@ -6,6 +6,65 @@
 {% block main-content %}
 <section class="content">
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>{{ all_students }}</h3>
+                  <p>My Students</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person"></i>
+                </div>
+                <a href="{% url 'student_attendance' %}" class="small-box-footer"
+                  >More info <i class="fas fa-arrow-circle-right"></i
+                ></a>
+              </div>
+            </div>
+      
+            <div class="col-lg-3 col-6">
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>30<sup style="font-size: 20px">%</sup></h3>
+                  <p>Attendance Report</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'student_view_attendance' %}" class="small-box-footer"
+                  >More info <i class="fas fa-arrow-circle-right"></i
+                ></a>
+              </div>
+            </div>
+      
+            <div class="col-lg-3 col-6">
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>30</h3>
+                  <p>My Leave Requests</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-document-text"></i>
+                </div>
+                <a href="{% url 'student_applyfor_leave' %}" class="small-box-footer"
+                  >More info <i class="fas fa-arrow-circle-right"></i
+                ></a>
+              </div>
+            </div>
+      
+            <div class="col-lg-3 col-6">
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>30<span style="font-size: 15px">subjects</span></h3>
+                  <p>My Subjects</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-easel"></i>
+                </div>
+                <a href="#" class="small-box-footer">&nbsp;</a>
+              </div>
+            </div>
+          </div>
     </div>
 </section>
 {% endblock main-content %}

@@ -93,3 +93,8 @@ urlpatterns = [
     path("student_applyfor_leave", student_views.student_applyfor_leave, name="student_applyfor_leave"),
     path("student_send_leave", student_views.student_send_leave, name="student_send_leave"),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404="schoolManagementApp.views.handle_404"
+handler500="schoolManagementApp.views.handle_500"
+handler403="schoolManagementApp.views.handle_403"
+handler400="schoolManagementApp.views.handle_400"

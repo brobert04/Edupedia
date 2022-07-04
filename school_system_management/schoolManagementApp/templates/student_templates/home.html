@@ -113,7 +113,7 @@ Dashboard {% endblock page_title %} {% block main-content %}
   <div class="col-lg-6">
     <div class="card card-success" style="margin-right: 8px;">
       <div class="card-header">
-        <h3 class="card-title">Bar Chart</h3>
+        <h3 class="card-title">Absences & Presences</h3>
         <div class="card-tools">
           <button
             type="button"
@@ -156,6 +156,7 @@ Dashboard {% endblock page_title %} {% block main-content %}
 
 {% endblock main-content %} {% block base_js %}
 <script>
+
   $(document).ready(function () {
     var subjects = {{ subject_name|safe }};
     var present = {{ subject_present }};
@@ -200,6 +201,8 @@ Dashboard {% endblock page_title %} {% block main-content %}
         }
       ]
     }
+
+    
     var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
     var pieOptions = {
       maintainAspectRatio: false,

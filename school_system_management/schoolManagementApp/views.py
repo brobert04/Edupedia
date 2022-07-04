@@ -47,3 +47,16 @@ def getUserData(request):
 def Logout(request):
     logout(request)
     return HttpResponseRedirect("/")
+
+
+def handle_404(request, exception):
+    return render(request, "error_pages/404.html")
+
+def handle_500(request):
+    return render(request, "error_pages/500.html")
+
+def handle_403(request, exception):
+    return render(request, "error_pages/403.html")
+
+def handle_400(request, exception):
+    return render(request, "error_pages/400.html")

@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 
 # Create your models here.
+
 class SessionYears(models.Model):
     id = models.AutoField(primary_key=True)
     startYear = models.DateField()

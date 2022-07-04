@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom
 
-
+# ACEASTA FUNCTIE RANDEAZA PAGINA DE HOME A STUDENTULUI SI AJUTA LA INCARCAREA DINAMICA A CHARTURILOR RESPECTIVE
 def student_home(request):
     student = Student.objects.get(admin=request.user.id)
     leave_report = LeaveReportStudent.objects.filter(studentID=student).count
@@ -35,12 +35,14 @@ def student_home(request):
     
     return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent})
 
+# ACEASTA FUNCTIE RANDEAZA PAGINA DE VIZUALIZARE A PROPRIILOR ABSENTE
 def student_view_attendance(request):
     student = Student.objects.get(admin=request.user.id)
     course = Course.objects.get(id=student.courseId.id)
     subjects = Subject.objects.filter(courseId=course)
     return render(request, 'student_templates/view_own_attendance.html', {"subjects":subjects})
 
+# ACEASTA FUNCTIE AJUTA LA PRINTAREA ABSENTELOR INTR O PAGINA SEPARATA
 def student_view_attendance_data(request):
     subject = request.POST.get("subject")
     startDate = request.POST.get("startDate")
@@ -59,11 +61,13 @@ def student_view_attendance_data(request):
 
     return render(request, "student_templates/own_attendance_data.html", {"report": attendance_report, "subject": subject_object})
 
+# ACEASTA FUNCTIE RANDEAZA PAGINA DE TRIMITERE A FEEDBACK ULUI
 def student_send_feedback(request):
     student = Student.objects.get(admin=request.user.id)
     feedback = FeedbackStudent.objects.filter(studentID=student)
     return render(request, "student_templates/student_send_feedback.html", {"feedback": feedback})
 
+# ACEASTA FUNCTIE SALVEAZA FEEDBACK UL TRIMIS IN BAZA DE DATE
 def student_feedback(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -119,15 +123,11 @@ def student_profile_save(request):
     else:
         first_name = request.POST.get("firstName")
         last_name = request.POST.get("lastName")
-        address = request.POST.get("address")
         try:
             user = UserCustom.objects.get(id=request.user.id)
             user.first_name = first_name
             user.last_name = last_name
             user.save()
-            student = Student.objects.get(admin=user)
-            student.address = address
-            student.save()
             messages.success(request, 'Profile information have been updated!')
             return HttpResponseRedirect(reverse('student_profile'))
         except:
