@@ -1,0 +1,15 @@
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Edit Profile {% endblock page_title %}}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Edit {{request.user}}'s Profile</h3>
+            </div>
+            <!-- /.card-header -->
+            {% url 'staff_profile_save' as action_path %}
+            {% include 'staff_templates/form_template.html' with messages=messages form=form action_path=action_path text_button="Edit Profile" %}
+    </div>
+</section>
+{% endblock main-content %}

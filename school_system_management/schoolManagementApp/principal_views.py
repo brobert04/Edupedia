@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.urls import reverse
 from httplib2 import Http
-from itsdangerous import NoneAlgorithm
 from  django.views.decorators.csrf import csrf_exempt
 
 from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
@@ -28,7 +27,7 @@ def save_staff_info(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        form = AddStaff(request.POST)
+        form = AddStaff(request.POST, request.FILES)
         if form.is_valid():
             first_name = form.cleaned_data['firstName']
             last_name = form.cleaned_data['lastName']
@@ -36,10 +35,20 @@ def save_staff_info(request):
             address = form.cleaned_data['address']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            gender = form.cleaned_data['gender']
+            phone_number = form.cleaned_data['phoneNumber']  
+            
+            profile_pic = request.FILES['profilePicture']
+            fs = FileSystemStorage()
+            filename  = fs.save(profile_pic.name, profile_pic)
+            profile_pic_url  = fs.url(filename)      
             try:   
                 # CREEM UN NOU USER CUSTOM CU MODELUL USERCUSTOM DIN BAZA DE DATE LA CARE ADAUGAM SI ADRESA   
                 user = UserCustom.objects.create_user(username=username, password=password, email=email, last_name=last_name,first_name=first_name, user_type=2)
                 user.staff.address = address 
+                user.staff.gender = gender
+                user.staff.phone_number = phone_number
+                user.staff.profile_picture = profile_pic_url
                 user.save()
                 messages.success(request, 'A new staff member has been added to the database!')
                 return HttpResponseRedirect('/add_staff')
@@ -126,13 +135,13 @@ def save_student_information(request):
             return render(request, 'principal_templates/add_student.html', {"form": form})
             
         
- # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE MATERIE    
+# FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE MATERIE    
 def add_subject(request):
     courses = Course.objects.all()
     staff = UserCustom.objects.filter(user_type=2)
     return render(request, 'principal_templates/add_subject.html', {"courses" : courses, "staff": staff})
 
- # FUNCTIA PENTRU A SALVA DATELE DESPRE NOUA MATERIE   
+# FUNCTIA PENTRU A SALVA DATELE DESPRE NOUA MATERIE   
 def save_subject_info(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -182,6 +191,8 @@ def edit_staff(request, staff_id):
     form.fields['username'].initial = staff.admin.username
     form.fields['address'].initial = staff.address
     form.fields['email'].initial = staff.admin.email
+    form.fields["phoneNumber"].initial = staff.phone_number
+    form.fields["gender"].initial = staff.gender
     return render(request, "principal_templates/edit_staff.html", {"form":form,"id": staff_id, "username": staff.admin.username})
 
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STAFF ULUI
@@ -198,7 +209,17 @@ def edit_staff_information(request):
             last_name = form.cleaned_data['lastName']
             username = form.cleaned_data['username']
             address = form.cleaned_data['address']
-            email = email = form.cleaned_data['email']  
+            email = form.cleaned_data['email']
+            gender =  form.cleaned_data['gender']
+            
+            if request.FILES.get('profilePic', False):
+                profile_pic = request.FILES['profilePic']
+                fs = FileSystemStorage()
+                filename  = fs.save(profile_pic.name, profile_pic)
+                profile_pic_url  = fs.url(filename)
+            else:
+                profile_pic_url = None
+                
             try:
                 user  = UserCustom.objects.get(id=staff_id)
                 user.first_name = first_name
@@ -209,6 +230,9 @@ def edit_staff_information(request):
                     
                 staff = Staff.objects.get(admin=staff_id)
                 staff.address = address
+                staff.gender = gender 
+                if profile_pic_url != None:
+                    staff.profile_picture = profile_pic_url
                 staff.save()
                 del request.session['staff_id']
                 messages.success(request, 'Teacher information have been updated!')

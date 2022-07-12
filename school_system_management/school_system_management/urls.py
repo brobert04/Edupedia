@@ -77,7 +77,9 @@ urlpatterns = [
     path("staff_feedback", staff_views.staff_feedback, name="staff_feedback"),
     path("staff_applyfor_leave", staff_views.staff_applyfor_leave, name="staff_applyfor_leave"),
     path("staff_send_leave", staff_views.staff_send_leave, name="staff_send_leave"),
-    
+    path("edit_staff_profile", staff_views.edit_staff_profile, name="edit_staff_profile"),
+    path("add_todo_staff", staff_views.add_todo_staff, name="add_todo_staff"),
+    path("deleteTodo/<int:todo_id>/", staff_views.delete_todo_staff, name="delete_todo_staff"),
     
     
     # STUDENT PAGE URLS

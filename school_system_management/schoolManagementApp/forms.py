@@ -33,11 +33,13 @@ class AddStudent(forms.Form):
 
     # PRELUAM TOATE CURSURILE DIN BAZA DE DATE, CREEM O LISTA CU ELE SI ITERAM PESTE ACESTEA ADAUGANDU-LE IN LISTA SI ULTERIOR LA ADAUGAM IN FORMULAR
     
-    courses = Course.objects.all()
+    
     courses_list = []
+    courses = Course.objects.all()
     for c in courses:
             list = (c.id, c.name)
             courses_list.append(list)
+
     
     sessions_list = []
     sessions = SessionYears.object.all()
@@ -45,7 +47,7 @@ class AddStudent(forms.Form):
             sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
             sessions_list.append(sess)
 
-    
+
     course = forms.ChoiceField(label="Course", choices=courses_list, widget=forms.Select(
         attrs={"class": "form-control"}))
     session_id = forms.ChoiceField(
@@ -77,8 +79,9 @@ class EditStudent(forms.Form):
 
     # PRELUAM TOATE CURSURILE DIN BAZA DE DATE, CREEM O LISTA CU ELE SI ITERAM PESTE ACESTEA ADAUGANDU-LE IN LISTA SI ULTERIOR LA ADAUGAM IN FORMULAR
     
-    courses = Course.objects.all()
+    
     courses_list = []
+    courses = Course.objects.all()
     for c in courses:
             courses = Course.objects.all()
             list = (c.id, c.name)
@@ -90,7 +93,7 @@ class EditStudent(forms.Form):
     for s in sessions:
             sess = (s.id, f" From {s.startYear}   To   {s.endYear}")
             sessions_list.append(sess)
- 
+    
         
         
     course = forms.ChoiceField(label="Course", choices=courses_list, widget=forms.Select(
@@ -111,10 +114,20 @@ class AddStaff(forms.Form):
         attrs={"class": "form-control","autocomplete:": "off"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
         attrs={"class": "form-control","autocomplete:": "off"}))
+    phoneNumber = forms.CharField(label="Phone Number", max_length=20, widget=forms.TextInput(
+        attrs={"class": "form-control","autocomplete:": "off"}))    
     password = forms.CharField(label="Password", max_length=50,
                                widget=forms.PasswordInput(attrs={"class": "form-control"}))
+    gender_choice = (
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Rather Not Say", "Rather Not Say")
+    )
 
-
+    gender = forms.ChoiceField(label="Gender", choices=gender_choice, widget=forms.Select(
+        attrs={"class": "form-control"}))
+    profilePicture = forms.FileField(label = "Profile Picture", max_length = 50)
+    
 # FORMULARUL PENTRU EDITARE STAFF
 class EditStaff(forms.Form):
     firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(
@@ -127,7 +140,18 @@ class EditStaff(forms.Form):
         attrs={"class": "form-control","autocomplete:": "off"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
         attrs={"class": "form-control","autocomplete:": "off"}))
+    phoneNumber = forms.CharField(label="Phone Number", max_length=50, widget=forms.TextInput(
+        attrs={"class": "form-control","autocomplete:": "off"}))
+    gender_choice = (
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Rather Not Say", "Rather Not Say")
+    )
 
+    gender = forms.ChoiceField(label="Gender", choices=gender_choice, widget=forms.Select(
+        attrs={"class": "form-control"}))
+    profilePic = forms.FileField(
+        label="Profile Picture", max_length=50, required=False)
 
 # FORMULARUL PENTRU ADAUGARE CURS
 class AddCourse(forms.Form):
@@ -139,3 +163,13 @@ class AddCourse(forms.Form):
 class EditCourse(forms.Form):
     courseName = forms.CharField(label="Course Name", max_length=50, widget=forms.TextInput(
         attrs={"class": "form-control"}))
+
+# FORMULARUL PRIN CARE STAFF-UL ISI POATE EDITA SINGUR CATEVA DIN INFORMATIILE CONTULUI SAU
+class StaffOwnProfileEdit(forms.Form):
+    username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off",}))
+    email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
+    firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
+    lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", }))
+    address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))
+    phoneNumber = forms.CharField(label="Phone Number", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))
+    profilePicture = forms.FileField(label="Profile Picture", max_length=50, required=False)

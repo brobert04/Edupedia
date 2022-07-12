@@ -34,6 +34,9 @@ class Staff(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
     address = models.TextField(max_length=500)
+    gender = models.CharField(max_length=300,default="Male")
+    profile_picture = models.FileField()
+    phone_number = models.CharField(max_length=20, default="+4073117891")
 
 
 # MODEL PENTRU CURS/URI 
@@ -146,6 +149,12 @@ class StaffNotification(models.Model):
     message = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
+    
+class StaffTodo(models.Model):
+    id = models.AutoField(primary_key=True)
+    staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    task_text  = models.TextField()
+    createdAt = models.DateTimeField(auto_now_add=True)
 
 
 # ATUNCI CAND UN NOU USER ESTE CREAT, SE VA ADAUGA AUTOMAT IN NOU RAND FIE IN MODELUL DIRECTORULUI, INVATATORULUI SAU STUDENTULUI

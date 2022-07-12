@@ -20,7 +20,10 @@
                     <th>Last Name</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Phone Number</th>
                     <th>Address</th>
+                    <th>Gender</th>
+                    <th>Profile Picture</th>
                     <th>Date Joined</th>
                     <th>Last Login</th>
                     <th>Actions</th>
@@ -34,7 +37,10 @@
                     <td>{{s.admin.last_name}}</td>
                     <td>{{s.admin.username}}</td>
                     <td>{{s.admin.email}}</td>
+                    <td>{{s.phone_number}}</td>
                     <td>{{s.address}}</td>
+                    <td>{{s.gender}}</td>
+                    <td><img height="35px" width="35px" src="{{s.profile_picture}}" alt="{{s.admin.username}}'s profile picture"></td>
                     <td>{{s.admin.date_joined}}</td>
                     <td>{{s.admin.last_login}}</td>
                     <th><a href="{% url 'edit_staff' staff_id=s.admin.id %}">Edit</a></th>
