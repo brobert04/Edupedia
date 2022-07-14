@@ -15,7 +15,21 @@ from schoolManagementApp.models import Attendance, AttendanceReport, Course, Fee
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
-    return render(request, 'principal_templates/home.html')
+    students = Student.objects.all().count()
+    courses = Course.objects.all().count()
+    subjects = Subject.objects.all().count()
+    teachers = Staff.objects.all().count()
+    
+    
+    all_courses = Course.objects.all()
+    course_name = []
+    subject_count = []
+    for course in all_courses:
+        subj = Subject.objects.filter(courseId=course.id).count()
+        course_name.append(course.name)
+        subject_count.append(subj)
+        
+    return render(request, 'principal_templates/home.html', {"students": students, "courses": courses, "subjects": subjects, "teachers": teachers, "course_name": course_name, "subject_count": subject_count})
 
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE STAFF
 def add_staff(request):
@@ -211,6 +225,7 @@ def edit_staff_information(request):
             address = form.cleaned_data['address']
             email = form.cleaned_data['email']
             gender =  form.cleaned_data['gender']
+            phone_number = form.cleaned_data['phoneNumber']
             
             if request.FILES.get('profilePic', False):
                 profile_pic = request.FILES['profilePic']
@@ -231,6 +246,7 @@ def edit_staff_information(request):
                 staff = Staff.objects.get(admin=staff_id)
                 staff.address = address
                 staff.gender = gender 
+                staff.phone_number = phone_number
                 if profile_pic_url != None:
                     staff.profile_picture = profile_pic_url
                 staff.save()

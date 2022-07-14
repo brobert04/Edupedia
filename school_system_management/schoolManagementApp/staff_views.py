@@ -40,8 +40,8 @@ def staff_home(request):
     pending_requests = LeaveReportStaff.objects.filter(
         staffID=staff, status=0).count()
     my_subjects = subject.count()
-    
-    todos = StaffTodo.objects.filter(staffID=staff);
+
+    todos = StaffTodo.objects.filter(staffID=staff)
 
     try:
         message = FeedbackStaff.objects.filter(staffID=staff).last().feedback
@@ -61,7 +61,7 @@ def student_attendance(request):
     subjects = Subject.objects.filter(staffId=user)
     profile_picture = user.staff.profile_picture
     session = SessionYears.object.all()
-    return render(request, 'staff_templates/student_attendance.html', {"subjects": subjects, "session": session,"profile_picture": profile_picture})
+    return render(request, 'staff_templates/student_attendance.html', {"subjects": subjects, "session": session, "profile_picture": profile_picture})
 
 
 # FOLOSIM AJAX PENTRU A DETERMINA ELEVII PREZENTI LA MATERIA RESPECTIVA SI PREZENTI IN ACEA SESIUNE
@@ -142,7 +142,7 @@ def show_student_data(request):
     data = []
     for r in report:
         r = {"id": r.studentID.admin.id,
-            "name": f"{r.studentID.admin.first_name} {r.studentID.admin.last_name}", "status": r.status}
+             "name": f"{r.studentID.admin.first_name} {r.studentID.admin.last_name}", "status": r.status}
         data.append(r)
 
     return JsonResponse(json.dumps(data), content_type="application/json", safe=False)
@@ -162,7 +162,7 @@ def update_attendance_data(request):
             student = Student.objects.get(admin=s["id"])
             report = AttendanceReport.objects.get(
                 studentID=student, attendanceID=attendance)
-            report.status = s['status'];
+            report.status = s['status']
             report.save()
         return HttpResponse("Saved")
     except:
@@ -248,26 +248,28 @@ def staff_profile(request):
         if course_id not in course_list:
             course_list.append(course_id)
     all_students = Student.objects.filter(courseId__in=course_list).count()
-    return render(request, "staff_templates/staff_profile.html", {"user": user, "staff": staff, "subjects": subjects, "all_students": all_students, "gender": gender, "address": address, "profile_picture": profile_picture, "phone":phone})
+    return render(request, "staff_templates/staff_profile.html", {"user": user, "staff": staff, "subjects": subjects, "all_students": all_students, "gender": gender, "address": address, "profile_picture": profile_picture, "phone": phone})
+
 
 def edit_staff_profile(request):
     staff_id = request.user.id
     staff = Staff.objects.get(admin=staff_id)
-    form  = StaffOwnProfileEdit();
+    form = StaffOwnProfileEdit()
     form.fields['username'].initial = staff.admin.username
     form.fields['email'].initial = staff.admin.email
     form.fields['firstName'].initial = staff.admin.first_name
     form.fields['lastName'].initial = staff.admin.last_name
     form.fields['address'].initial = staff.address
     form.fields['phoneNumber'].initial = staff.phone_number
-    return render(request, "staff_templates/edit_staff_profile.html", {"form":form}) 
+    return render(request, "staff_templates/edit_staff_profile.html", {"form": form})
+
 
 def staff_profile_save(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        student_id = request.user.id
-        if student_id is None:
+        staff_id = request.user.id
+        if staff_id is None:
             return HttpResponseRedirect(reverse("staff_profile"))
         form = StaffOwnProfileEdit(request.POST, request.FILES)
         if form.is_valid():
@@ -275,41 +277,46 @@ def staff_profile_save(request):
             last_name = form.cleaned_data['lastName']
             address = form.cleaned_data['address']
             phoneNumber = form.cleaned_data['phoneNumber']
-            
+
             if request.FILES.get('profilePicture', False):
                 profile_pic = request.FILES['profilePicture']
                 fs = FileSystemStorage()
-                filename  = fs.save(profile_pic.name, profile_pic)
-                profile_pic_url  = fs.url(filename)
+                filename = fs.save(profile_pic.name, profile_pic)
+                profile_pic_url = fs.url(filename)
             else:
                 profile_pic_url = None
             try:
-                user = UserCustom.objects.get(id=student_id)
+                user = UserCustom.objects.get(id=staff_id)
                 user.username = username
                 user.last_name = last_name
                 user.save()
-                
+
                 staff = Staff.objects.get(admin=user)
                 staff.address = address
                 staff.phone_number = phoneNumber
                 if profile_pic_url is not None:
                     staff.profile_picture = profile_pic_url
                 staff.save()
-                messages.success(request, 'Profile information have been updated!')
+                messages.success(
+                    request, 'Profile information have been updated!')
                 return HttpResponseRedirect(reverse("edit_staff_profile"))
             except:
-                messages.error(request,'The platform could not process the request. Try again!')
+                messages.error(
+                    request, 'The platform could not process the request. Try again!')
                 return HttpResponseRedirect(reverse("edit_staff_profile"))
-            
+        else:
+            print(form.errors)
+
+
 def add_todo_staff(request):
-    task  = request.POST.get("todoText")
+    task = request.POST.get("todoText")
     staff = Staff.objects.get(admin=request.user.id)
     new_todo = StaffTodo(task_text=task, staffID=staff)
     new_todo.save()
     return HttpResponseRedirect(reverse("staff_dashboard"))
 
+
 def delete_todo_staff(request, todo_id):
     task = StaffTodo.objects.get(id=todo_id)
     task.delete()
     return HttpResponseRedirect(reverse("staff_dashboard"))
-            

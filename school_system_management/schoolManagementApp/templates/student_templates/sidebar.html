@@ -55,6 +55,15 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            {% url 'student_contact_information' as student_contact_information %}
+            <a href="{% url 'student_contact_information' %}" class="nav-link {% if request.path == student_contact_information%} active {% endif %}">
+              <i class="nav-icon fas fa-phone"></i>
+              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                Contact 
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

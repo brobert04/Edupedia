@@ -133,3 +133,9 @@ def student_profile_save(request):
         except:
             messages.error(request,'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse('student_profile'))
+
+
+def student_contact_information(request):
+    principal = UserCustom.objects.filter(user_type=1)
+    staff = UserCustom.objects.filter(user_type=2)
+    return render(request, "student_templates/contact-information.html",{"principal":principal, "staff":staff}  )

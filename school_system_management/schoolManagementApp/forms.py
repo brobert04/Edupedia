@@ -114,7 +114,7 @@ class AddStaff(forms.Form):
         attrs={"class": "form-control","autocomplete:": "off"}))
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(
         attrs={"class": "form-control","autocomplete:": "off"}))
-    phoneNumber = forms.CharField(label="Phone Number", max_length=20, widget=forms.TextInput(
+    phoneNumber = forms.CharField(label="Phone Number(wihout +)", max_length=20, widget=forms.TextInput(
         attrs={"class": "form-control","autocomplete:": "off"}))    
     password = forms.CharField(label="Password", max_length=50,
                                widget=forms.PasswordInput(attrs={"class": "form-control"}))
@@ -166,9 +166,9 @@ class EditCourse(forms.Form):
 
 # FORMULARUL PRIN CARE STAFF-UL ISI POATE EDITA SINGUR CATEVA DIN INFORMATIILE CONTULUI SAU
 class StaffOwnProfileEdit(forms.Form):
-    username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off",}))
-    email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
-    firstName = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
+    username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off",}))
+    email = forms.EmailField(label="Email", max_length=50,required=False, widget=forms.EmailInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
+    firstName = forms.CharField(label="First Name", max_length=50, required=False, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", "disabled": "disabled"}))
     lastName = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", }))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))
     phoneNumber = forms.CharField(label="Phone Number", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))

@@ -23,6 +23,8 @@ class Admin(models.Model):
     admin = models.OneToOneField(UserCustom, on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
+    address = models.TextField(max_length=500, default="Adresa1")
+    phone_number = models.CharField(max_length=20, default="+4073117891")
     objects = models.Manager()
 
 
@@ -45,6 +47,7 @@ class Course(models.Model):
     name = models.CharField(max_length=300)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
+    
 
 
 # MODEL PENTRU MATERIE

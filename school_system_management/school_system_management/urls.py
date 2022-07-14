@@ -94,6 +94,7 @@ urlpatterns = [
     
     path("student_applyfor_leave", student_views.student_applyfor_leave, name="student_applyfor_leave"),
     path("student_send_leave", student_views.student_send_leave, name="student_send_leave"),
+    path("student_contact_information", student_views.student_contact_information, name="student_contact_information"),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404="schoolManagementApp.views.handle_404"
