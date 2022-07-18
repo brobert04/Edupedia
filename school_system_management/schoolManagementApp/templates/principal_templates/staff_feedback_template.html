@@ -33,8 +33,6 @@
                             {% endif %}
                         </td>
                     </tr>
-                    
-                    
                     {% endfor %}
                 </table>
             </div>
@@ -59,7 +57,6 @@
         <button id="reply-button" style="margin-top: 25px;" class="btn btn-primary">Send Reply</button>
       </div>
     </div>
-
   </div>
 </div>
 {% endblock main-content %}
@@ -69,7 +66,7 @@
 <script>
     $(document).ready(function(){
         $(".reply_button").click(function(){
-          var id = $(this).parents('tr').children("td:eq(0)").text();;
+          var id = $(this).parents('tr').children("td:eq(0)").text();
           var name = $(this).parents('tr').children("td:eq(1)").text();
           $("#reply_id").val(id);
           $("#reply_name").text(name);

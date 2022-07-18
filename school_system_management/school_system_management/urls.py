@@ -58,6 +58,12 @@ urlpatterns = [
     path("principal_view_attendance_data", principal_views.principal_view_attendance_data, name="principal_view_attendance_data"),
     path("admin_get_att_data", principal_views.admin_get_att_data, name="admin_get_att_data"),
     path("admin_show_student_data", principal_views.admin_show_student_data, name="admin_show_student_data"),
+    path("send_notification_student", principal_views.send_notification_student, name="send_notification_student"),   
+    path("send_notification_staff", principal_views.send_notification_staff, name="send_notification_staff"),
+    path("send_student_notification", principal_views.send_student_notification, name="send_student_notification"),
+    path("send_staff_notification", principal_views.send_staff_notification, name="send_staff_notification"),
+    # path("calendar", principal_views.calendar, name="Calendar"),
+    # path("save_event", principal_views.save_event, name="save_event"),
 
     
     
@@ -80,6 +86,7 @@ urlpatterns = [
     path("edit_staff_profile", staff_views.edit_staff_profile, name="edit_staff_profile"),
     path("add_todo_staff", staff_views.add_todo_staff, name="add_todo_staff"),
     path("deleteTodo/<int:todo_id>/", staff_views.delete_todo_staff, name="delete_todo_staff"),
+    path("save_fcm_token_staff", staff_views.save_fcm_token_staff, name="save_fcm_token_staff"),
     
     
     # STUDENT PAGE URLS
@@ -95,6 +102,8 @@ urlpatterns = [
     path("student_applyfor_leave", student_views.student_applyfor_leave, name="student_applyfor_leave"),
     path("student_send_leave", student_views.student_send_leave, name="student_send_leave"),
     path("student_contact_information", student_views.student_contact_information, name="student_contact_information"),
+    path("save_fcm_token", student_views.save_fcm_token, name="save_fcm_token"),
+    path("firebase-messaging-sw.js", views.showFirebaseJs, name="show_firebase_js")
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404="schoolManagementApp.views.handle_404"

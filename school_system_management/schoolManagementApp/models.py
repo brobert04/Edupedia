@@ -39,6 +39,7 @@ class Staff(models.Model):
     gender = models.CharField(max_length=300,default="Male")
     profile_picture = models.FileField()
     phone_number = models.CharField(max_length=20, default="+4073117891")
+    fcm_token = models.TextField(default="")
 
 
 # MODEL PENTRU CURS/URI 
@@ -71,6 +72,7 @@ class Student(models.Model):
     modifiedAt = models.DateTimeField(auto_now_add=True)
     courseId = models.ForeignKey(Course, on_delete=models.CASCADE)
     session_id = models.ForeignKey(SessionYears, on_delete=models.CASCADE)
+    fcm_token = models.TextField(default="")
 
 
 
@@ -158,7 +160,7 @@ class StaffTodo(models.Model):
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
     task_text  = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True)
-
+    
 
 # ATUNCI CAND UN NOU USER ESTE CREAT, SE VA ADAUGA AUTOMAT IN NOU RAND FIE IN MODELUL DIRECTORULUI, INVATATORULUI SAU STUDENTULUI
 @receiver(post_save, sender=UserCustom)

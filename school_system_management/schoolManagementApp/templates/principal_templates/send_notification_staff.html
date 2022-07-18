@@ -1,0 +1,100 @@
+{% extends 'principal_templates/base.html' %}
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->}
+{% block page_title %} Send Staff Notifications {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 style="font-size: 25px; font-weight:bold;" class="card-title">Choose Staff Member</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                    <tr style="text-align: center;">
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in staff %}
+                    <tr style="text-align: center;">
+                        <td>{{s.admin.id}}</td>
+                        <td>{{s.admin.first_name}}</td>
+                        <td>{{s.admin.last_name}}</td>
+                        <td>{{s.admin.username}}</td>
+                        <td>{{s.admin.email}}</td>
+                        <th>
+                            <a class="show_notification" href="#" data-toggle="modal"
+                               data-target="#notification-staff">Send Notification</a>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+<div id="notification-staff" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="font-size: 20px;">
+                <div class="form-group">
+                    <p>Send Notification to <span id="name" style="color:red; font-weight:bold"></span>
+                    </p>
+                    <input type="text" name="message" id="message" class="form-control">
+                    <input type="hidden" id="staff_id" name="staff_id">
+                    <button id="send_notification" style="margin-top: 25px;" class="btn btn-primary">Send Notification
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock main-content %}
+    {% block base_js%}
+    <script>
+        $(document).ready(function () {
+            $(".show_notification").click(function () {
+                var staff_id = $(this).parents('tr').children("td:eq(0)").text();
+                $("#staff_id").val(staff_id);
+                var staff_name = $(this).parents('tr').children("td:eq(1)").text();
+                $("#name").text(staff_name);
+            });
+
+            $("#send_notification").click(function () {
+                var id = $("#staff_id").val();
+                var message = $("#message").val();
+                sendNotification(id, message);
+            });
+
+            function sendNotification(id, message) {
+                $.ajax({
+                    url: '{% url 'send_staff_notification' %}',
+                    type: "POST",
+                    data: {id: id, message: message}
+                })
+                    .done(function (response) {
+                        if (response = "True") {
+                            alert("Notification has been sent!")
+                        } else {
+                            alert("We could not send the notification. Try again!")
+                        }
+
+                    })
+            }
+        })
+    </script>
+    {% endblock base_js%}

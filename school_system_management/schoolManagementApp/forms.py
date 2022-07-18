@@ -1,6 +1,7 @@
 from django import forms
 
 from schoolManagementApp.models import Course, SessionYears, Staff
+from school_system_management import settings
 
 
 class CustomDateInput(forms.DateInput):
@@ -173,3 +174,14 @@ class StaffOwnProfileEdit(forms.Form):
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))
     phoneNumber = forms.CharField(label="Phone Number", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off"}))
     profilePicture = forms.FileField(label="Profile Picture", max_length=50, required=False)
+    
+    
+# class CalendarForm(forms.Form):
+#     eventTitle = forms.CharField(label="Event", max_length=255, required=False, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "Event Title"}))
+    
+#     description = forms.CharField(label="Description", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", "placeholder": "Event Description"}))
+    
+#     startDateTime = forms.DateField(input_formats=['%d/%m/%Y'],label="Start Date", required=True, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "Start Date"}))
+    
+#     endDateTime = forms.DateField(input_formats=['%d/%m/%Y'], label="End Date",required=True, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "End Date"}))
+    

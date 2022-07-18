@@ -129,7 +129,7 @@
           <!-- /.card -->
       </div>
     </div>
-    <div class="row">
+    <div class="row"> 
         <div class="col-lg-6">
             <div class="card card-green">
                 <div class="card-header">
@@ -165,6 +165,30 @@
                 </div>
                 <!-- /.card-body -->
               </div>
+        </div>
+        <div class="col-lg-6">
+           <!-- BAR CHART -->
+         <div class="card card-warning">
+          <div class="card-header">
+            <h3 class="card-title">Students Leaves vs Attendance</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
         </div>
     </div>
   </div>
@@ -224,6 +248,91 @@
       type: 'doughnut',
       data: donutData,
       options: donutOptions
+    });
+
+  
+  //ACESTA ESTE CEL DE AL TREILEA GRAFIC
+    var student_count = {{student_count}};
+
+    var pieData2 = {
+      labels: course_name,
+      datasets: [
+        {
+          data: {{student_count}},
+          backgroundColor: [
+            "#f56954",
+            "#00a65a",
+            "#004ba0",
+            "#ff844c",
+            
+          ],
+        },
+      ],
+    };
+    var pieChartCanvas = $("#pieChart2").get(0).getContext("2d");
+    var pieData = pieData2;
+    var pieOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+    };
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: "pie",
+      data: pieData,
+      options: pieOptions,
+    });
+
+  //BAR CHART
+
+  var student_present_list = {{student_present_list}}
+  var student_absent_list  ={{student_absent_list}}
+  var student_name_list = {{student_name_list | safe}}
+  var areaChartData = {
+    labels  : student_name_list,
+    datasets: [
+      {
+        label               : 'Absent',
+        backgroundColor     : 'rgba(60,141,188,0.9)',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : student_absent_list
+      },
+      {
+        label               : 'Present',
+        backgroundColor     : 'rgba(210, 214, 222, 1)',
+        borderColor         : 'rgba(210, 214, 222, 1)',
+        pointRadius         : false,
+        pointColor          : 'rgba(210, 214, 222, 1)',
+        pointStrokeColor    : '#c1c7d1',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data                : student_present_list
+      },
+    ]
+  }
+
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
     })
     });
 </script>

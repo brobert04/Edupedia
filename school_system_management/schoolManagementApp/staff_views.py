@@ -320,3 +320,16 @@ def delete_todo_staff(request, todo_id):
     task = StaffTodo.objects.get(id=todo_id)
     task.delete()
     return HttpResponseRedirect(reverse("staff_dashboard"))
+
+
+@csrf_exempt
+def save_fcm_token_staff(request):
+    token = request.POST.get("token")
+    try:
+        staff = Staff.objects.get(admin=request.user.id)
+        staff.fcm_token = token
+        staff.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("Error")
+

@@ -1,4 +1,5 @@
 # ACEASTA PAGINA CONTINE FUNCTIILE NECESARE FUNCTIONARII PAGINI DE ADMIN/DIRECTOR
+from datetime import timedelta
 import json
 from unicodedata import name
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -8,10 +9,27 @@ from django.core.files.storage import FileSystemStorage
 from django.urls import reverse
 from httplib2 import Http
 from  django.views.decorators.csrf import csrf_exempt
+import httplib2
 
-from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent, EditCourse, EditStaff, EditStudent
+from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent,EditCourse, EditStaff, EditStudent
 
 from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, FeedbackStudent, LeaveReportStaff, LeaveReportStudent, SessionYears, Staff, Student, Subject, UserCustom
+
+# from google.oauth2 import service_account
+# from django.views.generic import FormView
+# from googleapiclient.discovery import build
+# from oauth2client.service_account import ServiceAccountCredentials
+# from googleapiclient.errors import HttpError
+
+
+# service_account_email = "edupedia-google-calendar-event@edupedia-356412.iam.gserviceaccount.com"
+# SCOPES = ["https://www.googleapis.com/auth/calendar"]
+# scopes = [SCOPES]
+# calendarId = "brb2iln1odddcmvm67nm13baf4@group.calendar.google.com"
+
+
+
+
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
@@ -24,12 +42,28 @@ def principal_home(request):
     all_courses = Course.objects.all()
     course_name = []
     subject_count = []
+    student_count = []
     for course in all_courses:
         subj = Subject.objects.filter(courseId=course.id).count()
+        students = Student.objects.filter(courseId = course.id).count()
         course_name.append(course.name)
         subject_count.append(subj)
+        student_count.append(students)
         
-    return render(request, 'principal_templates/home.html', {"students": students, "courses": courses, "subjects": subjects, "teachers": teachers, "course_name": course_name, "subject_count": subject_count})
+
+    studs = Student.objects.all();
+    studs_present_list = []
+    studs_absent_list = []
+    studs_name_list = []
+    
+    for s in studs:
+        present = AttendanceReport.objects.filter(studentID=s.id, status=True).count()
+        absent = AttendanceReport.objects.filter(studentID=s.id, status=False).count()
+        leaves = LeaveReportStudent.objects.filter(studentID=s.id, status=1).count()
+        studs_absent_list.append(absent+leaves)
+        studs_present_list.append(present)
+        studs_name_list.append(f"{s.admin.first_name} {s.admin.last_name}")
+    return render(request, 'principal_templates/home.html', {"students": students, "courses": courses, "subjects": subjects, "teachers": teachers, "course_name": course_name, "subject_count": subject_count, "student_count":student_count, "student_present_list":studs_present_list, "student_absent_list":studs_absent_list, "student_name_list":studs_name_list})
 
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE STAFF
 def add_staff(request):
@@ -585,3 +619,97 @@ def edit_profile_save(request):
         except:
             messages.error(request,'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse('admin_profile'))
+        
+
+# def calendar(request):
+#         form = CalendarForm();
+#         return render(request, "principal_templates/calendar.html", {"form": form})
+    
+    
+# def build_service(request):
+#     credentials = ServiceAccountCredentials.from_json_keyfile_name(filename="schoolManagementApp/service-account", scopes=SCOPES)
+#     http = credentials.authorize(httplib2.Http())
+#     service = build("calendar", "v3", http=http)
+#     return service
+
+# def save_event(request):
+#     if request.method != "POST":
+#         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+#     else:
+#         form = CalendarForm(request.POST)
+#         if form.is_valid():
+#             eventTitle = form.cleaned_data.get('eventTitle')
+#             startDate = form.cleaned_data.get('startDateTime')
+#             endDate = form.cleaned_data.get('endDateTime')
+#             description = form.cleaned_data.get('description')
+#             service = build_service(request)
+#             event = (
+#             service.events().insert(
+#                     calendarId=calendarId,
+#                     body={
+#                         "summary": eventTitle,
+#                         "description": description,
+#                         "start": {"dateTime": startDate.isoformat() + 'Z', "timeZone": "Europe/Amsterdam"},
+#                         "end": {"dateTime": (startDate + timedelta(minutes=15)).isoformat()+ 'Z', "timeZone": "Europe/Amsterdam"},
+#                     },
+#                 ).execute()
+#                 )
+#             messages.success(request, 'Event added successfully.')
+#             return HttpResponseRedirect(reverse('calendar'))
+        
+#         else:
+#             print(form.errors)
+
+def send_notification_student(request):
+    student = Student.objects.all()
+    return render(request, "principal_templates/send_notification_student.html", {"student": student})
+
+def send_notification_staff(request):
+    staff = Staff.objects.all()
+    return render(request, "principal_templates/send_notification_staff.html", {"staff": staff})
+
+
+@csrf_exempt
+def send_student_notification(request):
+    id = request.POST.get("id")
+    message = request.POST.get("message")
+    student = Student.objects.get(admin=id)
+    token = student.fcm_token
+    url = "https://fcm.googleapis.com/fcm/send"
+    body={
+        "notification": {
+            "title": "Edupedia",
+            "body": message,
+            "sound": "default",
+        },
+        "to": token,
+    }
+    headers = {"Content-Type":"application/json", "Authorization": "key:AAAAcjtEJA4:APA91bGkHb7OylTCK3WSCN_YhgPkd4ulSJg601U3sPPNiN9JI7CudmXdg5TMNE06shtQMe-vU0O4A8WIMNMNkYi-GjHZqL25R4xgPvpXzuF8p4IAhVMMGka0fA6_9FpVokRRAQVTcQ_W"}
+    data = requests.post(url, data=json.dumps(body), headers=headers)
+    notification = StudentNotification(studentID=student, message=message)
+    notification.save()
+    console.log(data.text)
+    return HttpResponse("True")
+
+
+@csrf_exempt
+def send_staff_notification(request):
+    id = request.POST.get("id")
+    message = request.POST.get("message")
+    staff = Staff.objects.get(admin=id)
+    token = staff.fcm_token
+    url = "https://fcm.googleapis.com/fcm/send"
+    body={
+        "notification": {
+            "title": "Edupedia",
+            "body": message,
+            "sound": "default",
+        },
+        "to": token,
+    }
+    headers = {"Content-Type":"application/json", "Authorization": "key:AAAAcjtEJA4:APA91bGkHb7OylTCK3WSCN_YhgPkd4ulSJg601U3sPPNiN9JI7CudmXdg5TMNE06shtQMe-vU0O4A8WIMNMNkYi-GjHZqL25R4xgPvpXzuF8p4IAhVMMGka0fA6_9FpVokRRAQVTcQ_W"}
+    data = requests.post(url, data=json.dumps(body), headers=headers)
+    notification = StaffNotification(staffID=staff, message=message)
+    notification.save()
+    console.log(data.text)
+    return HttpResponse("True")

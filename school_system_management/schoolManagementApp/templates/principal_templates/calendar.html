@@ -1,0 +1,31 @@
+{% extends 'principal_templates/base.html' %}
+{% load widget_tweaks %}
+{% block page_title %} Program Events {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Add Student Information</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            {% url 'save_event' as action_path %}
+            {% include 'principal_templates/form_template.html' with messages=messages form=form action_path=action_path text_button="Add New Event"%}
+            </div>
+          </div>
+    </div> 
+</section>
+{% endblock main-content %}
+{% block base_js %}
+<script>
+    $(function(){
+        $("#id_startDateTime").datepicker({
+            dateFormat: 'dd/mm/yy'
+        });
+        $("#id_endDateTime").datepicker({
+            dateFormat: 'dd/mm/yy'
+        });
+    })
+</script>
+{% endblock base_js %}

@@ -139,3 +139,15 @@ def student_contact_information(request):
     principal = UserCustom.objects.filter(user_type=1)
     staff = UserCustom.objects.filter(user_type=2)
     return render(request, "student_templates/contact-information.html",{"principal":principal, "staff":staff}  )
+
+
+def save_fcm_token(request):
+    token = request.POST.get("token")
+    try:
+        student = Student.objects.get(admin=request.user.id)
+        student.fcm_token = token
+        student.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("Error")
+

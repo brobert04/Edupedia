@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'schoolManagementApp',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
@@ -114,10 +115,24 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
 
+DATE_INPUT_FORMATS = [
+    
+    '%Y-%m-%d',  # '2006-10-25'
+    '%m/%d/%Y',  # '10/25/2006'
+    '%m/%d/%y',  # '10/25/06'
+    '%b %d %Y',  # 'Oct 25 2006'
+    '%b %d, %Y',  # 'Oct 25, 2006'
+    '%d %b %Y',  # '25 Oct 2006'
+    '%d %b, %Y',  # '25 Oct, 2006'
+    '%B %d %Y',  # 'October 25 2006'
+    '%B %d, %Y',  # 'October 25, 2006'
+    '%d %B %Y',  # '25 October 2006'
+    '%d %B, %Y',  # '25 October, 2006' 
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
