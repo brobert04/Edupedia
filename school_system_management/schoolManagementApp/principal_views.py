@@ -10,10 +10,14 @@ from django.urls import reverse
 from httplib2 import Http
 from  django.views.decorators.csrf import csrf_exempt
 import httplib2
+import requests
 
 from schoolManagementApp.forms import AddCourse, AddStaff, AddStudent,EditCourse, EditStaff, EditStudent
 
-from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, FeedbackStudent, LeaveReportStaff, LeaveReportStudent, SessionYears, Staff, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, FeedbackStudent, LeaveReportStaff, LeaveReportStudent, SessionYears, Staff, Student, Subject, UserCustom, StudentNotification, StaffNotification
+
+from notifications.signals import notify
+
 
 # from google.oauth2 import service_account
 # from django.views.generic import FormView
@@ -673,22 +677,10 @@ def send_notification_staff(request):
 def send_student_notification(request):
     id = request.POST.get("id")
     message = request.POST.get("message")
+    sender = request.POST.get("sender")
     student = Student.objects.get(admin=id)
-    token = student.fcm_token
-    url = "https://fcm.googleapis.com/fcm/send"
-    body={
-        "notification": {
-            "title": "Edupedia",
-            "body": message,
-            "sound": "default",
-        },
-        "to": token,
-    }
-    headers = {"Content-Type":"application/json", "Authorization": "key:AAAAcjtEJA4:APA91bGkHb7OylTCK3WSCN_YhgPkd4ulSJg601U3sPPNiN9JI7CudmXdg5TMNE06shtQMe-vU0O4A8WIMNMNkYi-GjHZqL25R4xgPvpXzuF8p4IAhVMMGka0fA6_9FpVokRRAQVTcQ_W"}
-    data = requests.post(url, data=json.dumps(body), headers=headers)
-    notification = StudentNotification(studentID=student, message=message)
+    notification = StudentNotification(studentID=student, message=message,sender=sender)
     notification.save()
-    console.log(data.text)
     return HttpResponse("True")
 
 
@@ -696,20 +688,8 @@ def send_student_notification(request):
 def send_staff_notification(request):
     id = request.POST.get("id")
     message = request.POST.get("message")
+    sender = request.POST.get("sender")
     staff = Staff.objects.get(admin=id)
-    token = staff.fcm_token
-    url = "https://fcm.googleapis.com/fcm/send"
-    body={
-        "notification": {
-            "title": "Edupedia",
-            "body": message,
-            "sound": "default",
-        },
-        "to": token,
-    }
-    headers = {"Content-Type":"application/json", "Authorization": "key:AAAAcjtEJA4:APA91bGkHb7OylTCK3WSCN_YhgPkd4ulSJg601U3sPPNiN9JI7CudmXdg5TMNE06shtQMe-vU0O4A8WIMNMNkYi-GjHZqL25R4xgPvpXzuF8p4IAhVMMGka0fA6_9FpVokRRAQVTcQ_W"}
-    data = requests.post(url, data=json.dumps(body), headers=headers)
-    notification = StaffNotification(staffID=staff, message=message)
+    notification = StaffNotification(staffID=staff, message=message, sender=sender)
     notification.save()
-    console.log(data.text)
     return HttpResponse("True")

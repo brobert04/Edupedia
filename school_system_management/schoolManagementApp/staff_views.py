@@ -4,10 +4,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from requests import session
 from schoolManagementApp.forms import EditStaff, StaffOwnProfileEdit
-from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, LeaveReportStaff, SessionYears, Staff, StaffTodo, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, StaffNotification, \
+    LeaveReportStaff, \
+    SessionYears, Staff, StaffTodo, Student, Subject, UserCustom, StudentNotification
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
 
@@ -51,17 +54,26 @@ def staff_home(request):
         message = ""
         reply = ""
 
-    return render(request, 'staff_templates/home.html', {"subject": subject, "all_students": all_students, "attendance_count": attendance_count, "leave_request": leave_request_count, "my_subjects": my_subjects, "feedback": message, "feedback_reply": reply, "accepted_requests": accepted_requests, "rejected_requests": rejected_requests, "pending_requests": pending_requests, "profile_picture": profile_picture, "todos": todos})
+    notifications = StaffNotification.objects.filter(staffID=staff.id)
+    notf_number = notifications.count()
+
+    return render(request, 'staff_templates/home.html',
+                  {"subject": subject, "all_students": all_students, "attendance_count": attendance_count,
+                   "leave_request": leave_request_count, "my_subjects": my_subjects, "feedback": message,
+                   "feedback_reply": reply, "accepted_requests": accepted_requests,
+                   "rejected_requests": rejected_requests, "pending_requests": pending_requests,
+                   "profile_picture": profile_picture, "todos": todos, "notifications": notifications,
+                   "notf_number": notf_number})
+
 
 # FUNCTIA PENTRU A RANDA PAGINA DE STABILIRE A PREZENTEI LA CURS
-
-
 def student_attendance(request):
     user = UserCustom.objects.get(id=request.user.id)
     subjects = Subject.objects.filter(staffId=user)
     profile_picture = user.staff.profile_picture
     session = SessionYears.object.all()
-    return render(request, 'staff_templates/student_attendance.html', {"subjects": subjects, "session": session, "profile_picture": profile_picture})
+    return render(request, 'staff_templates/student_attendance.html',
+                  {"subjects": subjects, "session": session, "profile_picture": profile_picture})
 
 
 # FOLOSIM AJAX PENTRU A DETERMINA ELEVII PREZENTI LA MATERIA RESPECTIVA SI PREZENTI IN ACEA SESIUNE
@@ -147,6 +159,7 @@ def show_student_data(request):
 
     return JsonResponse(json.dumps(data), content_type="application/json", safe=False)
 
+
 # CU ACESTA FUNCTIA SE REALIZEAZA UPDATAREA PREZENTEI IN CAZUL IN CARE FUSESE FACUTA GRESIT IN PRIMA INSTANTA
 
 
@@ -168,6 +181,7 @@ def update_attendance_data(request):
     except:
         return HttpResponse("Error")
 
+
 # ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A RANDA PAGINA DE FEEDBACK A STAFF-ULUI SI ULTERIOR PERMITE PAGINII SA FOLOESASCA MESAJELE DE FEEDBACK EXISTENTE IN BAZA DE DATE PENTRU A LE INCLUDE INTR UN TABEL
 
 
@@ -176,9 +190,8 @@ def staff_send_feedback(request):
     feedback = FeedbackStaff.objects.filter(staffID=staff)
     return render(request, "staff_templates/staff_send_feedback.html", {"feedback": feedback})
 
+
 # ACEASTA FUNCTIE ARE ROLUL DE A SALVA FEEDBACK UL STAFF ULUI IN BAZA DE DATE
-
-
 def staff_feedback(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -203,6 +216,7 @@ def staff_applyfor_leave(request):
     staff = Staff.objects.get(admin=request.user.id)
     data = LeaveReportStaff.objects.filter(staffID=staff)
     return render(request, "staff_templates/staff_leave_application.html", {"leaveData": data})
+
 
 #  ACEASTA FUNCTIE ARE ROLUL DE A SALVA CEREREA DE CONCEDIU SAU DE PROBLEMA IN BAZA DE DATE
 
@@ -248,7 +262,9 @@ def staff_profile(request):
         if course_id not in course_list:
             course_list.append(course_id)
     all_students = Student.objects.filter(courseId__in=course_list).count()
-    return render(request, "staff_templates/staff_profile.html", {"user": user, "staff": staff, "subjects": subjects, "all_students": all_students, "gender": gender, "address": address, "profile_picture": profile_picture, "phone": phone})
+    return render(request, "staff_templates/staff_profile.html",
+                  {"user": user, "staff": staff, "subjects": subjects, "all_students": all_students, "gender": gender,
+                   "address": address, "profile_picture": profile_picture, "phone": phone})
 
 
 def edit_staff_profile(request):
@@ -322,14 +338,17 @@ def delete_todo_staff(request, todo_id):
     return HttpResponseRedirect(reverse("staff_dashboard"))
 
 
+def staff_student_notification(request):
+    student = Student.objects.all()
+    return render(request, "staff_templates/staff_notification_student.html", {"student": student})
+
 @csrf_exempt
-def save_fcm_token_staff(request):
-    token = request.POST.get("token")
-    try:
-        staff = Staff.objects.get(admin=request.user.id)
-        staff.fcm_token = token
-        staff.save()
-        return HttpResponse("True")
-    except:
-        return HttpResponse("Error")
+def staff_send_notification(request):
+    id = request.POST.get('id')
+    message = request.POST.get('message')
+    sender = request.POST.get("sender")
+    student = Student.objects.get(admin=id)
+    notification = StudentNotification(studentID=student, message=message, sender=sender)
+    notification.save()
+    return HttpResponse("True")
 

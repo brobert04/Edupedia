@@ -61,7 +61,6 @@ def handle_403(request, exception):
 def handle_400(request, exception):
     return render(request, "error_pages/400.html")
 
-
 def showFirebaseJs(request):
     data = 'importScripts("https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js");' \
            'importScripts("https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging.js");' \

@@ -4,7 +4,9 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.urls import reverse
 
-from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom,StudentNotification
+from datetime import datetime
+
 
 # ACEASTA FUNCTIE RANDEAZA PAGINA DE HOME A STUDENTULUI SI AJUTA LA INCARCAREA DINAMICA A CHARTURILOR RESPECTIVE
 def student_home(request):
@@ -32,8 +34,10 @@ def student_home(request):
         subject_name.append(subject.name)
         subject_present.append(att_present)
         subject_absent.append(att_absent)
-    
-    return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent})
+
+    notifications = StudentNotification.objects.filter(studentID=student.id)
+    notf_number  = notifications.count()
+    return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent, "notifications":notifications, "notf_number":notf_number})
 
 # ACEASTA FUNCTIE RANDEAZA PAGINA DE VIZUALIZARE A PROPRIILOR ABSENTE
 def student_view_attendance(request):
@@ -141,13 +145,14 @@ def student_contact_information(request):
     return render(request, "student_templates/contact-information.html",{"principal":principal, "staff":staff}  )
 
 
-def save_fcm_token(request):
-    token = request.POST.get("token")
-    try:
-        student = Student.objects.get(admin=request.user.id)
-        student.fcm_token = token
-        student.save()
-        return HttpResponse("True")
-    except:
-        return HttpResponse("Error")
+def delete_notification_student(request, notification_id):
+    notification = StudentNotification.objects.get(id=notification_id)
+    notification.delete()
+    return HttpResponseRedirect(reverse('student_dashboard'))
 
+
+def delete_all_notifications_student(request):
+    student = Student.objects.get(admin=request.user.id)
+    notifications = StudentNotification.objects.filter(studentID=student)
+    notifications.delete()
+    return HttpResponseRedirect(reverse('student_dashboard'))

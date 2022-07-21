@@ -4,70 +4,84 @@
     <!-- Brand Logo -->
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image"> 
-          <img src="{{profile_picture}}" class="img-circle elevation-2" alt="User Image">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{{profile_picture}}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="{% url 'staff_profile' %}" class="d-block">{{user.username}}</a>
+            </div>
         </div>
-        <div class="info">
-          <a href="{% url 'staff_profile' %}" class="d-block">{{user.username}}</a>
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item">
-            {% url 'student_attendance' as student_attendance %}
-            <a href="{% url 'student_attendance' %}" class="nav-link {% if request.path == student_attendance%} active {% endif %}">
-              <i class="nav-icon fas fa-calendar-check"></i>
-              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
-                Attendance
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'update_student_attendance' as update_student_attendance %}
-            <a href="{% url 'update_student_attendance' %}" class="nav-link {% if request.path == update_student_attendance%} active {% endif %}">
-              <i class="nav-icon fas fa-eye"></i>
-              <p style="font-size: 16px; font-weight: bold;margin-left: 5px;">
-                View & Edit Attendance
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'staff_send_feedback' as staff_send_feedback %}
-            <a href="{% url 'staff_send_feedback' %}" class="nav-link {% if request.path == staff_send_feedback%} active {% endif %}">
-              <i class="nav-icon fas fa-comment"></i>
-              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
-                Send Feedback
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'staff_applyfor_leave' as staff_applyfor_leave %}
-            <a href="{% url 'staff_applyfor_leave' %}" class="nav-link {% if request.path == staff_applyfor_leave%} active {% endif %}">
-              <i class="nav-icon fas fa-door-open"></i>
-              <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
-                Leave Application
-              </p>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    {% url 'student_attendance' as student_attendance %}
+                    <a href="{% url 'student_attendance' %}"
+                       class="nav-link {% if request.path == student_attendance%} active {% endif %}">
+                        <i class="nav-icon fas fa-calendar-check"></i>
+                        <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                            Attendance
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'update_student_attendance' as update_student_attendance %}
+                    <a href="{% url 'update_student_attendance' %}"
+                       class="nav-link {% if request.path == update_student_attendance%} active {% endif %}">
+                        <i class="nav-icon fas fa-eye"></i>
+                        <p style="font-size: 16px; font-weight: bold;margin-left: 5px;">
+                            View & Edit Attendance
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'staff_send_feedback' as staff_send_feedback %}
+                    <a href="{% url 'staff_send_feedback' %}"
+                       class="nav-link {% if request.path == staff_send_feedback%} active {% endif %}">
+                        <i class="nav-icon fas fa-comment"></i>
+                        <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                            Send Feedback
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'staff_applyfor_leave' as staff_applyfor_leave %}
+                    <a href="{% url 'staff_applyfor_leave' %}"
+                       class="nav-link {% if request.path == staff_applyfor_leave%} active {% endif %}">
+                        <i class="nav-icon fas fa-door-open"></i>
+                        <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                            Leave Application
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'staff_student_notification' as staff_student_notification %}
+                    <a href="{% url 'staff_student_notification' %}"
+                       class="nav-link {% if request.path == staff_student_notification%} active {% endif %}">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                            Send Notifications
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
     </div>
-    
+
     <!-- /.sidebar -->
-  </aside>
+</aside>

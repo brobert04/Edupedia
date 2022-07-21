@@ -3,70 +3,74 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image"> 
-          <img src="{% static "dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{% static " dist/img/user2-160x160.jpg" %}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="{% url 'student_profile' %}" class="d-block">{{user.username}}</a>
+            </div>
         </div>
-        <div class="info">
-          <a href="{% url 'student_profile' %}" class="d-block">{{user.username}}</a>
-        </div>
-      </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item">
-            {% url 'student_view_attendance' as student_view_attendance %}
-            <a href="{% url 'student_view_attendance' %}" class="nav-link {% if request.path == student_view_attendance%} active {% endif %}">
-              <i class="nav-icon fas fa-eye"></i>
-              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
-                View Attendance
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'student_send_feedback' as student_send_feedback %}
-            <a href="{% url 'student_send_feedback' %}" class="nav-link {% if request.path == student_send_feedback%} active {% endif %}">
-              <i class="nav-icon fas fa-comment"></i>
-              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
-                Send Feedback
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'student_applyfor_leave' as student_applyfor_leave %}
-            <a href="{% url 'student_applyfor_leave' %}" class="nav-link {% if request.path == student_applyfor_leave%} active {% endif %}">
-              <i class="nav-icon fas fa-calendar"></i>
-              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
-                Leave Application
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            {% url 'student_contact_information' as student_contact_information %}
-            <a href="{% url 'student_contact_information' %}" class="nav-link {% if request.path == student_contact_information%} active {% endif %}">
-              <i class="nav-icon fas fa-phone"></i>
-              <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
-                Contact 
-              </p>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item">
+                    {% url 'student_view_attendance' as student_view_attendance %}
+                    <a href="{% url 'student_view_attendance' %}"
+                       class="nav-link {% if request.path == student_view_attendance%} active {% endif %}">
+                        <i class="nav-icon fas fa-eye"></i>
+                        <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                            View Attendance
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'student_send_feedback' as student_send_feedback %}
+                    <a href="{% url 'student_send_feedback' %}"
+                       class="nav-link {% if request.path == student_send_feedback%} active {% endif %}">
+                        <i class="nav-icon fas fa-comment"></i>
+                        <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                            Send Feedback
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'student_applyfor_leave' as student_applyfor_leave %}
+                    <a href="{% url 'student_applyfor_leave' %}"
+                       class="nav-link {% if request.path == student_applyfor_leave%} active {% endif %}">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                            Leave Application
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'student_contact_information' as student_contact_information %}
+                    <a href="{% url 'student_contact_information' %}"
+                       class="nav-link {% if request.path == student_contact_information%} active {% endif %}">
+                        <i class="nav-icon fas fa-phone"></i>
+                        <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                            Contact
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
-  </aside>
+</aside>

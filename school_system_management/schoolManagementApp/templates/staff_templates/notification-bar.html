@@ -1,16 +1,57 @@
+{% load static %}
+{% load notifications_tags %}
 <ul class="navbar-nav ml-auto">
-  <li class="nav-item d-sm-inline-block">
-    <a href="{% url 'student_dashboard' %}" class="nav-link">Home</a>
-  </li>
-  <li class="nav-item d-sm-inline-block">
-    <a href="{% url 'logout' %}" id="logout" class="nav-link">Logout</a>
-  </li>
+    <li class="nav-item d-sm-inline-block">
+        <a href="{% url 'student_dashboard' %}" class="nav-link">Home</a>
+    </li>
+    <li class="nav-item d-sm-inline-block">
+        <a href="{% url 'logout' %}" id="logout" class="nav-link">Logout</a>
+    </li>
+    <li class="dropdown nav-item d-sm-inline-block">
+        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <i style="color:gray" class="fa fa-bell"></i>
+            <span style="color:gray" class="glyphicon glyphicon-user pull-right">
+                {{notf_number}}
+            </span>
+        </a>
+
+        <ul class="dropdown-menu" id="notice-link" style="width:400px;">
+            {% for n in notifications%}
+            <li style="margin-bottom: 10px; display: flex;flex-direction: row;
+    justify-content: space-between;align-items:center;padding:17px;border-bottom: 1px solid lightgray
+    ;" class="not">
+                <div style="display: flex;flex-direction: row; align-items: center;">
+                <img style="height:50px;" src="{% static "dist/img/notificare.jpg" %}" class="img-circle img-fluid">
+                <a href="#" style="font-size:15px;color:black;margin-left:20px;">
+                    {{n.message}}
+                    <br>
+                    <span style="font-size:12px;">{{n.createdAt}}</span>
+                    <br>
+                    <span style="font-size:12px;">From: {{n.sender}}</span>
+                </a>
+                </div>
+                <form action="/delete_notification_student/{{n.id}}/" method="post">
+                    {% csrf_token %}
+                    <button style="background:transparent; border:none;color:red;" type="submit"><i
+                            class="fas fa-trash"></i></button>
+                </form>
+            </li>
+            {% endfor %}
+            <form action="/delete_all_notifications_student" method="post">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item dropdown-footer">Delete All Notifications</button>
+            </form>
+        </ul>
+
+    </li>
     <li style="margin-right: 20px;" class="nav-item">
-      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-        <i class="fas fa-expand-arrows-alt"></i>
-      </a>
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+        </a>
     </li>
     <li style="margin-right: 20px; " class="nav-item  d-none d-sm-inline-block">
-      <div style="margin-top: 6px;" id="google_translate_element"></div>
+        <div style="margin-top: 6px;" id="google_translate_element"></div>
     </li>
 </ul>
+<script>
+</script>

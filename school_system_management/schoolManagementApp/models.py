@@ -143,6 +143,7 @@ class StudentNotification(models.Model):
     id = models.AutoField(primary_key=True)
     studentID = models.ForeignKey(Student, on_delete=models.CASCADE)
     message = models.TextField()
+    sender = models.TextField(default="Admin")
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
 
@@ -152,9 +153,11 @@ class StaffNotification(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
     message = models.TextField()
+    sender = models.TextField(default="Admin")
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
-    
+
+# MODELUL PENTRU APLICATIA DE TODO A STAFFULUI DIN PAGINA HOME
 class StaffTodo(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)

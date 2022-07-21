@@ -1,18 +1,20 @@
-{% extends 'principal_templates/base.html' %}
-<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->}
-{% block page_title %} Send Staff Notifications {% endblock page_title %}
+{% extends 'staff_templates/base.html' %}
+<!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
+{% block page_title %} Send Student Notification{% endblock page_title %}
 {% block main-content %}
 <section class="content">
     <div class="container-fluid">
         <div class="card">
             <div class="card-header">
-                <h3 style="font-size: 25px; font-weight:bold;" class="card-title">Choose Staff Member</h3>
+                <h3 style="font-size: 25px; font-weight: bold" class="card-title">
+                    Choose Student
+                </h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
-                    <tr style="text-align: center;">
+                    <tr style="text-align: center">
                         <th>ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
@@ -22,8 +24,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for s in staff %}
-                    <tr style="text-align: center;">
+                    {% for s in student%}
+                    <tr style="text-align: center">
                         <td>{{s.admin.id}}</td>
                         <td>{{s.admin.first_name}}</td>
                         <td>{{s.admin.last_name}}</td>
@@ -31,7 +33,9 @@
                         <td>{{s.admin.email}}</td>
                         <th>
                             <a class="show_notification" href="#" data-toggle="modal"
-                               data-target="#notification-staff">Send Notification</a>
+                               data-target="#notification_student"
+                            >Send Notification</a
+                            >
                         </th>
                     </tr>
                     {% endfor %}
@@ -42,8 +46,9 @@
         </div>
     </div>
 </section>
+
 <!-- Modal -->
-<div id="notification-staff" class="modal fade" role="dialog">
+<div id="notification_student" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -55,10 +60,10 @@
                     <p>Send Notification to <span id="name" style="color:red; font-weight:bold"></span>
                     </p>
                     <label for="message">Message</label>
-                    <input type="text" name="message" id="message" class="form-control">
+                    <input style="margin-bottom: 20px;" type="text" name="message" id="message" class="form-control">
                     <label for="from">From</label>
                     <input type="text" name="from" id="from" class="form-control">
-                    <input type="hidden" id="staff_id" name="staff_id">
+                    <input type="hidden" id="student_id" name="student_id">
                     <button id="send_notification" style="margin-top: 25px;" class="btn btn-primary">Send Notification
                     </button>
                 </div>
@@ -71,25 +76,24 @@
 <script>
     $(document).ready(function () {
         $(".show_notification").click(function () {
-            var staff_id = $(this).parents('tr').children("td:eq(0)").text();
-            $("#staff_id").val(staff_id);
-            var staff_name = $(this).parents('tr').children("td:eq(1)").text();
-            $("#name").text(staff_name);
+            var student_id = $(this).parents('tr').children("td:eq(0)").text();
+            $("#student_id").val(student_id);
+            var student_name = $(this).parents('tr').children("td:eq(1)").text();
+            $("#name").text(student_name);
         });
 
         $("#send_notification").click(function () {
-            var id = $("#staff_id").val();
+            var id = $("#student_id").val();
             var message = $("#message").val();
             var sender = $("#from").val();
             sendNotification(id, message, sender);
-
         });
 
         function sendNotification(id, message, sender) {
             $.ajax({
-                url: '{% url 'send_staff_notification' %}',
+                url: '{% url 'staff_send_notification' %}',
                 type: "POST",
-                data: {id: id, message: message, sender:sender}
+                data: {id: id, message: message, sender: sender},
             })
                 .done(function (response) {
                     if (response = "True") {

@@ -59,7 +59,10 @@
                 <div class="form-group">
                     <p>Send Notification to <span id="name" style="color:red; font-weight:bold"></span>
                     </p>
-                    <input type="text" name="message" id="message" class="form-control">
+                    <label for="message">Message</label>
+                    <input style="margin-bottom: 20px;" type="text" name="message" id="message" class="form-control">
+                    <label for="from">From</label>
+                    <input type="text" name="from" id="from" class="form-control">
                     <input type="hidden" id="student_id" name="student_id">
                     <button id="send_notification" style="margin-top: 25px;" class="btn btn-primary">Send Notification
                     </button>
@@ -82,18 +85,20 @@
         $("#send_notification").click(function () {
             var id = $("#student_id").val();
             var message = $("#message").val();
-            sendNotification(id, message);
+            var sender = $("#from").val();
+            sendNotification(id, message, sender);
         });
 
-        function sendNotification(id, message) {
+        function sendNotification(id, message, sender) {
             $.ajax({
                 url: '{% url 'send_student_notification' %}',
                 type: "POST",
-                data: {id: id, message: message}
+                data: {id: id, message: message, sender: sender},
             })
                 .done(function (response) {
                     if (response = "True") {
                         alert("Notification has been sent!")
+                        location.reload();
                     } else {
                         alert("We could not send the notification. Try again!")
                     }
