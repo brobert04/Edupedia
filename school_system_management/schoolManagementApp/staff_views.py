@@ -6,7 +6,7 @@ from requests import session
 from schoolManagementApp.forms import EditStaff, StaffOwnProfileEdit
 from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, StaffNotification, \
     LeaveReportStaff, \
-    SessionYears, Staff, StaffTodo, Student, Subject, UserCustom, StudentNotification
+    SessionYears, Staff, StaffTodo, Student, Subject, UserCustom, StudentNotification, StudentResults
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
@@ -63,7 +63,7 @@ def staff_home(request):
                    "feedback_reply": reply, "accepted_requests": accepted_requests,
                    "rejected_requests": rejected_requests, "pending_requests": pending_requests,
                    "profile_picture": profile_picture, "todos": todos, "notifications": notifications,
-                   "notf_number": notf_number})
+                   "notf_number": notf_number, })
 
 
 # FUNCTIA PENTRU A RANDA PAGINA DE STABILIRE A PREZENTEI LA CURS
@@ -219,8 +219,6 @@ def staff_applyfor_leave(request):
 
 
 #  ACEASTA FUNCTIE ARE ROLUL DE A SALVA CEREREA DE CONCEDIU SAU DE PROBLEMA IN BAZA DE DATE
-
-
 def staff_send_leave(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -243,6 +241,7 @@ def staff_send_leave(request):
             return HttpResponseRedirect('/staff_applyfor_leave')
 
 
+# ACEASTA FUNCTIE RANDEAZA PAGINA DE PROFIL A PROFESORULUI
 def staff_profile(request):
     user = UserCustom.objects.get(id=request.user.id)
     staff = Staff.objects.get(admin=user)
@@ -267,6 +266,7 @@ def staff_profile(request):
                    "address": address, "profile_picture": profile_picture, "phone": phone})
 
 
+# ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A RANDA PAGINA DE EDIT A PROFILULUI PROFESORULUI
 def edit_staff_profile(request):
     staff_id = request.user.id
     staff = Staff.objects.get(admin=staff_id)
@@ -280,6 +280,7 @@ def edit_staff_profile(request):
     return render(request, "staff_templates/edit_staff_profile.html", {"form": form})
 
 
+# ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A SALVA NOILE DETALII
 def staff_profile_save(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -324,6 +325,7 @@ def staff_profile_save(request):
             print(form.errors)
 
 
+# FUCNTIE PENTRU A ADAUGA UN NOU TODO
 def add_todo_staff(request):
     task = request.POST.get("todoText")
     staff = Staff.objects.get(admin=request.user.id)
@@ -332,16 +334,25 @@ def add_todo_staff(request):
     return HttpResponseRedirect(reverse("staff_dashboard"))
 
 
+# FUNCTIE PENTRU A STERGE UN ANUMIT TODO
 def delete_todo_staff(request, todo_id):
     task = StaffTodo.objects.get(id=todo_id)
     task.delete()
     return HttpResponseRedirect(reverse("staff_dashboard"))
 
 
+# FUNCTIE PENTRU A RANDA PAGINA DE TRIMITERE DE NOTIFICARI
 def staff_student_notification(request):
-    student = Student.objects.all()
+    subject = Subject.objects.filter(staffId=request.user.id)
+    course_ids_list = []
+    for s in subject:
+        course = Course.objects.get(id=s.courseId.id)
+        course_ids_list.append(course.id)
+    student = Student.objects.filter(courseId__in=course_ids_list)
     return render(request, "staff_templates/staff_notification_student.html", {"student": student})
 
+
+# FUNCTIA PENTRU A TRIMITE NOTIFICARI
 @csrf_exempt
 def staff_send_notification(request):
     id = request.POST.get('id')
@@ -352,3 +363,42 @@ def staff_send_notification(request):
     notification.save()
     return HttpResponse("True")
 
+
+# FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE REZULTATE
+def staff_add_results(request):
+    subjects = Subject.objects.filter(staffId=request.user.id)
+    session = SessionYears.object.all()
+    return render(request, 'staff_templates/add_results.html', {'subjects': subjects, 'session': session})
+
+
+def save_student_results(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        student_id = request.POST.get('student_list');
+        assingment_mark = request.POST.get('assignment_mark')
+        exam_mark = request.POST.get('exam_mark')
+        date = request.POST.get('date')
+        subject_id = request.POST.get('subject')
+
+        student = Student.objects.get(admin=student_id)
+        subject = Subject.objects.get(id=subject_id)
+
+        try:
+            check_exist = StudentResults.objects.filter(subjectID=subject,studentID=student, date=date).exists()
+            if check_exist:
+                res = StudentResults.objects.get(subjectID=subject,studentID=student, date=date)
+                res.subject_assignment_mark = assingment_mark
+                res.subject_exam_mark = exam_mark
+                res.save()
+                messages.success(request, 'Results have been updated!')
+                return HttpResponseRedirect(reverse("staff_add_results"))
+            else:
+                results = StudentResults(studentID=student, subjectID=subject, subject_assignment_mark=assingment_mark, subject_exam_mark=exam_mark, date=date)
+                results.save()
+                messages.success(request, 'Results have been saved!')
+                return HttpResponseRedirect(reverse("staff_add_results"))
+        except:
+            messages.error(
+                request, 'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse("staff_add_results"))

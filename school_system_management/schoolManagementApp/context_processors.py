@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from schoolManagementApp.models import Staff, UserCustom
 from django.utils.functional import SimpleLazyObject
-
+from django.contrib.auth.decorators import login_required
 
 # def profile_picture(request):
-#     user  = UserCustom.objects.get(id=request.user.id, user_type=2)
-#     profile = user.profile_picture
-#     return {'profile_picture': profile}
+#     if request.user.is_authenticated:
+#         user1 = UserCustom.objects.get(id=request.user.id)
+#     return {'user': user}

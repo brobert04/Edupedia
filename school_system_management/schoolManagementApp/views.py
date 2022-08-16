@@ -21,7 +21,6 @@ def Login(request):
     # ALTFEL FOLOSIM DATELE INTRDOUSE IN FORMULAR SI REALIZAM AUTENTIFICAREA UTILIZATORULUI FOLOSINDU-NE DE FUNCTIA DIN EMAIL.PY
     else:
         user = Email.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-
         # IN CAZUL IN CARE USERUL EXISTA, REALIZAM LOGAREA
         if user is not None:
             login(request, user)
@@ -60,28 +59,3 @@ def handle_403(request, exception):
 
 def handle_400(request, exception):
     return render(request, "error_pages/400.html")
-
-def showFirebaseJs(request):
-    data = 'importScripts("https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js");' \
-           'importScripts("https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging.js");' \
-           'const firebaseConfig = {' \
-                'apiKey: "AIzaSyD-0otDO4PwXo8NlH9JAf6eZvukq37BUIY",' \
-                'authDomain: "edupedia-356412.firebaseapp.com",' \
-                'projectId: "edupedia-356412",' \
-                'storageBucket: "edupedia-356412.appspot.com",' \
-                'messagingSenderId: "490620593166",' \
-                'appId: "1:490620593166:web:97764f9b6fff13f960485f",' \
-                'measurementId: "G-BFDRTSF6LE"' \
-            '};'\
-            'firebase.initializeApp(firebaseConfig);' \
-            'const messaging = firebase.messaging();' \
-            'messaging.setBackgroundMessageHandler(function(payload){' \
-                'console.log(payload);' \
-                'const notification = JSON.parse(payload)' \
-                'const notificationOption={' \
-                    'body:notification.body,' \
-                    'icon:notification.icon,' \
-                '};' \
-            'return self.registration.showNotification(payload.notification.title, notificationOption)'\
-            '})"'
-    return HttpResponse(data)

@@ -1,0 +1,99 @@
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Add Student Results {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <form action="{% url 'save_student_results'%}" method="post">
+            {% csrf_token %}
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Establish Student Results</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select name="subject" class="form-control custom-select form-control-border" id="subject" name="subject">
+                            {% for subject in subjects %}
+                            <option value="{{subject.id}}">{{subject.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Session</label>
+                        <select name="session" class="form-control custom-select form-control-border" id="session">
+                            {% for s in session %}
+                            <option value="{{s.id}}">From {{s.startYear}} to {{s.endYear}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    {%if messages%}
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                      <div id="fail" class="alert alert-danger">{{message}}</div>
+                    {% endif %}
+                    {% if message.tags == "success" %}
+                      <div id="fail" class="alert alert-success">{{message}}</div>
+                    {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" id="fetch_attendance">See Students
+                    </button>
+                </div>
+                <div style="margin-top: 40px;" id="studentData">
+                    <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
+                </div>
+        </form>
+    </div>
+    </div>
+</section>
+{% block base_js %}
+<script>
+    $(document).ready(function () {
+        $("#fetch_attendance").click(function () {
+            var subject = $("#subject").val()
+            var session = $("#session").val()
+            $.ajax({
+                url: '{% url 'get_students' %}',
+                type: "POST",
+                data: {subject: subject, session: session}
+            })
+                .done(function (response) {
+                    var json_data = JSON.parse(response)
+                    console.log(json_data)
+                    var div_data = "<div class='form-group' style='margin-left:20px;''><label>Student List</label><select class='student_list form-control custom-select form-control-border' name='student_list' style='width:99%;'>";
+                    for (j in json_data) {
+                        div_data += "<option  value='" + json_data[j]['id'] + "'>" + json_data[j]['name'] + "</option>";
+                    }
+                    div_data += "</select>";
+                    div_data += "</div>";
+                    div_data += "<div class='form-group'><div class='row' style='margin-right: 10px;'>"
+                    div_data += "<div class='col-lg' style='margin-left:20px;'>";
+                    div_data += "<label>Exam Mark: </label><input type='text' name='exam_mark' class='form-control' placeholder='Exam Mark'>";
+                    div_data+="</div>"
+                    div_data += "<div class='col-lg' style='margin-left:20px;'>";
+                    div_data += "<label>Assignment Mark: </label><input type='text' name='assignment_mark' class='form-control' placeholder='Exam Mark'>";
+                    div_data+="</div>"
+                    div_data += "<div class='col-lg' style='margin-left:20px;'>";
+                    div_data += "<label>Date: </label><input type='date' name='date' class='form-control' placeholder='Assignment Mark'>";
+                    div_data+="</div></div></div>"
+                    div_data += "<div class='form-group'>";
+                    div_data += "<button style='margin-left:20px;' type='submit' class='btn btn-primary' id='save_attendance_data'>Save Results</button>";
+                    div_data += "</div>";
+                    $('#studentData').html(div_data);
+                })
+                .fail(function () {
+                    alert("We could not fetch the students. Try again!")
+                })
+        })
+    })
+</script>
+{% endblock base_js %}
+{% endblock main-content %}
+

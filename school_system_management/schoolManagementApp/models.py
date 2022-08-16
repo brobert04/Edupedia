@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import datetime
 
 
 # Create your models here.
@@ -11,7 +12,8 @@ class SessionYears(models.Model):
     startYear = models.DateField()
     endYear = models.DateField()
     object = models.Manager()
-    
+
+
 class UserCustom(AbstractUser):
     user_type_data = ((1, "Admin"), (2, "Staff"), (3, "Student"))
     user_type = models.CharField(default=1, max_length=30, choices=user_type_data)
@@ -36,7 +38,7 @@ class Staff(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
     address = models.TextField(max_length=500)
-    gender = models.CharField(max_length=300,default="Male")
+    gender = models.CharField(max_length=300, default="Male")
     profile_picture = models.FileField()
     phone_number = models.CharField(max_length=20, default="+4073117891")
     fcm_token = models.TextField(default="")
@@ -48,7 +50,6 @@ class Course(models.Model):
     name = models.CharField(max_length=300)
     createdAt = models.DateTimeField(auto_now_add=True)
     modifiedAt = models.DateTimeField(auto_now_add=True)
-    
 
 
 # MODEL PENTRU MATERIE
@@ -73,7 +74,6 @@ class Student(models.Model):
     courseId = models.ForeignKey(Course, on_delete=models.CASCADE)
     session_id = models.ForeignKey(SessionYears, on_delete=models.CASCADE)
     fcm_token = models.TextField(default="")
-
 
 
 # MODELUL PENTRU INREGISTRAREA PREZENTEI
@@ -157,13 +157,26 @@ class StaffNotification(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
 
+
 # MODELUL PENTRU APLICATIA DE TODO A STAFFULUI DIN PAGINA HOME
 class StaffTodo(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
-    task_text  = models.TextField()
+    task_text = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True)
-    
+
+
+class StudentResults(models.Model):
+    id = models.AutoField(primary_key=True)
+    studentID = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subjectID = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject_exam_mark = models.FloatField(default=0)
+    subject_assignment_mark = models.FloatField(default=0)
+    date = models.DateField(auto_now_add=False, default=datetime.date.today)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+
 
 # ATUNCI CAND UN NOU USER ESTE CREAT, SE VA ADAUGA AUTOMAT IN NOU RAND FIE IN MODELUL DIRECTORULUI, INVATATORULUI SAU STUDENTULUI
 @receiver(post_save, sender=UserCustom)
@@ -174,7 +187,8 @@ def create_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staff.objects.create(admin=instance)
         if instance.user_type == 3:
-            Student.objects.create(admin=instance, courseId=Course.objects.get(id=1),session_id=SessionYears.object.get(id=1), address="",profile_picture="",gender="")
+            Student.objects.create(admin=instance, courseId=Course.objects.get(id=1),
+                                   session_id=SessionYears.object.get(id=1), address="", profile_picture="", gender="")
 
 
 # ACEASTA METODA VA FI EXECUTATA PENTRU A SALVA INFORMATIILE DUPA CE EXECUTIA FUNCTIEI DE MAI SUS SE VA FI TERMINAT

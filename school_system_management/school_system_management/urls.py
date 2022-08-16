@@ -102,10 +102,11 @@ urlpatterns = [
                   path("edit_staff_profile", staff_views.edit_staff_profile, name="edit_staff_profile"),
                   path("add_todo_staff", staff_views.add_todo_staff, name="add_todo_staff"),
                   path("deleteTodo/<int:todo_id>/", staff_views.delete_todo_staff, name="delete_todo_staff"),
-                  path("staff_student_notification", staff_views.staff_student_notification, name="staff_student_notification"),
+                  path("staff_student_notification", staff_views.staff_student_notification,
+                       name="staff_student_notification"),
                   path("staff_send_notification", staff_views.staff_send_notification, name="staff_send_notification"),
-
-
+                  path("staff_add_results", staff_views.staff_add_results, name="staff_add_results"),
+                  path("save_student_results", staff_views.save_student_results, name="save_student_results"),
 
                   # STUDENT PAGE URLS
                   path('student_dashboard', student_views.student_home, name="student_dashboard"),
@@ -123,8 +124,10 @@ urlpatterns = [
                   path("student_send_leave", student_views.student_send_leave, name="student_send_leave"),
                   path("student_contact_information", student_views.student_contact_information,
                        name="student_contact_information"),
-                  path("delete_notification_student/<int:notification_id>/", student_views.delete_notification_student, name="delete_notification_student"),
-                  path("delete_all_notifications_student", student_views.delete_all_notifications_student, name="delete_all_notifications_student"),
+                  path("delete_notification_student/<int:notification_id>/", student_views.delete_notification_student,
+                       name="delete_notification_student"),
+                  path("delete_all_notifications_student", student_views.delete_all_notifications_student,
+                       name="delete_all_notifications_student"),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL,
                                                                                          document_root=settings.STATIC_ROOT)
 
