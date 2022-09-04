@@ -364,13 +364,25 @@ def staff_send_notification(request):
     return HttpResponse("True")
 
 
+def delete_notification_staff(request,notification_id):
+    notification = StaffNotification.objects.get(id=notification_id)
+    notification.delete()
+    return HttpResponseRedirect(reverse("staff_dashboard"))
+
+def delete_all_notifications_staff(request):
+    staff = Staff.objects.get(admin=request.user.id)
+    noitifications = StaffNotification.objects.filter(staffID=staff)
+    noitifications.delete()
+    return HttpResponseRedirect(reverse("staff_dashboard"))
+
+
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE REZULTATE
 def staff_add_results(request):
     subjects = Subject.objects.filter(staffId=request.user.id)
     session = SessionYears.object.all()
     return render(request, 'staff_templates/add_results.html', {'subjects': subjects, 'session': session})
 
-
+# FUNCTIA PENTRU A SALVA/UPDATA REZULTATELE ELEVILOR LA MATERIA RESPECTIVA
 def save_student_results(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -402,3 +414,21 @@ def save_student_results(request):
             messages.error(
                 request, 'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse("staff_add_results"))
+
+
+def edit_student_results_save(request):
+    pass
+@csrf_exempt
+def fetch_student_results(request):
+    subject_id = request.POST.get('subject_id')
+    student_id = request.POST.get('student_id')
+    date_id = request.POST.get('date_id')
+
+    student_object = Student.objects.get(admin=student_id)
+    results = StudentResults.objects.filter(subjectID=subject_id, studentID=student_object.id, date=date_id).exists()
+    if results:
+        results = StudentResults.objects.get(subjectID=subject_id, studentID=student_object.id, date=date_id)
+        result_data = {"exam_mark":results.subject_exam_mark, "assignment_mark":results.subject_assignment_mark}
+        return HttpResponse(json.dumps(result_data))
+    else:
+        return HttpResponse("False")

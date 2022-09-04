@@ -88,6 +88,16 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    {% url 'edit_student_result' as edit_student_result %}
+                    <a href="{% url 'edit_student_result' %}"
+                       class="nav-link {% if request.path == edit_student_result%} active {% endif %}">
+                        <i class="nav-icon fas fa-pen"></i>
+                        <p style="font-size: 18px; font-weight: bold;margin-left: 5px;">
+                            Edit Results
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

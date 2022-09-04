@@ -4,6 +4,7 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from school_system_management import settings
 from schoolManagementApp import staff_views, student_views, views
+from schoolManagementApp.EditViewClass import EditViewClass
 from schoolManagementApp import principal_views
 from schoolManagementApp.principal_views import principal_home
 from schoolManagementApp.views import showDemoPage, loginPage, getUserData, Logout
@@ -105,8 +106,16 @@ urlpatterns = [
                   path("staff_student_notification", staff_views.staff_student_notification,
                        name="staff_student_notification"),
                   path("staff_send_notification", staff_views.staff_send_notification, name="staff_send_notification"),
+                  path("delete_notification_staff/<int:notification_id>/", staff_views.delete_notification_staff,
+                       name="delete_notification_staff"),
+                  path("delete_all_notifications_staff", staff_views.delete_all_notifications_staff,
+                       name="delete_all_notifications_staff"),
                   path("staff_add_results", staff_views.staff_add_results, name="staff_add_results"),
                   path("save_student_results", staff_views.save_student_results, name="save_student_results"),
+                  path("edit_student_result", EditViewClass.as_view(), name="edit_student_result"),
+                path('edit_student_results_save', staff_views.edit_student_results_save, name="edit_student_results_save"),
+                path("fetch_student_results", staff_views.fetch_student_results, name="fetch_student_results"),
+
 
                   # STUDENT PAGE URLS
                   path('student_dashboard', student_views.student_home, name="student_dashboard"),

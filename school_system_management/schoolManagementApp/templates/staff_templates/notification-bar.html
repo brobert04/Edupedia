@@ -30,14 +30,14 @@
                     <span style="font-size:12px;">From: {{n.sender}}</span>
                 </a>
                 </div>
-                <form action="/delete_notification_student/{{n.id}}/" method="post">
+                <form action="/delete_notification_staff/{{n.id}}/" method="post">
                     {% csrf_token %}
                     <button style="background:transparent; border:none;color:red;" type="submit"><i
                             class="fas fa-trash"></i></button>
                 </form>
             </li>
             {% endfor %}
-            <form action="/delete_all_notifications_student" method="post">
+            <form action="/delete_all_notifications_staff" method="post">
                 {% csrf_token %}
                 <button type="submit" class="dropdown-item dropdown-footer">Delete All Notifications</button>
             </form>

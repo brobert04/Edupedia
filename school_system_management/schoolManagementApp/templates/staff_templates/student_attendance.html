@@ -32,7 +32,7 @@
               <div class="card-footer">
                 <button type="button" class="btn btn-primary" id="fetch_attendance">Check Student Attendance</button>
               </div>
-              <div style="margin-top: 40px;" id="studentData" >
+              <div style="margin-top: 40px;" id="studentData" hidden>
                 <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
               </div>
           </div>
@@ -55,6 +55,7 @@
             .done(function(response){
                 var json_data = JSON.parse(response)
                 console.log(json_data)
+                $('#studentData').removeAttr('hidden')
                 var div_data = "<div class='form-group'><h1 style='font-size:40px;font-weight: bold; margin: 0 0 20px 50px; color: red;'>Attendance List</h1><label style='margin-left: 50px;'>Attendance Date: </label><input style='margin: 0 0 20px 50px;width: 50%;' type='date' name='attendanceDate' id='attendanceDate' class='form-control'</div><div class='form-group'><div class='row'>";
                 for(j in json_data){
                     div_data += "<div class='col-lg-4'><div style='margin-bottom:10px; font-size:18px;' class='form-check'><input style='margin: 0 5px 0 30px;' type ='checkbox' checked='checked' name='studentData[]'' value='" +json_data[j]['id']+"'>"+json_data[j]['name']+"</div></div>";

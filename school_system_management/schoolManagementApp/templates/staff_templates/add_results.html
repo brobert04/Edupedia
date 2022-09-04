@@ -46,7 +46,7 @@
                     <button type="button" class="btn btn-primary" id="fetch_attendance">See Students
                     </button>
                 </div>
-                <div style="margin-top: 40px;" id="studentData">
+                <div style="margin-top: 40px;" id="studentData" hidden>
                     <!-- AICI VOM ADAUGA DIVUL REZULTAT IN URMA ADAUGARII ELEVILOR PREZENTI LA CURSUL RESPECTIV -->
                 </div>
         </form>
@@ -67,6 +67,7 @@
                 .done(function (response) {
                     var json_data = JSON.parse(response)
                     console.log(json_data)
+                    $('#studentData').removeAttr('hidden')
                     var div_data = "<div class='form-group' style='margin-left:20px;''><label>Student List</label><select class='student_list form-control custom-select form-control-border' name='student_list' style='width:99%;'>";
                     for (j in json_data) {
                         div_data += "<option  value='" + json_data[j]['id'] + "'>" + json_data[j]['name'] + "</option>";
@@ -78,7 +79,7 @@
                     div_data += "<label>Exam Mark: </label><input type='text' name='exam_mark' class='form-control' placeholder='Exam Mark'>";
                     div_data+="</div>"
                     div_data += "<div class='col-lg' style='margin-left:20px;'>";
-                    div_data += "<label>Assignment Mark: </label><input type='text' name='assignment_mark' class='form-control' placeholder='Exam Mark'>";
+                    div_data += "<label>Homework Mark: </label><input type='text' name='assignment_mark' class='form-control' placeholder='Homework Mark'>";
                     div_data+="</div>"
                     div_data += "<div class='col-lg' style='margin-left:20px;'>";
                     div_data += "<label>Date: </label><input type='date' name='date' class='form-control' placeholder='Assignment Mark'>";

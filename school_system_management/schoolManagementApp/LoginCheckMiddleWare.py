@@ -20,7 +20,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
             
             # DACA USERUL ARE STATUT DE STAFF POATE ACCESA NUMAI PAGINILE SPECIFICE MEMBRILOR STAFFULUI    
             elif user.user_type == "2":
-                if modulename == "schoolManagementApp.staff_views":
+                if modulename == "schoolManagementApp.staff_views" or modulename == "schoolManagementApp.EditViewClass":
                     pass
                 elif modulename == "schoolManagementApp.views"  or modulename == "django.views.static":
                     pass

@@ -1,8 +1,13 @@
 from django import forms
+from django.forms import ChoiceField
 
-from schoolManagementApp.models import Course, SessionYears, Staff
+from schoolManagementApp.models import Course, SessionYears, Staff, Subject
 from school_system_management import settings
 
+
+class NotValidatingChoice(ChoiceField):
+    def validate(self, value):
+        pass
 
 class CustomDateInput(forms.DateInput):
     input_type = "date"
@@ -176,12 +181,38 @@ class StaffOwnProfileEdit(forms.Form):
     profilePicture = forms.FileField(label="Profile Picture", max_length=50, required=False)
     
     
-# class CalendarForm(forms.Form):
-#     eventTitle = forms.CharField(label="Event", max_length=255, required=False, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "Event Title"}))
-    
-#     description = forms.CharField(label="Description", max_length=50, widget=forms.TextInput(attrs={"class": "form-control", "autocmplete": "off", "placeholder": "Event Description"}))
-    
-#     startDateTime = forms.DateField(input_formats=['%d/%m/%Y'],label="Start Date", required=True, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "Start Date"}))
-    
-#     endDateTime = forms.DateField(input_formats=['%d/%m/%Y'], label="End Date",required=True, widget=forms.TextInput(attrs={"class": "form-control", "autocomplete": "off", "placeholder": "End Date"}))
-    
+# FORMULARUL PENTRU EDITAREA REZULATULUI ELEVLUI
+class EditResult(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.staffId = kwargs.pop("staffId")
+        super(EditResult, self).__init__(*args, **kwargs)
+        subject_list = []
+        try:
+            subjects = Subject.objects.filter(staffId=self.staffId)
+            for s in subjects:
+                subject = (s.id, s.name)
+                subject_list.append(subject)
+        except:
+            subjects = []
+        self.fields["subject_id"].choices = subject_list
+        
+        
+    years_list = []
+    try:
+        years = SessionYears.object.all()
+        for y in years:
+             year = (y.id, "From " + str(y.startYear) + " to " + str(y.endYear))
+             years_list.append(year)
+    except:
+             years_list = []
+
+
+    students = NotValidatingChoice(label="Student", widget=forms.Select(attrs={"class": "form-control custom-select form-control-border"}))
+    session = forms.ChoiceField(label="Session", choices=years_list,
+                                widget=forms.Select(attrs={"class": "form-control custom-select form-control-border"}))
+    date = forms.DateField(label="Date", widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}))
+    subject_id = forms.ChoiceField(label="Subject", widget=forms.Select(attrs={"class":"form-control custom-select form-control-border "}))
+    assignment_mark = forms.CharField(label="Homework Mark", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
+    exam_mark = forms.CharField(label="Exam Mark", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
+        
+              
