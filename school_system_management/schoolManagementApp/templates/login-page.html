@@ -25,7 +25,7 @@
     }
 
     #fail{
-      width: 75%;
+      width: 100%;
       text-align: center;
       margin: 20px auto;
     }
@@ -63,7 +63,10 @@
             </div>
           </div>
         </div>
-        <div class="row mt-5">
+      <div class="input-group" style="margin-left:10px;">
+        <div class="g-recaptcha" data-sitekey="6LceptAhAAAAAIhio4Ong7NIAygmI8Xoe5Db3VtC"></div>
+      </div>
+        <div class="row mt-3">
           <!-- /.col -->
           <div class="col-12">
             <button type="submit" class="btn btn-primary btn-block">Log In</button>
@@ -93,6 +96,7 @@
 <script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static " dist/js/adminlte.min.js" %}"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>
 

@@ -68,6 +68,16 @@
                         </p>
                     </a>
                 </li>
+                 <li class="nav-item">
+                    {% url 'view_results' as view_results %}
+                    <a href="{% url 'view_results' %}"
+                       class="nav-link {% if request.path == view_results%} active {% endif %}">
+                        <i class="nav-icon fas fa-check"></i>
+                        <p style="font-size: 19px; font-weight: bold;margin-left: 20px;">
+                            Grades
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

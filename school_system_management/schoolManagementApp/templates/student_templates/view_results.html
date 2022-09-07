@@ -1,0 +1,43 @@
+{% extends 'student_templates/base.html' %}
+{% block page_title %} View Recent Grades & Results{% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+    </div>
+    <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Recent grades & results</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+            <tr style="text-align: center;">
+                <th>Subject</th>
+                <th>Exam Mark</th>
+                <th>Homework Mark</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+            {% for s in student_results  %}
+            <tr style="text-align: center;">
+                <td>{{s.subjectID.name}}</td>
+                <td>{{s.subject_exam_mark}}</td>
+                <td>{{s.subject_assignment_mark}}</td>
+                <td>{{s.date}}</td>
+                <td>
+                    {% if s.subject_exam_mark >= 8.5%}
+                        <span class="badge bg-success">Good Job</span>
+                    {% elif s.subject_exam_mark >= 4 and s.subject_exam_mark < 8.5%}
+                        <span class="badge bg-warning">Keep Learning</span>
+                    {% else %}
+                        <span class="badge bg-danger">Failed</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</section>
+{% endblock main-content %}
+

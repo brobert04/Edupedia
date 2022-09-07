@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.urls import reverse
 
-from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom,StudentNotification
+from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom,StudentNotification, StudentResults
 from datetime import datetime
 
 
@@ -156,3 +156,9 @@ def delete_all_notifications_student(request):
     notifications = StudentNotification.objects.filter(studentID=student)
     notifications.delete()
     return HttpResponseRedirect(reverse('student_dashboard'))
+
+
+def view_results(request):
+    student = Student.objects.get(admin=request.user.id)
+    student_results = StudentResults.objects.filter(studentID=student.id)
+    return render(request, "student_templates/view_results.html", {"student_results": student_results})

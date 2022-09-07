@@ -1,9 +1,12 @@
+from urllib.request import Request
 from django.contrib.auth import logout, login
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from schoolManagementApp.Email import Email
 from django.contrib import messages
+import requests
+import json
 
 
 def showDemoPage(request):
@@ -20,6 +23,18 @@ def Login(request):
         return HttpResponse('<h1>THIS METHOD IS NOT ALLOWED</h1>')
     # ALTFEL FOLOSIM DATELE INTRDOUSE IN FORMULAR SI REALIZAM AUTENTIFICAREA UTILIZATORULUI FOLOSINDU-NE DE FUNCTIA DIN EMAIL.PY
     else:
+        # FACEM UN SCHIMB DE DATE CU API-UL DE CAPTCHA DE LA GOOGLE PENTRU A VERIFIOCA RASPUNUL USERULUI INAINTE DE A SE LOGA
+        captcha_token = request.POST.get('g-recaptcha-response')
+        captcha_url = 'https://www.google.com/recaptcha/api/siteverify'
+        captcha_secret_key = '6LceptAhAAAAAIrLGX3J44NxcbM4YihCfjUYnQR5'
+        captcha_data = {"secret":captcha_secret_key, "response":captcha_token}
+        server_response = requests.post(url=captcha_url, data=captcha_data)
+        captcha_json = json.loads(server_response.text)
+
+        if captcha_json['success'] == False:
+            messages.error(request, 'Invalid Captcha')
+            return HttpResponseRedirect('/')
+
         user = Email.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         # IN CAZUL IN CARE USERUL EXISTA, REALIZAM LOGAREA
         if user is not None:

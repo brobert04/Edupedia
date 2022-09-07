@@ -137,6 +137,7 @@ urlpatterns = [
                        name="delete_notification_student"),
                   path("delete_all_notifications_student", student_views.delete_all_notifications_student,
                        name="delete_all_notifications_student"),
+                  path("view_results", student_views.view_results, name="view_results"),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL,
                                                                                          document_root=settings.STATIC_ROOT)
 
