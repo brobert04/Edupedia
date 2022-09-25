@@ -1,0 +1,115 @@
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Schedule Class Meeting {% endblock page_title %}
+{% block main-content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <button style="border: none;background-color:transparent" id="add_new">
+                <div class="card" style="width: 18rem; text-align: center; padding: 20px">
+                    <i class="fas fa-plus fa-3x"></i>
+                    <div class="card-body">
+                        <h5>Schedule New Meeting</h5>
+                    </div>
+                </div>
+            </button>
+            <div class="col-lg" hidden id="meeting_details">
+                <form action="{% url 'schedule_meeting'%}" method="post">
+                    {% csrf_token %}
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Set meeting information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" name="email" id="email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Meeting Topic</label>
+                                <input type="text" name="meeting_topic" id="meeting_topic" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <button type="button" class="btn" data-toggle="tooltip"
+                                        data-placement="right"
+                                        title="If you want to schedule a meeting, set the 'Date' with 3 hours earlier (so that Zoom will automatically convert it to Bucharest (GMT+3) timezone) - eg: desired date: September 26, 2022, 10:00 am ; 'Date' input:September 26, 2022, 7:00 am">
+                                    <i class="fas fa-info" style="position: relative; left: -9px; top: -1px;"></i>
+                                </button>
+                                <input type="datetime-local" name="date" class="form-control" required="" id="id_date">
+                            </div>
+                            <div class="form-group">
+                                <label>Duration(minutes)</label>
+                                <input type="number" name="duration" class="form-control" required="" id="id_duration">
+                            </div>
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select name="subject" class="form-control" id="subject">
+                                    {% for subject in subjects %}
+                                    <option value="{{subject.id}}">{{subject.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary" id="schedule_meeting">Schedule Meeting
+                            </button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        {%if messages%}
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div id="fail" class="alert alert-danger">{{message}}</div>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <div id="fail" class="alert alert-success">{{message}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+</section>
+
+<!--IN CONTINUARE VOM FOLOSI AJAX PENTRU A FACE UN SCHIMB DE DATE CU SERVERUL SI A ARATA LISTA ELEVILOR PREZENTI/INSCRISI LA CURSUL/MATERIA RESPECTIV/A-->
+{% block base_js %}
+<script>
+    $(document).ready(function () {
+        $("#add_new").click(function () {
+            $("#add_new").attr("hidden", true);
+            $("#meeting_details").attr("hidden", false);
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        if ($("#meetings").is(":empty")) {
+            $("#meetings").attr("hidden", true);
+        }
+        $("#schedule_meeting").click(function () {
+            var email = $("#email").val();
+            var meeting_topic = $("#meeting_topic").val();
+            var date = $("#id_date").val();
+            var duration = $("#id_duration").val();
+            var subject = $("#subject").val();
+            $.ajax({
+                url: "{% url 'schedule_meeting' %}",
+                type: "POST",
+                data: {
+                    email: email,
+                    meeting_topic: meeting_topic,
+                    date: date,
+                    duration: duration,
+                    subject: subject,
+                },
+            })
+                .done(function () {
+                    $("#exampleModalCenter").modal("show");
+                })
+        });
+    });
+</script>
+{% endblock base_js %}
+
+{% endblock main-content %}
+

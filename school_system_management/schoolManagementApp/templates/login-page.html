@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edupedia | Log In</title>
+  <title>Edupedia | Log in</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="{% static "plugins/icheck-bootstrap/icheck-bootstrap.min.css" %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static "dist/css/adminlte.css" %}">
-  
+
   <style>
     #logo-text{
       font-size: 50px;
@@ -43,7 +43,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p id="autentificare" class="login-box-msg">Log in to the platform</p>
+      <p id="autentificare" class="login-box-msg">Connect to the platform</p>
 
     <form action="/login" method="post">
         {% csrf_token %}
@@ -69,11 +69,11 @@
         <div class="row mt-3">
           <!-- /.col -->
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Log In</button>
+            <button type="submit" class="btn btn-primary btn-block">Connect</button>
           </div>
           <div class="col-12 text-center mt-4">
             <a id="passwordReset" href="{% url 'password_reset' %}" style="
-            color: black;">Forgot your Password?</a>
+            color: black;">Forgot your password?</a>
           </div>
           <div class="row">
             {%if messages%}
@@ -90,6 +90,7 @@
     </div>
   </div>
 </div>
+
 <!-- jQuery -->
 <script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
 <!-- Bootstrap 4 -->

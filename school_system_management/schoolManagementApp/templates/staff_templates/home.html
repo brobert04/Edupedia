@@ -1,228 +1,253 @@
 <!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
 
-{% extends 'staff_templates/base.html' %} 
-{% block page_title %} Staff Dashboard{% endblock page_title %} 
-{% block breadcrumb %}Dashboard{% endblock breadcrumb%} 
+{% extends 'staff_templates/base.html' %}
+{% block page_title %} Staff Dashboard{% endblock page_title %}
+{% block breadcrumb %}Dashboard{% endblock breadcrumb%}
 {% block main-content %}
 <section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-          <div class="inner">
-            <h3>{{ all_students }}</h3>
-            <p>My Students</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-person"></i>
-          </div>
-          <a href="{% url 'student_attendance' %}" class="small-box-footer"
-            >More info <i class="fas fa-arrow-circle-right"></i
-          ></a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-          <div class="inner">
-            <h3>
-              {{my_subjects}} <span style="font-size: 15px">subjects</span>
-            </h3>
-            <p>My Subjects</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-easel"></i>
-          </div>
-          <a href="#" class="small-box-footer">&nbsp;</a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-6">
-        <!-- small card -->
-        <div class="small-box bg-light">
-          <div class="inner" style="padding: 15px">
-            <p style="font-size: 18px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-6 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ all_students }}</h3>
+                                <p>My Students</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a href="{% url 'student_attendance' %}" class="small-box-footer"
+                            >More info <i class="fas fa-arrow-circle-right"></i
+                            ></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>
+                                    {{my_subjects}} <span style="font-size: 15px">subjects</span>
+                                </h3>
+                                <p>My Subjects</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-easel"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">&nbsp;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-light">
+                            <div class="inner" style="padding: 15px">
+                                <p style="font-size: 18px">
               <span style="color: green; font-weight: bold"
-                >Accepted - <span>{{accepted_requests}}</span></span
+              >Accepted - <span>{{accepted_requests}}</span></span
               >&nbsp;&nbsp;&nbsp;<span style="color: red; font-weight: bold"
-                >Rejected - <span>{{rejected_requests}}</span></span
-              >&nbsp;&nbsp;&nbsp;<span style="color: #e1ad01; font-weight: bold"
-                >Pending - <span>{{pending_requests}}</span></span
-              >
-            </p>
-            <p>My Requests Report</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-document-text"></i>
-          </div>
-          <a href="{% url 'staff_applyfor_leave' %}" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card card-warning collapsed-card">
-          <div class="card-header">
-            <h3 class="card-title">Latest Feedback & Reply</h3>
-            <div class="card-tools">
-              <button
-                type="button"
-                class="btn btn-tool"
-                data-card-widget="collapse"
-              >
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-            <!-- /.card-tools -->
-          </div>
-          <!-- /.card-header -->
-          <div
-            class="card-body"
-            style="
-              display: none;
-              text-transform: capitalize;
-              font-size: 17px;
-              padding: 30px;
-            "
-          >
-            <p>You : <span style="color: blue">{{feedback}}</span></p>
-            <p>Admin : <span style="color: red">{{feedback_reply}}</span></p>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-      </div>
-    </div>
-  </div>
+                                >Rejected - <span>{{rejected_requests}}</span></span
+                                >&nbsp;&nbsp;&nbsp;<span style="color: #e1ad01; font-weight: bold"
+                                >Pending - <span>{{pending_requests}}</span></span
+                                >
+                                </p>
+                                <p>My Requests Report</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-document-text"></i>
+                            </div>
+                            <a href="{% url 'staff_applyfor_leave' %}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <p style="text-align: center;font-weight: bold;color: white;font-size: 20px;">Latest
+                                    Feedback & reply</p>
+                                <p style="color: white; font-weight: bold">You : <span
+                                        style="color: blue">{{feedback}}</span></p>
+                                <p style="color:white; font-weight: bold">Admin : <span style="color: red">{{feedback_reply}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PIE CHART -->
+                <div class="card card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title">Attendance & Leave Requests Chart</h3>
 
-  <div class="row">
-    <div class="col-lg-6">
-      <!-- PIE CHART -->
-      <div class="card card-danger">
-        <div class="card-header">
-          <h3 class="card-title">Attendance & Leave Requests Chart</h3>
-
-          <div class="card-tools">
-            <button
-              type="button"
-              class="btn btn-tool"
-              data-card-widget="collapse"
-            >
-              <i class="fas fa-minus"></i>
-            </button>
-            <button
-              type="button"
-              class="btn btn-tool"
-              data-card-widget="remove"
-            >
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <canvas
-            id="pieChart"
-            style="
+                        <div class="card-tools">
+                            <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="collapse"
+                            >
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="remove"
+                            >
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas
+                                id="pieChart"
+                                style="
               min-height: 250px;
               height: 250px;
               max-height: 250px;
               max-width: 100%;
             "
-          ></canvas>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-    </div>
-
-    <div class="col-lg-6">
-      <!-- TO DO List -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">
-            <i class="ion ion-clipboard mr-1"></i>
-            Tasks For Today
-          </h3>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-          <ul class="todo-list" id="todo-list" data-widget="todo-list">
-            {% for t in todos %}
-            <li class="">
+                        ></canvas>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg">
+                    <!-- TO DO List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="ion ion-clipboard mr-1"></i>
+                                Tasks For Today
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <ul class="todo-list" id="todo-list" data-widget="todo-list">
+                                {% for t in todos %}
+                                <li class="">
               <span class="handle ui-sortable-handle">
                 <i class="fas fa-ellipsis-v"></i>
                 <i class="fas fa-ellipsis-v"></i>
               </span>
-              <span id="textcss" class="text">{{t.task_text}}</span>
-              <div class="tools">
-                <form action="/deleteTodo/{{t.id}}/" method="post">
-                  {% csrf_token %}
-                  <button style="background:transparent; border:none;color:red;"type="submit"><i class="fas fa-trash"></i></button>
-                </form>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer clearfix">
-          <div>
-            <form action="{% url 'add_todo_staff' %}" method="post" class="row" style="gap:40px;">
-              {% csrf_token %}
-              <input
-              type="text"
-              name="todoText"
-              style="width: 80%; background: transparent"
-              class="form-control form-control-border border-width-2"
-              placeholder="Enter task name"
-            />
-            <button type="submit" class="btn btn-primary float-right">
-              <i class="fas fa-plus"></i> Add item
-            </button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- /.card -->
-    </div>
-  </div>
-</section>
+                                    <span id="textcss" class="text">{{t.task_text}}</span>
+                                    <div class="tools">
+                                        <form action="/deleteTodo/{{t.id}}/" method="post">
+                                            {% csrf_token %}
+                                            <button style="background:transparent; border:none;color:red;"
+                                                    type="submit"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            <div>
+                                <form action="{% url 'add_todo_staff' %}" method="post" class="row" style="gap:40px;">
+                                    {% csrf_token %}
+                                    <input
+                                            type="text"
+                                            name="todoText"
+                                            style="width: 80%; background: transparent"
+                                            class="form-control form-control-border border-width-2"
+                                            placeholder="Enter task name"
+                                    />
+                                    <button type="submit" class="btn btn-primary float-right">
+                                        <i class="fas fa-plus"></i> Add item
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" style="font-weight:bold ">Upcoming Meetings...</h2>
+                    </div>
 
-{% endblock main-content%} {% block base_js %}
+                    <div class="card-body p-0">
+                        {% for m in meetings %}
+                        <div class="col-md" style="margin-top:20px;">
+                            <div class="card card-purple collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">{{m.topic}}</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                                class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div class="card-body" style="display: none;">
+                                    <p>Date: {{m.date}} </p>
+                                    <p>Subject: {{m.subject_id.name}}</p>
+                                    <p>Duration: {{m.duration}} minutes </p>
+                                    <div class="row">
+                                        <button type="button" class="btn btn-success"
+                                                style="position: relative; left: 36px; top: 1px;">
+                                            <a style="color: white;" href="{{m.join_url}}">Start Meeting</a>
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                                style="position: relative; left: 87px; top: 0px;">
+                                            Delete Meeting
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</section>
+{% endblock main-content%}
+{% block base_js %}
 <script>
-  $(document).ready(function () {
-      var donutData= {
-      labels: [
-          'All Attendance Taken',
-          'Leave Requests',
-      ],
-      datasets: [
-        {
-          data: [{{attendance_count}}, {{leave_request}}],
-          backgroundColor : ['#00a65a', '#f56954'],
-        }
-      ]
+    $(document).ready(function () {
+        var donutData = {
+            labels: [
+                'All Attendance Taken',
+                'Leave Requests',
+            ],
+            datasets: [
+                {
+                    data: [{{attendance_count}}, {{leave_request}}],
+        backgroundColor : ['#00a65a', '#f56954'],}]
     }
-    // Get context with jQuery - using jQuery's .get() method.
-    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-    var pieData = donutData;
-    var pieOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
-    };
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(pieChartCanvas, {
-      type: "pie",
-      data: pieData,
-      options: pieOptions,
+        // Get context with jQuery - using jQuery's .get() method.
+        var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+        var pieData = donutData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        };
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        new Chart(pieChartCanvas, {
+            type: "pie",
+            data: pieData,
+            options: pieOptions,
+        });
     });
-});
 </script>
 {% endblock base_js %}

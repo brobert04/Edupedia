@@ -115,6 +115,8 @@ urlpatterns = [
                   path("edit_student_result", EditViewClass.as_view(), name="edit_student_result"),
                 path('edit_student_results_save', staff_views.edit_student_results_save, name="edit_student_results_save"),
                 path("fetch_student_results", staff_views.fetch_student_results, name="fetch_student_results"),
+                path("meeting_details", staff_views.meeting_details, name="meeting_details"),
+                path("schedule_meeting", staff_views.schedule_meeting, name="schedule_meeting"),
 
 
                   # STUDENT PAGE URLS

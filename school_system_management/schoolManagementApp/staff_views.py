@@ -6,15 +6,21 @@ from requests import session
 from schoolManagementApp.forms import EditStaff, StaffOwnProfileEdit
 from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStaff, StaffNotification, \
     LeaveReportStaff, \
-    SessionYears, Staff, StaffTodo, Student, Subject, UserCustom, StudentNotification, StudentResults
+    SessionYears, Staff, StaffTodo, Student, Subject, UserCustom, StudentNotification, StudentResults, ZoomMeting
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+import jwt
+import requests
+from time import time
+from datetime import datetime
+from datetime import timedelta
+
+API_KEY = 'F2WspNWwRv-Y6DmI_hoJpA'
+API_SEC = 'NKY3KOT2zg8yaW63n6z2q9F5jFbX8PvAb26p'
 
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
-
-
 def staff_home(request):
     # PRELUAM DATELE DESPRE STUDENTI AFLATI LA CURSUL PROFESORULUI IN CAUZA
     subject = Subject.objects.filter(staffId=request.user.id)
@@ -57,13 +63,15 @@ def staff_home(request):
     notifications = StaffNotification.objects.filter(staffID=staff.id)
     notf_number = notifications.count()
 
+    meetings = ZoomMeting.objects.filter(staffID=staff.id)
+
     return render(request, 'staff_templates/home.html',
                   {"subject": subject, "all_students": all_students, "attendance_count": attendance_count,
                    "leave_request": leave_request_count, "my_subjects": my_subjects, "feedback": message,
                    "feedback_reply": reply, "accepted_requests": accepted_requests,
                    "rejected_requests": rejected_requests, "pending_requests": pending_requests,
                    "profile_picture": profile_picture, "todos": todos, "notifications": notifications,
-                   "notf_number": notf_number, })
+                   "notf_number": notf_number, "meetings": meetings})
 
 
 # FUNCTIA PENTRU A RANDA PAGINA DE STABILIRE A PREZENTEI LA CURS
@@ -364,10 +372,11 @@ def staff_send_notification(request):
     return HttpResponse("True")
 
 
-def delete_notification_staff(request,notification_id):
+def delete_notification_staff(request, notification_id):
     notification = StaffNotification.objects.get(id=notification_id)
     notification.delete()
     return HttpResponseRedirect(reverse("staff_dashboard"))
+
 
 def delete_all_notifications_staff(request):
     staff = Staff.objects.get(admin=request.user.id)
@@ -381,6 +390,7 @@ def staff_add_results(request):
     subjects = Subject.objects.filter(staffId=request.user.id)
     session = SessionYears.object.all()
     return render(request, 'staff_templates/add_results.html', {'subjects': subjects, 'session': session})
+
 
 # FUNCTIA PENTRU A SALVA/UPDATA REZULTATELE ELEVILOR LA MATERIA RESPECTIVA
 def save_student_results(request):
@@ -397,16 +407,17 @@ def save_student_results(request):
         subject = Subject.objects.get(id=subject_id)
 
         try:
-            check_exist = StudentResults.objects.filter(subjectID=subject,studentID=student, date=date).exists()
+            check_exist = StudentResults.objects.filter(subjectID=subject, studentID=student, date=date).exists()
             if check_exist:
-                res = StudentResults.objects.get(subjectID=subject,studentID=student, date=date)
+                res = StudentResults.objects.get(subjectID=subject, studentID=student, date=date)
                 res.subject_assignment_mark = assingment_mark
                 res.subject_exam_mark = exam_mark
                 res.save()
                 messages.success(request, 'Results have been updated!')
                 return HttpResponseRedirect(reverse("staff_add_results"))
             else:
-                results = StudentResults(studentID=student, subjectID=subject, subject_assignment_mark=assingment_mark, subject_exam_mark=exam_mark, date=date)
+                results = StudentResults(studentID=student, subjectID=subject, subject_assignment_mark=assingment_mark,
+                                         subject_exam_mark=exam_mark, date=date)
                 results.save()
                 messages.success(request, 'Results have been saved!')
                 return HttpResponseRedirect(reverse("staff_add_results"))
@@ -418,6 +429,8 @@ def save_student_results(request):
 
 def edit_student_results_save(request):
     pass
+
+
 @csrf_exempt
 def fetch_student_results(request):
     subject_id = request.POST.get('subject_id')
@@ -428,7 +441,82 @@ def fetch_student_results(request):
     results = StudentResults.objects.filter(subjectID=subject_id, studentID=student_object.id, date=date_id).exists()
     if results:
         results = StudentResults.objects.get(subjectID=subject_id, studentID=student_object.id, date=date_id)
-        result_data = {"exam_mark":results.subject_exam_mark, "assignment_mark":results.subject_assignment_mark}
+        result_data = {"exam_mark": results.subject_exam_mark, "assignment_mark": results.subject_assignment_mark}
         return HttpResponse(json.dumps(result_data))
     else:
         return HttpResponse("False")
+
+
+def meeting_details(request):
+    subjects = Subject.objects.filter(staffId=request.user.id)
+    return render(request, "staff_templates/schedule_meeting.html", {"subjects": subjects})
+
+
+def generate_token():
+    token = jwt.encode(
+        {'iss': API_KEY, 'exp': time() + 5000},
+        API_SEC,
+        algorithm='HS256'
+    )
+    return token.decode('utf-8')
+
+
+token = generate_token()
+
+def schedule_meeting(request):
+    if request.method != "POST":
+        return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
+    else:
+        email = request.POST.get('email')
+        meeting_topic = request.POST.get('meeting_topic')
+        date = request.POST['date']
+        duration = request.POST.get('duration')
+        subject = request.POST.get('subject')
+
+        new_Date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+        dated = new_Date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        print(dated)
+
+        staff_id = request.user.id
+        user = UserCustom.objects.get(id=staff_id)
+        staff = Staff.objects.get(admin=user)
+        print(staff.id)
+        subject = Subject.objects.get(id=subject)
+        print(subject.id)
+
+
+        meetingdetails = {"topic": meeting_topic,
+                          "type": 2,
+                          "start_time": dated,
+                          "duration": duration,
+                          "recurrence": {"type": 1,
+                                         "repeat_interval": 1
+                                         },
+                          "settings": {"host_video": "true",
+                                       "participant_video": "true",
+                                       "join_before_host": "False",
+                                       "mute_upon_entry": "False",
+                                       "watermark": "true",
+                                       "audio": "voip",
+                                       "auto_recording": "cloud"
+                                       }
+                          }
+        headers = {'authorization': 'Bearer ' + token,
+                   'content-type': 'application/json'}
+
+        try:
+            url = "https://api.zoom.us/v2/users/{}/meetings".format(email)
+            r = requests.post(url,
+                                headers=headers, data=json.dumps(meetingdetails))
+            print(r.text)
+            y = json.loads(r.text)
+            join_url = y['start_url']
+            password = y['password']
+            meet = ZoomMeting(staffID=staff, subject_id=subject, date=date, duration=duration, topic=meeting_topic, join_url=join_url, password=password, email=email)
+            meet.save()
+            messages.success(request, 'The meeting has been successfully scheduled! You can see more about on the home page.')
+            return HttpResponseRedirect(reverse("meeting_details"))
+        except:
+            messages.error(
+                request, 'The platform could not process the request. Try again!')
+            return HttpResponseRedirect(reverse("meeting_details"))

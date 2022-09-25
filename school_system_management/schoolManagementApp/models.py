@@ -177,6 +177,20 @@ class StudentResults(models.Model):
     updatedAt = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
+class ZoomMeting(models.Model):
+    id = models.AutoField(primary_key=True)
+    staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    date= models.DateTimeField(auto_now_add=False, default=datetime.date.today)
+    email = models.CharField(max_length=100, default="")
+    duration = models.IntegerField(default=0)
+    topic = models.CharField(max_length=300, default="")
+    join_url = models.CharField(max_length=300, default="")
+    password = models.CharField(max_length=300, default="")
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
+
 
 # ATUNCI CAND UN NOU USER ESTE CREAT, SE VA ADAUGA AUTOMAT IN NOU RAND FIE IN MODELUL DIRECTORULUI, INVATATORULUI SAU STUDENTULUI
 @receiver(post_save, sender=UserCustom)

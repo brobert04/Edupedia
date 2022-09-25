@@ -98,6 +98,16 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    {% url 'meeting_details' as meeting_details %}
+                    <a href="{% url 'meeting_details' %}"
+                       class="nav-link {% if request.path == meeting_details%} active {% endif %}">
+                        <ion-icon name="videocam" class="nav-icon"></ion-icon>
+                        <p style="font-size: 18px; font-weight: bold; margin-left: 5px; position: relative; left: 0px; top: -3px;">
+                            Schedule Meeting
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
