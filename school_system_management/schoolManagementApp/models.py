@@ -159,7 +159,7 @@ class StaffNotification(models.Model):
 
 
 # MODELUL PENTRU APLICATIA DE TODO A STAFFULUI DIN PAGINA HOME
-class StaffTodo(models.Model):
+class    StaffTodo(models.Model):
     id = models.AutoField(primary_key=True)
     staffID = models.ForeignKey(Staff, on_delete=models.CASCADE)
     task_text = models.TextField()
@@ -187,6 +187,7 @@ class ZoomMeting(models.Model):
     topic = models.CharField(max_length=300, default="")
     join_url = models.CharField(max_length=300, default="")
     password = models.CharField(max_length=300, default="")
+    meeting_id = models.PositiveBigIntegerField(default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()

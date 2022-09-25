@@ -55,7 +55,7 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="/principal_dashboard" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" id="welcome_message">
         <p style="position: relative; left: 6px; top: 7px; font-weight: bold;">Hello, {{request.user}}. Welcome back!👋</p>
       </li>
     </ul>
@@ -142,6 +142,12 @@
   
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/build/jquery.datetimepicker.full.min.js"></script>
+<script>
+  setTimeout(() =>{
+    let message = document.querySelector('#welcome_message');
+    message.style.display = 'none';
+  }, 3000);
+</script>
 {% block base_js %}
 {% endblock base_js %}
 </body>

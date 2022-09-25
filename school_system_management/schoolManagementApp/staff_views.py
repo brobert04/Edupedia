@@ -15,6 +15,8 @@ import requests
 from time import time
 from datetime import datetime
 from datetime import timedelta
+import pyshorteners
+from django_zoom_meetings import ZoomMeetings
 
 API_KEY = 'F2WspNWwRv-Y6DmI_hoJpA'
 API_SEC = 'NKY3KOT2zg8yaW63n6z2q9F5jFbX8PvAb26p'
@@ -451,7 +453,7 @@ def meeting_details(request):
     subjects = Subject.objects.filter(staffId=request.user.id)
     return render(request, "staff_templates/schedule_meeting.html", {"subjects": subjects})
 
-
+# FUNCTIA PENTRU A GENERA UN TOKEN NECESAR PROGRAMARII UNUI MEETING PE ZOOM
 def generate_token():
     token = jwt.encode(
         {'iss': API_KEY, 'exp': time() + 5000},
@@ -459,10 +461,9 @@ def generate_token():
         algorithm='HS256'
     )
     return token.decode('utf-8')
-
-
 token = generate_token()
 
+# FUNCTIA PENTRU A GENERA UN MEET PE ZOOM SI A-I SALVA INFORMATIILE IN BAZA DE DATE
 def schedule_meeting(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
@@ -507,16 +508,26 @@ def schedule_meeting(request):
         try:
             url = "https://api.zoom.us/v2/users/{}/meetings".format(email)
             r = requests.post(url,
-                                headers=headers, data=json.dumps(meetingdetails))
-            print(r.text)
+                                        headers=headers, data=json.dumps(meetingdetails))
+            s = pyshorteners.Shortener()
             y = json.loads(r.text)
-            join_url = y['start_url']
+            join_url = s.tinyurl.short(y['start_url'])
             password = y['password']
-            meet = ZoomMeting(staffID=staff, subject_id=subject, date=date, duration=duration, topic=meeting_topic, join_url=join_url, password=password, email=email)
+            meeting_id = y['id']
+            meet = ZoomMeting(staffID=staff, subject_id=subject, date=date, duration=duration, topic=meeting_topic, join_url=join_url, password=password, email=email, meeting_id=meeting_id)
             meet.save()
             messages.success(request, 'The meeting has been successfully scheduled! You can see more about on the home page.')
             return HttpResponseRedirect(reverse("meeting_details"))
         except:
             messages.error(
-                request, 'The platform could not process the request. Try again!')
+                    request, 'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse("meeting_details"))
+
+# FUNCTIA PENTRU A STERGE MEET-UL ATAT DIN BAZA DE DATE CAT SI DIN BAZA DE DATE A ZOOM
+def deleteMeeting(request, meeting_id):
+    meet = ZoomMeting.objects.get(id=meeting_id)
+    url = 'https://api.zoom.us/v2/meetings/{}'.format(meet.meeting_id)
+    header = {'authorization': 'Bearer ' +  token}
+    zoom_delete_meeting = requests.delete(url, headers=header)
+    meet.delete()
+    return HttpResponseRedirect(reverse("staff_dashboard"))

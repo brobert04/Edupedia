@@ -117,6 +117,7 @@ urlpatterns = [
                 path("fetch_student_results", staff_views.fetch_student_results, name="fetch_student_results"),
                 path("meeting_details", staff_views.meeting_details, name="meeting_details"),
                 path("schedule_meeting", staff_views.schedule_meeting, name="schedule_meeting"),
+                path("delete_meeting/<int:meeting_id>/", staff_views.deleteMeeting, name="delete_meeting"),
 
 
                   # STUDENT PAGE URLS

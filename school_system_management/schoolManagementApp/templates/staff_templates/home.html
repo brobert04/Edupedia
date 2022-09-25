@@ -201,10 +201,13 @@
                                                 style="position: relative; left: 36px; top: 1px;">
                                             <a style="color: white;" href="{{m.join_url}}">Start Meeting</a>
                                         </button>
-                                        <button type="button" class="btn btn-danger"
+                                        <form action="/delete_meeting/{{m.id}}/" method="post">
+                                            {% csrf_token %}
+                                             <button type="submit" class="btn btn-danger"
                                                 style="position: relative; left: 87px; top: 0px;">
                                             Delete Meeting
                                         </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
