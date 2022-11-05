@@ -17,11 +17,13 @@ from datetime import datetime
 from datetime import timedelta
 import pyshorteners
 from django_zoom_meetings import ZoomMeetings
+import avinit
 
 API_KEY = 'F2WspNWwRv-Y6DmI_hoJpA'
 API_SEC = 'NKY3KOT2zg8yaW63n6z2q9F5jFbX8PvAb26p'
 
 
+    
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A MEMBRULUI STAFF-ULUI
 def staff_home(request):
     # PRELUAM DATELE DESPRE STUDENTI AFLATI LA CURSUL PROFESORULUI IN CAUZA
@@ -41,7 +43,9 @@ def staff_home(request):
     attendance_count = Attendance.objects.filter(subjectID__in=subject).count()
 
     staff = Staff.objects.get(admin=request.user.id)
-    profile_picture = staff.profile_picture
+    # profile_pic = avinit.get_avatar_data_url(f"{staff.admin.first_name} {staff.admin.last_name}")
+    # print(profile_pic)
+    # profile_picture = staff.profile_picture
     leave_request_count = LeaveReportStaff.objects.filter(
         staffID=staff).count()
     accepted_requests = LeaveReportStaff.objects.filter(
@@ -63,6 +67,7 @@ def staff_home(request):
         reply = ""
 
     notifications = StaffNotification.objects.filter(staffID=staff.id)
+    # notf_sender = avinit.get_avatar_data_url(f"{notifications.sender}")
     notf_number = notifications.count()
 
     meetings = ZoomMeting.objects.filter(staffID=staff.id)
@@ -72,8 +77,8 @@ def staff_home(request):
                    "leave_request": leave_request_count, "my_subjects": my_subjects, "feedback": message,
                    "feedback_reply": reply, "accepted_requests": accepted_requests,
                    "rejected_requests": rejected_requests, "pending_requests": pending_requests,
-                   "profile_picture": profile_picture, "todos": todos, "notifications": notifications,
-                   "notf_number": notf_number, "meetings": meetings})
+                   "todos": todos, "notifications": notifications,
+                   "notf_number": notf_number, "meetings": meetings, })
 
 
 # FUNCTIA PENTRU A RANDA PAGINA DE STABILIRE A PREZENTEI LA CURS
@@ -258,7 +263,6 @@ def staff_profile(request):
     gender = staff.gender
     address = staff.address
     phone = staff.phone_number
-    profile_picture = staff.profile_picture
     subjects = Subject.objects.filter(staffId=user)
     course_ids_list = []
     for s in subjects:
@@ -273,7 +277,7 @@ def staff_profile(request):
     all_students = Student.objects.filter(courseId__in=course_list).count()
     return render(request, "staff_templates/staff_profile.html",
                   {"user": user, "staff": staff, "subjects": subjects, "all_students": all_students, "gender": gender,
-                   "address": address, "profile_picture": profile_picture, "phone": phone})
+                   "address": address,"phone": phone})
 
 
 # ACEASTA FUNCTIE ESTE FOLOSITA PENTRU A RANDA PAGINA DE EDIT A PROFILULUI PROFESORULUI
@@ -374,12 +378,14 @@ def staff_send_notification(request):
     return HttpResponse("True")
 
 
+# FUNCTIA PENTRU A STERGE O SINGURA NOTIFICARE DIN PANELUL DE NOTIFICARI
 def delete_notification_staff(request, notification_id):
     notification = StaffNotification.objects.get(id=notification_id)
     notification.delete()
     return HttpResponseRedirect(reverse("staff_dashboard"))
 
 
+# FUNCTIA PENTRU A STERGE TOATE NOTIFICARILE DIN PANELUL DE NOTIFICARI
 def delete_all_notifications_staff(request):
     staff = Staff.objects.get(admin=request.user.id)
     noitifications = StaffNotification.objects.filter(staffID=staff)
@@ -449,6 +455,7 @@ def fetch_student_results(request):
         return HttpResponse("False")
 
 
+# FUNCTIA PENTRU A RANDA PAGINA DE PROGRAMARE A MEET-ULUI PE ZOOM
 def meeting_details(request):
     subjects = Subject.objects.filter(staffId=request.user.id)
     return render(request, "staff_templates/schedule_meeting.html", {"subjects": subjects})
@@ -508,10 +515,10 @@ def schedule_meeting(request):
         try:
             url = "https://api.zoom.us/v2/users/{}/meetings".format(email)
             r = requests.post(url,
-                                        headers=headers, data=json.dumps(meetingdetails))
+                                            headers=headers, data=json.dumps(meetingdetails))
             s = pyshorteners.Shortener()
             y = json.loads(r.text)
-            join_url = s.tinyurl.short(y['start_url'])
+            join_url = y['join_url']
             password = y['password']
             meeting_id = y['id']
             meet = ZoomMeting(staffID=staff, subject_id=subject, date=date, duration=duration, topic=meeting_topic, join_url=join_url, password=password, email=email, meeting_id=meeting_id)
@@ -522,6 +529,8 @@ def schedule_meeting(request):
             messages.error(
                     request, 'The platform could not process the request. Try again!')
             return HttpResponseRedirect(reverse("meeting_details"))
+
+
 
 # FUNCTIA PENTRU A STERGE MEET-UL ATAT DIN BAZA DE DATE CAT SI DIN BAZA DE DATE A ZOOM
 def deleteMeeting(request, meeting_id):

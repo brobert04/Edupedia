@@ -49,7 +49,7 @@ def Login(request):
             else:
                  return HttpResponseRedirect(reverse('student_dashboard'))
         else:
-            messages.error(request, "Datele introduse nu sunt corecte. Inecearca din nou!")
+            messages.error(request, "The credentials are not correct. Try again!")
             return HttpResponseRedirect('/', )
 
 def getUserData(request):

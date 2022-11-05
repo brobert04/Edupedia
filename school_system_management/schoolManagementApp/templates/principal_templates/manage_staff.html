@@ -1,56 +1,78 @@
 <!--- PAGINA CU CONTENTUL PRINCIPAL CE SE VA INCARCA DINAMIC-->
-
 {% extends 'principal_templates/base.html' %}
-{% block page_title %} Manage Staff {% endblock page_title %}
 {% block breadcrumb %}Staff Members List{% endblock breadcrumb %}
 {% block main-content %}
 <section class="content">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-              <h3 style="font-size: 25px; font-weight:bold;"class="card-title">Staff Members List</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
-                <thead>
-                  <tr style="text-align: center;">
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Address</th>
-                    <th>Gender</th>
-                    <th>Profile Picture</th>
-                    <th>Date Joined</th>
-                    <th>Last Login</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Staff List</h3>
+      </div>
+      <div class="card-body">
+        <div id="staff_table_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table id="staff_table" class="table table-bordered table-striped dataTable dtr-inline"
+                  aria-describedby="example1_info">
+                  <thead>
+                    <tr>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="Browser: activate to sort column ascending">Last Name</th>
+                      <th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="Rendering engine: activate to sort column ascending" aria-sort="ascending">First
+                        Name
+                      </th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="Platform(s): activate to sort column ascending">Username</th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="Engine version: activate to sort column ascending">Gender</th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="CSS grade: activate to sort column ascending">Email</th>
+                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="CSS grade: activate to sort column ascending">Phone Number</th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="CSS grade: activate to sort column ascending">Address</th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
+                        aria-label="CSS grade: activate to sort column ascending">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {% for s in staff %}
-                  <tr style="text-align: center;">
-                    <td>{{s.admin.id}}</td>
-                    <td>{{s.admin.first_name}}</td>
-                    <td>{{s.admin.last_name}}</td>
-                    <td>{{s.admin.username}}</td>
-                    <td>{{s.admin.email}}</td>
-                    <td><a href="https://api.whatsapp.com/send?phone={{s.phone_number}}" target="_blank">{{s.phone_number}}</a></td>
-                    <td>{{s.address}}</td>
-                    <td>{{s.gender}}</td>
-                    <td><img height="35px" width="35px" src="{{s.profile_picture}}" alt="{{s.admin.username}}'s profile picture"></td>
-                    <td>{{s.admin.date_joined}}</td>
-                    <td>{{s.admin.last_login}}</td>
-                    <th><a href="{% url 'edit_staff' staff_id=s.admin.id %}">Edit</a></th>
+                    <tr style="text-align:center">
+                      <td>{{s.admin.last_name}}</td>
+                      <td>{{s.admin.first_name}}</td>
+                      <td>{{s.admin.username}}</td>
+                      <td>{{s.gender}}</td>
+                      <td>{{s.admin.email}}</td>
+                      <td><a href="https://api.whatsapp.com/send?phone={{s.phone_number}}" target="_blank">{{s.phone_number}}</a></td>
+                      <td>{{s.address}}</td>
+                      <th><a style="margin-right: 5px;"href="{% url 'edit_staff' staff_id=s.admin.id %}">Edit</a>
+                      <br>
+                      <a  style="color:red" href="{% url 'delete_staff' staff_id=s.admin.id %}">Delete</a></th>
+                    {% endfor %}
                   </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <!-- /.card-body -->
           </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock main-content %}
+{% block base_js %}
+<script>
+  $(function () {
+    $("#staff_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "pageLength": 10,
+      "lengthChange" : true,
+      "buttons": ["copy", "csv", "excel", "pdf", "print",]
+    }).buttons().container().appendTo('#staff_table_wrapper .col-md-6:eq(0)');
+  });
+</script>
+{% endblock base_js%}
+
+

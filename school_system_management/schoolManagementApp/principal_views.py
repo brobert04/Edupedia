@@ -37,7 +37,7 @@ from notifications.signals import notify
 
 # FUNCTIA PENTRU A RANDA PAGINA DE DASHBOARD A DIRECTORULUI/ADMINULUI
 def principal_home(request):
-    students = Student.objects.all().count()
+    students_count = Student.objects.all().count()
     courses = Course.objects.all().count()
     subjects = Subject.objects.all().count()
     teachers = Staff.objects.all().count()
@@ -67,7 +67,7 @@ def principal_home(request):
         studs_absent_list.append(absent+leaves)
         studs_present_list.append(present)
         studs_name_list.append(f"{s.admin.first_name} {s.admin.last_name}")
-    return render(request, 'principal_templates/home.html', {"students": students, "courses": courses, "subjects": subjects, "teachers": teachers, "course_name": course_name, "subject_count": subject_count, "student_count":student_count, "student_present_list":studs_present_list, "student_absent_list":studs_absent_list, "student_name_list":studs_name_list})
+    return render(request, 'principal_templates/home.html', {"students": students_count, "courses": courses, "subjects": subjects, "teachers": teachers, "course_name": course_name, "subject_count": subject_count, "student_count":student_count, "student_present_list":studs_present_list, "student_absent_list":studs_absent_list, "student_name_list":studs_name_list})
 
 # FUNCTIA PENTRU A RANDA PAGINA DE ADAUGARE STAFF
 def add_staff(request):
@@ -148,7 +148,7 @@ def save_student_information(request):
     if request.method != "POST":
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
-        form = AddStudent(request.POST, request.FILES)
+        form = AddStudent(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['firstName']
             last_name = form.cleaned_data['lastName']
@@ -161,11 +161,6 @@ def save_student_information(request):
             course_id = form.cleaned_data['course']
         
         
-            profile_pic = request.FILES['profilePic']
-            fs = FileSystemStorage()
-            filename  = fs.save(profile_pic.name, profile_pic)
-            profile_pic_url  = fs.url(filename)
-        
             try:   
                 # CREEM UN NOU USER CUSTOM CU MODELUL USERCUSTOM DIN BAZA DE DATE LA CARE ADAUGAM SI ADRESA   
                 user = UserCustom.objects.create_user(username=username, password=password, email=email, last_name=last_name,first_name=first_name, user_type=3)
@@ -175,7 +170,6 @@ def save_student_information(request):
                 session_year = SessionYears.object.get(id=session_id)
                 user.student.session_id = session_year 
                 user.student.gender = gender
-                user.student.profile_picture = profile_pic_url
                 user.save()
                 messages.success(request, 'A new student has been added to the database!')
                 return HttpResponseRedirect('/add_student')
@@ -247,6 +241,12 @@ def edit_staff(request, staff_id):
     form.fields["gender"].initial = staff.gender
     return render(request, "principal_templates/edit_staff.html", {"form":form,"id": staff_id, "username": staff.admin.username})
 
+# FUNCTIA PENTRU A STERGE UN MEMBRU AL STAFF-ULUI
+def delete_staff(request, staff_id):
+    staff = UserCustom.objects.get(id=staff_id)
+    staff.delete()
+    return HttpResponseRedirect(reverse("manage_staff"))
+
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STAFF ULUI
 def edit_staff_information(request):
     if request.method != "POST":
@@ -317,6 +317,11 @@ def edit_student(request, student_id):
     
     return render(request, 'principal_templates/edit_student.html', {"form":form, "id":student_id,"username": student.admin.username})
 
+def delete_student(request, student_id):
+    student = UserCustom.objects.get(id=student_id)
+    student.delete()
+    return HttpResponseRedirect(reverse("manage_student"))
+
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII ALE STUDENTULUI
 def edit_student_information(request):
     if request.method != "POST":
@@ -383,6 +388,11 @@ def edit_course(request, course_id):
     form = EditCourse()
     form.fields['courseName'].initial = course.name
     return render(request, "principal_templates/edit_course.html", {"name": course.name, "id": course_id, "form":form})
+
+def delete_course(request, course_id):
+    course = Course.objects.get(id = course_id)
+    course.delete()
+    return HttpResponseRedirect(reverse("manage_course"))
 
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII REFERITOARE LA CURS
 def edit_course_information(request):

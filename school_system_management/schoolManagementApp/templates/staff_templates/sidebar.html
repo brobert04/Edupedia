@@ -5,12 +5,13 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center align-items-center">
             <div class="image">
-                <img src="{% static "dist/img/user.jpg" %}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{profile_picture}}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="{% url 'staff_profile' %}" class="d-block">{{user.username}}</a>
+                <a href="#" style="font-size:11px" class="d-block">{{user.email}}</a>
             </div>
         </div>
         <!-- SidebarSearch Form -->
@@ -43,7 +44,7 @@
                     <a href="{% url 'update_student_attendance' %}"
                        class="nav-link {% if request.path == update_student_attendance%} active {% endif %}">
                         <i class="nav-icon fas fa-eye"></i>
-                        <p style="font-size: 16px; font-weight: bold;margin-left: 5px;">
+                        <p style="font-size: 14px; font-weight: bold;margin-left: 5px;">
                             View & Edit Attendance
                         </p>
                     </a>

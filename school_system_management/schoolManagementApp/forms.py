@@ -21,7 +21,6 @@ class AddStudent(forms.Form):
         attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
         attrs={"class": "form-control","autocomplete:": "off"}))
-    profilePic = forms.FileField(label="Profile Picture", max_length=50)
     gender_choice = (
         ("Male", "Male"),
         ("Female", "Female"),
@@ -68,8 +67,6 @@ class EditStudent(forms.Form):
         attrs={"class": "form-control","autocomplete:": "off"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(
         attrs={"class": "form-control","autocomplete:": "off"}))
-    profilePic = forms.FileField(
-        label="Profile Picture", max_length=50, required=False)
     gender_choice = (
         ("Male", "Male"),
         ("Female", "Female"),

@@ -1,4 +1,6 @@
 {% load static %}
+{% load pwa %}
+{% progressive_web_app_meta %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,10 +28,18 @@
   <link rel="stylesheet" href="{% static "plugins/daterangepicker/daterangepicker.css" %}">
   <!-- summernote -->
   <link rel="stylesheet" href="{% static "plugins/summernote/summernote-bs4.min.css" %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
   {% block base_css %}
 
   {% endblock base_css %}
   <style>
+    *{
+        font-family: 'Merriweather Sans', sans-serif;
+    }
     #logout:hover{
       color: red;
     }
@@ -60,8 +70,6 @@
     {% include 'student_templates/notification-bar.html' %}
   </nav>
   <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
     {% include 'student_templates/sidebar.html' with user=user id=id %}
 
   <!-- Content Wrapper. Contains page content -->

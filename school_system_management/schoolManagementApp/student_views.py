@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.urls import reverse
 
 from schoolManagementApp.models import Attendance, AttendanceReport, Course, FeedbackStudent, LeaveReportStudent, Student, Subject, UserCustom,StudentNotification, StudentResults
-from datetime import datetime
+
+
 
 
 # ACEASTA FUNCTIE RANDEAZA PAGINA DE HOME A STUDENTULUI SI AJUTA LA INCARCAREA DINAMICA A CHARTURILOR RESPECTIVE
@@ -37,7 +38,7 @@ def student_home(request):
 
     notifications = StudentNotification.objects.filter(studentID=student.id)
     notf_number  = notifications.count()
-    return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent, "notifications":notifications, "notf_number":notf_number})
+    return render(request, 'student_templates/home.html', {"leave_report":leave_report, "present":percentage_present, "absent":absent, "subjects":subjects, "course":course, "total_present":present_total, "subject_name":subject_name, "subject_present":subject_present, "subject_absent":subject_absent, "notifications":notifications, "notf_number":notf_number, })
 
 # ACEASTA FUNCTIE RANDEAZA PAGINA DE VIZUALIZARE A PROPRIILOR ABSENTE
 def student_view_attendance(request):

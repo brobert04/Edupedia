@@ -167,11 +167,7 @@ Dashboard {% endblock page_title %} {% block main-content %}
 
     $(document).ready(function () {
         var subjects = {
-        {
-            subject_name | safe
-        }
-    }
-        ;
+        {subject_name | safe}};
         var present = {
         {
             subject_present

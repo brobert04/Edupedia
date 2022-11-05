@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'schoolManagementApp',
     'widget_tweaks',
     'notifications',
+    'pwa'
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'schoolManagementApp.context_processors.profile_picture',
+                'schoolManagementApp.context_processors.profile_picture',
             ],
         },
     },
@@ -121,7 +122,7 @@ USE_L10N = False
 USE_TZ = False
 
 DATE_INPUT_FORMATS = [
-    
+
     '%Y-%m-%d',  # '2006-10-25'
     '%m/%d/%Y',  # '10/25/2006'
     '%m/%d/%y',  # '10/25/06'
@@ -132,7 +133,7 @@ DATE_INPUT_FORMATS = [
     '%B %d %Y',  # 'October 25 2006'
     '%B %d, %Y',  # 'October 25, 2006'
     '%d %B %Y',  # '25 October 2006'
-    '%d %B, %Y',  # '25 October, 2006' 
+    '%d %B, %Y',  # '25 October, 2006'
 ]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -148,10 +149,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "schoolManagementApp.UserCustom"
-AUTHENTIFICATION_BACKENDS= ["schoolManagementApp.Email.Email"]
+AUTHENTIFICATION_BACKENDS = ["schoolManagementApp.Email.Email"]
 
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'schoolManagementApp/static/js', 'serviceworker.js')
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
@@ -159,3 +162,13 @@ EMAIL_HOST_USER = "mykey.login@gmail.com"
 EMAIL_HOST_PASSWORD = "rofljcwysoduegcj"
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Edupedia Team<edupedia.team23@gmail.com>"
+
+
+PWA_APP_NAME = 'Edupedia'
+PWA_APP_DESCRIPTION = "My app description" 
+PWA_APP_THEME_COLOR = '#0A0302' 
+PWA_APP_BACKGROUND_COLOR = '#ffffff' 
+PWA_APP_ICONS = [{'src': '/static/dist/img/logo.png', 'sizes': '160x160'}] 
+PWA_APP_ICONS_APPLE = [{'src': '/static/dist/img/logo.png', 'size': '160x160'}] 
+
+
