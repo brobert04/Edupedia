@@ -49,6 +49,7 @@ urlpatterns = [
                   path('edit_course_information', principal_views.edit_course_information,
                        name="edit_course_information"),
                   path('edit_subject/<str:subject_id>', principal_views.edit_subject, name="edit_subject"),
+                  path('delete_subject/<str:subject_id>', principal_views.delete_subject, name="delete_subject"),
                   path('edit_subject_information', principal_views.edit_subject_information,
                        name="edit_subject_information"),
                   path("manage_session", principal_views.manage_session, name="manage_session"),

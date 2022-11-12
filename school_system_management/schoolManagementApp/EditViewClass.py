@@ -17,7 +17,6 @@ class EditViewClass(View):
         form = EditResult(request.POST, staffId = request.user.id)
         if form.is_valid():
             student_id = form.cleaned_data["students"]
-            assingment_mark = form.cleaned_data["assignment_mark"]
             exam_mark = form.cleaned_data['exam_mark']
             date = form.cleaned_data['date']
             subject_id = form.cleaned_data['subject_id']
@@ -26,7 +25,6 @@ class EditViewClass(View):
             subject = Subject.objects.get(id=subject_id)
 
             res = StudentResults.objects.get(subjectID=subject, studentID=student, date=date)
-            res.subject_assignment_mark = assingment_mark
             res.subject_exam_mark = exam_mark
             res.save()
             messages.success(request, "Succesfully updated marks.")

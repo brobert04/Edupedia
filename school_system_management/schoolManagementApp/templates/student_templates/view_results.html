@@ -14,7 +14,6 @@
             <tr style="text-align: center;">
                 <th>Subject</th>
                 <th>Exam Mark</th>
-                <th>Homework Mark</th>
                 <th>Date</th>
                 <th>Status</th>
             </tr>
@@ -22,7 +21,6 @@
             <tr style="text-align: center;">
                 <td>{{s.subjectID.name}}</td>
                 <td>{{s.subject_exam_mark}}</td>
-                <td>{{s.subject_assignment_mark}}</td>
                 <td>{{s.date}}</td>
                 <td>
                     {% if s.subject_exam_mark >= 8.5%}

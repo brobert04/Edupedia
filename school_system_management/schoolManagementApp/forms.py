@@ -209,7 +209,6 @@ class EditResult(forms.Form):
                                 widget=forms.Select(attrs={"class": "form-control custom-select form-control-border"}))
     date = forms.DateField(label="Date", widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}))
     subject_id = forms.ChoiceField(label="Subject", widget=forms.Select(attrs={"class":"form-control custom-select form-control-border "}))
-    assignment_mark = forms.CharField(label="Homework Mark", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
     exam_mark = forms.CharField(label="Exam Mark", max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
         
               

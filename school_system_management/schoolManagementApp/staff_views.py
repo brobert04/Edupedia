@@ -406,7 +406,6 @@ def save_student_results(request):
         return HttpResponse('<h1 style="color: red;">THIS METHOD IS NOT ALLLOWED</h1>')
     else:
         student_id = request.POST.get('student_list');
-        assingment_mark = request.POST.get('assignment_mark')
         exam_mark = request.POST.get('exam_mark')
         date = request.POST.get('date')
         subject_id = request.POST.get('subject')
@@ -418,13 +417,12 @@ def save_student_results(request):
             check_exist = StudentResults.objects.filter(subjectID=subject, studentID=student, date=date).exists()
             if check_exist:
                 res = StudentResults.objects.get(subjectID=subject, studentID=student, date=date)
-                res.subject_assignment_mark = assingment_mark
                 res.subject_exam_mark = exam_mark
                 res.save()
                 messages.success(request, 'Results have been updated!')
                 return HttpResponseRedirect(reverse("staff_add_results"))
             else:
-                results = StudentResults(studentID=student, subjectID=subject, subject_assignment_mark=assingment_mark,
+                results = StudentResults(studentID=student, subjectID=subject, 
                                          subject_exam_mark=exam_mark, date=date)
                 results.save()
                 messages.success(request, 'Results have been saved!')
@@ -449,7 +447,7 @@ def fetch_student_results(request):
     results = StudentResults.objects.filter(subjectID=subject_id, studentID=student_object.id, date=date_id).exists()
     if results:
         results = StudentResults.objects.get(subjectID=subject_id, studentID=student_object.id, date=date_id)
-        result_data = {"exam_mark": results.subject_exam_mark, "assignment_mark": results.subject_assignment_mark}
+        result_data = {"exam_mark": results.subject_exam_mark}
         return HttpResponse(json.dumps(result_data))
     else:
         return HttpResponse("False")

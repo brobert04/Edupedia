@@ -170,7 +170,6 @@ class StudentResults(models.Model):
     studentID = models.ForeignKey(Student, on_delete=models.CASCADE)
     subjectID = models.ForeignKey(Subject, on_delete=models.CASCADE)
     subject_exam_mark = models.FloatField(default=0)
-    subject_assignment_mark = models.FloatField(default=0)
     date = models.DateField(auto_now_add=False, default=datetime.date.today)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)

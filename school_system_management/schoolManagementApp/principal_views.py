@@ -429,6 +429,11 @@ def edit_subject(request, subject_id):
     teachers = UserCustom.objects.filter(user_type=2)
     return render(request, 'principal_templates/edit_subject.html', {"subject": subject, "courses": course, "teachers": teachers, "id": subject_id})
 
+def delete_subject(request, subject_id):
+    subject = Subject.objects.get(id=subject_id)
+    subject.delete()
+    return HttpResponseRedirect(reverse("manage_subject"))
+
 #FUNCTIA PENTRU A SALVA NOILE INFORMATII REFERITOARE LA MATERIE
 def edit_subject_information(request):
     if request.method != "POST":
